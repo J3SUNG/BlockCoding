@@ -1,0 +1,18 @@
+on:
+  pull-request:
+    branches: [ '*' ] # PR이 생성될 때마다 작업을 실행합니다.
+jobs:
+  - name: deft-pr-preview
+    execute:
+      # 패키지를 설치합니다.
+      - yarn install
+      # ! 레포에 알맞은 빌드 명령어를 실행하세요.
+      - yarn build
+      # Deft CLI를 설치합니다.
+      - npm i --registry https://npm.daumkakao.io -g @kakao/deft
+      # 사이트를 배포합니다. CLI 사용법은 https://deft.kakao.com/cli 참고하세요.
+      - deft --token=$DEFT_TOKEN --name=${PR_HEAD_REPO}_${PR_HEAD_BRANCH} ./dist
+    run-on:
+      image: mdock.daumkakao.io/node:18
+      resources: large
+    set-proxy: [shell, npm, yarn]
