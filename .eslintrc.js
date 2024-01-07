@@ -3,18 +3,11 @@ module.exports = {
     browser: true,
     commonjs: true,
     es6: true,
-    jest: true
+    jest: true,
   },
-  extends: [
-    '@kos/styleguide/comment',
-    '@kos/styleguide/es3',
-    '@kos/styleguide/es2015',
-    '@kos/styleguide/typescript'
-  ],
+  extends: ['@kos/styleguide/comment', '@kos/styleguide/es3', '@kos/styleguide/es2015', '@kos/styleguide/typescript'],
   parserOptions: {
-    project: [
-      './tsconfig.json'
-    ],
-    sourceType: 'module'
-  }
+    project: ['./tsconfig.json'],
+    sourceType: 'module',
+  },
 }

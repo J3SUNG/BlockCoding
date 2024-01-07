@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ '*' ] # 브랜치가 푸시될 때마다 작업을 실행합니다.
+    branches: ['*'] # 브랜치가 푸시될 때마다 작업을 실행합니다.
 jobs:
   - name: deft-branch-preview
     execute:

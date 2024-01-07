@@ -1,92 +1,67 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Block Coding</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <link rel="stylesheet" href="./reset.css" />
+    <link rel="stylesheet" href="./index.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Block Coding</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link rel="stylesheet" href="./reset.css">
-  <link rel="stylesheet" href="./index.css">
-</head>
-
-<body>
-  <!-- GNB -->
-  <header id="gnb">
-    <h1 id="title">Block Coding</h1>
-    <nav>
-      <button type="button" class="bg-yellow">
-        Save
-      </button>
-      <button type="button" class="bg-gray">
-        Load
-      </button>
-      <button type="button" class="bg-green">
-        ▶
-      </button>
-      <button type="button" class="bg-red">
-        ⏹
-      </button>
-    </nav>
-  </header>
-
-  <!-- 콘텐츠 영역 -->
-  <div id="main">
-    <!-- 블럭 메뉴 영역 -->
-    <div id="block-menu">
+  <body>
+    <!-- GNB -->
+    <header id="gnb">
+      <h1 id="title">Block Coding</h1>
       <nav>
-        <button type="button" class="bg-lightgray">
-          범주 1
-        </button>
-        <button type="button" class="bg-lightgray">
-          범주 2
-        </button>
-        <button type="button" class="bg-lightgray">
-          범주 3
-        </button>
-        <button type="button" class="bg-yellow">
-          범주 4
-        </button>
-        <button type="button" class="bg-lightgray">
-          범주 5
-        </button>
-        <button type="button" class="bg-lightgray">
-          범주 6
-        </button>
+        <button type="button" class="bg-yellow">Save</button>
+        <button type="button" class="bg-gray">Load</button>
+        <button type="button" class="bg-green">▶</button>
+        <button type="button" class="bg-red">⏹</button>
       </nav>
-      <nav>
-        <button type="button" class="bg-yellow">
-          블럭 1
-        </button>
-        <button type="button" class="bg-yellow">
-          블럭 2
-        </button>
-        <button type="button" class="bg-yellow">
-          블럭 3
-        </button>
-      </nav>
-    </div>
+    </header>
 
-    <!-- 워크스페이스 영역 -->
-    <section id="workspace">
-      <!-- 코드 블럭이 들어갈 영역입니다. -->
-
-      <!-- 휴지통 -->
-      <div id="trash-bin">
-        <span class="material-symbols-outlined">delete</span>
+    <!-- 콘텐츠 영역 -->
+    <div id="main">
+      <!-- 블럭 메뉴 영역 -->
+      <div id="block-menu">
+        <nav>
+          <button type="button" class="bg-lightgray">범주 1</button>
+          <button type="button" class="bg-lightgray">범주 2</button>
+          <button type="button" class="bg-lightgray">범주 3</button>
+          <button type="button" class="bg-yellow">범주 4</button>
+          <button type="button" class="bg-lightgray">범주 5</button>
+          <button type="button" class="bg-lightgray">범주 6</button>
+        </nav>
+        <nav>
+          <button type="button" class="bg-yellow">블럭 1</button>
+          <button type="button" class="bg-yellow">블럭 2</button>
+          <button type="button" class="bg-yellow">블럭 3</button>
+        </nav>
       </div>
-    </section>
 
-    <!-- 콘솔 영역 -->
-    <div id="console">
-      <h1>Output</h1>
-      <div>
-        <!-- <p>결과 값이 들어갈 영역입니다.</p> -->
+      <!-- 워크스페이스 영역 -->
+      <section id="workspace">
+        <!-- 코드 블럭이 들어갈 영역입니다. -->
+
+        <!-- 휴지통 -->
+        <div id="trash-bin">
+          <span class="material-symbols-outlined">delete</span>
+        </div>
+      </section>
+
+      <!-- 콘솔 영역 -->
+      <div id="console">
+        <h1>Output</h1>
+        <div>
+          <!-- <p>결과 값이 들어갈 영역입니다.</p> -->
+        </div>
+        <input type="text" name="input" placeholder="입력해 주세요." />
       </div>
-      <input type="text" name="input" placeholder="입력해 주세요.">
     </div>
-  </div>
-  <script src="./index.js"></script>
-</body>
-
+    <script src="./index.js"></script>
+  </body>
 </html>

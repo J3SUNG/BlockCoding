@@ -1,6 +1,6 @@
 on:
   pull-request:
-    branches: [ '*' ] # PR이 생성될 때마다 작업을 실행합니다.
+    branches: ['*'] # PR이 생성될 때마다 작업을 실행합니다.
 jobs:
   - name: deft-pr-preview
     execute:
