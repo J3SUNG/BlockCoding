@@ -38,5 +38,8 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "dependencies": {
+    "yarn": "^1.22.21"
   }
 }
