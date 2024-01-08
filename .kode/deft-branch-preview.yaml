@@ -17,3 +17,4 @@ jobs:
     run-on:
       image: mdock.daumkakao.io/node:18
       resources: large
+    set-proxy: [shell, npm, yarn]
