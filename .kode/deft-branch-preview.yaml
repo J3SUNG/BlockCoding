@@ -1,13 +1,13 @@
 on:
   push:
-    branches: [ '*' ] # 브랜치가 푸시될 때마다 작업을 실행합니다.
+    branches: ['*'] # 브랜치가 푸시될 때마다 작업을 실행합니다.
 jobs:
   - name: deft-branch-preview
     execute:
       # 패키지를 설치합니다.
-      - yarn install
+      - npm install
       # ! 레포에 알맞은 빌드 명령어를 실행하세요.
-      - yarn build
+      - npm run build
       # Deft CLI를 설치합니다.
       - npm i --registry https://npm.daumkakao.io -g @kakao/deft
       # 환경변수에 레포 이름을 넣습니다. 아래에서 사이트 주소를 설정할 때 사용합니다.
@@ -17,3 +17,4 @@ jobs:
     run-on:
       image: mdock.daumkakao.io/node:18
       resources: large
+    set-proxy: [shell, npm, yarn]
