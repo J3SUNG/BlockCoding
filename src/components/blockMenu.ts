@@ -1,18 +1,22 @@
+import { BLOCK_OBJECT } from '../constants/blockObject';
+import { BLOCK_TYPE_OBJECT } from '../constants/blockTypeObject';
+
 export const blockMenu = () => {
+  const selectedType = 0;
   return `
   <div id="block-menu">
     <nav>
-      <button type="button" class="bg-lightgray">범주 1</button>
-      <button type="button" class="bg-lightgray">범주 2</button>
-      <button type="button" class="bg-lightgray">범주 3</button>
-      <button type="button" class="bg-yellow">범주 4</button>
-      <button type="button" class="bg-lightgray">범주 5</button>
-      <button type="button" class="bg-lightgray">범주 6</button>
+      ${BLOCK_TYPE_OBJECT.map((blockType) => {
+        console.log(blockType);
+        return `<button type="button" class="bg-lightgray">${blockType.korName}</button>`;
+      }).join('')}
     </nav>
     <nav>
-      <button type="button" class="bg-yellow">블럭 1</button>
-      <button type="button" class="bg-yellow">블럭 2</button>
-      <button type="button" class="bg-yellow">블럭 3</button>
+      ${BLOCK_OBJECT.filter((block) => block.type === BLOCK_TYPE_OBJECT[selectedType].name)
+        .map((block) => {
+          return `<button type="button" class="bg-yellow">${block.korName}</button>`;
+        })
+        .join('')}
     </nav>
   </div>
   `;
