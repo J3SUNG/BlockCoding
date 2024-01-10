@@ -17,6 +17,13 @@ button {
   border-radius: 2px;
 }
 
+/* root */
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 /* GNB */
 #gnb {
   background-color: #222;
