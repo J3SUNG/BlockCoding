@@ -1,4 +1,4 @@
-export const console = () => {
+export const consoleSpace = () => {
   return `
   <div id="console">
     <h1>Output</h1>
