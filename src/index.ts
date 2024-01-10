@@ -5,6 +5,8 @@ import { main } from './components/main';
 import { blockMenu } from './components/blockMenu';
 import { workspace } from './components/workspace';
 import { consoleSpace } from './components/consoleSpace';
+import { BLOCK_OBJECT } from './constants/blockObject';
+import { BLOCK_MAP } from './constants/blockMap';
 
 const rootElement = document.querySelector('#root') as HTMLElement;
 rootElement.innerHTML = '';
@@ -14,25 +16,33 @@ const mainElement = document.querySelector('#main') as HTMLElement;
 mainElement.innerHTML = '';
 mainElement.innerHTML = blockMenu() + workspace() + consoleSpace();
 
+const condition = BLOCK_OBJECT[BLOCK_MAP.condition];
+const logical = BLOCK_OBJECT[BLOCK_MAP.logical];
+
 const arr = [
   {
     name: 'start',
+    korName: '시작',
     type: 'declare',
     data: {
       value: [],
     },
   },
+  condition,
+  logical,
   {
-    name: 'start',
-    type: 'declare',
+    name: 'variable',
+    korName: '변수',
+    type: 'general',
     data: {
-      value: [],
+      varName: {},
+      value: {},
     },
   },
 ];
 
 const newBlock = arr.map((block: any) => {
-  return `<div class="block" id="${block.name}">hi</div>`;
+  return `<div class="block" id="${block.type}">${block.korName}</div>`;
 });
 
 const workspaceElement = document.querySelector('#workspace') as HTMLElement;
