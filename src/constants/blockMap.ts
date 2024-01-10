@@ -1,4 +1,4 @@
-export const BLOCK = {
+export const BLOCK_MAP = {
   start: 0,
   variable: 1,
   output: 2,
@@ -14,7 +14,7 @@ export const BLOCK = {
   logical: 12,
 };
 
-export const BLOCK_TYPE = {
+export const BLOCK_TYPE_MAP = {
   declare: 0,
   general: 1,
   control: 2,
