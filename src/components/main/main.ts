@@ -1,3 +1,4 @@
+import { BlockObject } from '@/types/blockObjectType';
 import { useState } from '../../core/core';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { blockMenu } from '../blockMenu/blockMenu';
@@ -6,10 +7,10 @@ import { workspace } from '../workspace/workspace';
 
 export const main = () => {
   const [selectedBlock, setSelectedBlock] = useState(-1);
-  const [blockList, setBlockList] = useState<Object[]>([]);
+  const [blockList, setBlockList] = useState<BlockObject[]>([]);
 
   const blockMenuComponent = blockMenu({ selectedBlock, setSelectedBlock, blockList, setBlockList });
-  const workspaceComponent = workspace();
+  const workspaceComponent = workspace({ blockList });
   const consoleSpaceComponent = consoleSpace();
 
   const main = createElementCommon('div', { id: 'main' });
