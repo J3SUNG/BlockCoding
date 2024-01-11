@@ -1,9 +1,12 @@
+import { createElementCommon } from '../utils/createElementCommon';
+
 export const workspace = () => {
-  return `
-  <section id="workspace">
-    <div id="trash-bin">
-      <span class="material-symbols-outlined">delete</span>
-    </div>
-  </section>
-  `;
+  const section = createElementCommon('section', { id: 'workspace' });
+  const trashBin = createElementCommon('div', { id: 'trash-bin' });
+  const trashIcon = createElementCommon('span', { className: 'material-symbols-outlined', textContent: 'delete' });
+
+  trashBin.appendChild(trashIcon);
+  section.appendChild(trashBin);
+
+  return section;
 };

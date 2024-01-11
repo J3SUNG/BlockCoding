@@ -1,23 +1,27 @@
+import { useState } from '../core/core';
 import { BLOCK_OBJECT } from '../constants/blockObject';
 import { BLOCK_TYPE_OBJECT } from '../constants/blockTypeObject';
+import { createElementCommon } from '../utils/createElementCommon';
 
 export const blockMenu = () => {
-  const selectedType = 0;
-  return `
-  <div id="block-menu">
-    <nav>
-      ${BLOCK_TYPE_OBJECT.map((blockType) => {
-        console.log(blockType);
-        return `<button type="button" class="bg-lightgray">${blockType.korName}</button>`;
-      }).join('')}
-    </nav>
-    <nav>
-      ${BLOCK_OBJECT.filter((block) => block.type === BLOCK_TYPE_OBJECT[selectedType].name)
-        .map((block) => {
-          return `<button type="button" class="bg-yellow">${block.korName}</button>`;
-        })
-        .join('')}
-    </nav>
-  </div>
-  `;
+  const [getSelectedType, setSelectedType] = useState(0);
+
+  const blockMenuDiv = createElementCommon('div', { id: 'block-menu' });
+
+  const blockTypeNav = createElementCommon('nav', {});
+  BLOCK_TYPE_OBJECT.forEach((blockType) => {
+    const button = createElementCommon('button', { textContent: blockType.korName, className: 'bg-lightgray' });
+    blockTypeNav.appendChild(button);
+  });
+
+  const blockNav = createElementCommon('nav', {});
+  BLOCK_OBJECT.filter((block) => block.type === BLOCK_TYPE_OBJECT[getSelectedType()].name).forEach((block) => {
+    const button = createElementCommon('button', { textContent: block.korName, className: 'bg-yellow' });
+    blockNav.appendChild(button);
+  });
+
+  blockMenuDiv.appendChild(blockTypeNav);
+  blockMenuDiv.appendChild(blockNav);
+
+  return blockMenuDiv;
 };
