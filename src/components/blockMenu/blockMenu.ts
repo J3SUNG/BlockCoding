@@ -1,5 +1,4 @@
 import { useState } from '../../core/core';
-import { BLOCK_TYPE_OBJECT } from '../../constants/blockTypeObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockMenuProps } from '../../types/blockMenuProps';
 import { blockMenuBlockNav } from './blockMenuBlockNav';
@@ -11,7 +10,6 @@ export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlock
 
   const blockMenuDiv = createElementCommon('div', { id: 'block-menu' });
   const blockTypeNav = blockMenuTypeNav({ selectedType, setSelectedType, setSelectedTypeBlock });
-
   const BlockNav = blockMenuBlockNav({
     selectedType,
     selectedBlock,
