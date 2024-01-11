@@ -1,6 +1,6 @@
 import { BlockList, SelectedBlock, SetBlockList, SetSelectedBlock } from './stateType';
 
-export interface blockMenuProps {
+export interface BlockMenuProps {
   selectedBlock: SelectedBlock;
   setSelectedBlock: SetSelectedBlock;
   blockList: BlockList;
