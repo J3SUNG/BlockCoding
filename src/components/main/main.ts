@@ -6,8 +6,9 @@ import { workspace } from '../workspace/workspace';
 
 export const main = () => {
   const [selectedBlock, setSelectedBlock] = useState(-1);
+  const [blockList, setBlockList] = useState<Object[]>([]);
 
-  const blockMenuComponent = blockMenu({ selectedBlock, setSelectedBlock });
+  const blockMenuComponent = blockMenu({ selectedBlock, setSelectedBlock, blockList, setBlockList });
   const workspaceComponent = workspace();
   const consoleSpaceComponent = consoleSpace();
 
