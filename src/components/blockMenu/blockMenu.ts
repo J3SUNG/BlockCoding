@@ -2,10 +2,10 @@ import { useState } from '../../core/core';
 import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { BLOCK_TYPE_OBJECT } from '../../constants/blockTypeObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { BlockMenuProps } from '../../types/blockMenuProps';
+import { blockMenuProps } from '../../types/blockMenuProps';
 import { BLOCK_MAP } from '../../constants/blockMap';
 
-export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlockList }: BlockMenuProps) => {
+export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlockList }: blockMenuProps) => {
   const [selectedType, setSelectedType] = useState(0);
   const [selectedTypeBlock, setSelectedTypeBlock] = useState(-1);
 
