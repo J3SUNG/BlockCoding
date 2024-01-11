@@ -1,7 +1,4 @@
-type SelectedBlock = number;
-type SetSelectedBlock = (selectedBlock: SelectedBlock) => void;
-type BlockList = Object[];
-type SetBlockList = (blockList: BlockList) => void;
+import { BlockList, SelectedBlock, SetBlockList, SetSelectedBlock } from './stateType';
 
 export interface BlockMenuProps {
   selectedBlock: SelectedBlock;
