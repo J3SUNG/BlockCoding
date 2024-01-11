@@ -3,7 +3,7 @@ import './index.css';
 import { gnb } from './components/gnb';
 import { main } from './components/main';
 
-export const App = () => {
+export const app = () => {
   const gnbComponent = gnb();
   const mainComponent = main();
 
