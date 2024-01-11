@@ -1,5 +1,7 @@
-import './reset.css';
-import './index.css';
+import { App } from './App';
 
-const greeting: string = 'Hello, World!';
-console.log(greeting);
+const rootElement = document.querySelector('#root') as HTMLElement;
+const appComponent = App();
+
+rootElement.innerHTML = '';
+rootElement.innerHTML = appComponent;
