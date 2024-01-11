@@ -10,7 +10,7 @@ export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlock
 
   const blockMenuDiv = createElementCommon('div', { id: 'block-menu' });
   const blockTypeNav = blockMenuTypeNav({ selectedType, setSelectedType, setSelectedTypeBlock });
-  const BlockNav = blockMenuBlockNav({
+  const blockNav = blockMenuBlockNav({
     selectedType,
     selectedBlock,
     setSelectedBlock,
@@ -21,7 +21,7 @@ export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlock
   });
 
   blockMenuDiv.appendChild(blockTypeNav);
-  blockMenuDiv.appendChild(BlockNav);
+  blockMenuDiv.appendChild(blockNav);
 
   return blockMenuDiv;
 };
