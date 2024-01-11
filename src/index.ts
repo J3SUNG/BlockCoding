@@ -1,4 +1,6 @@
 import { App } from './App';
 import { render } from './core/core';
 
-render(App, document.body);
+const root = document.querySelector('#root') as HTMLElement;
+
+render(App, root);
