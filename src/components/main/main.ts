@@ -1,10 +1,13 @@
+import { useState } from '../../core/core';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { blockMenu } from '../blockMenu/blockMenu';
 import { consoleSpace } from '../consoleSpace/consoleSpace';
 import { workspace } from '../workspace/workspace';
 
 export const main = () => {
-  const blockMenuComponent = blockMenu();
+  const [selectedBlock, setSelectedBlock] = useState(-1);
+
+  const blockMenuComponent = blockMenu({ selectedBlock, setSelectedBlock });
   const workspaceComponent = workspace();
   const consoleSpaceComponent = consoleSpace();
 

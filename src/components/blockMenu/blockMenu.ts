@@ -2,10 +2,10 @@ import { useState } from '../../core/core';
 import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { BLOCK_TYPE_OBJECT } from '../../constants/blockTypeObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { blockMenuProps } from '../../types/blockMenuProps';
 
-export const blockMenu = () => {
+export const blockMenu = ({ selectedBlock, setSelectedBlock }: blockMenuProps) => {
   const [selectedType, setSelectedType] = useState(0);
-  const [selectedBlock, setSelectedBlock] = useState(-1);
 
   const blockMenuDiv = createElementCommon('div', { id: 'block-menu' });
   const blockTypeNav = createElementCommon('nav', {});
@@ -24,7 +24,10 @@ export const blockMenu = () => {
 
   const BlockNav = createElementCommon('nav', {});
   BLOCK_OBJECT.filter((block) => block.type === BLOCK_TYPE_OBJECT[selectedType].name).forEach((block, index) => {
-    const button = createElementCommon('button', { textContent: block.korName, className: 'bg-yellow' });
+    const button = createElementCommon('button', {
+      textContent: block.korName,
+      className: `${selectedBlock === index ? 'bg-yellow' : 'bg-lightgray'}`,
+    });
     button.onclick = () => {
       setSelectedBlock(index);
     };
