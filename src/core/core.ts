@@ -10,16 +10,18 @@ const core = () => {
     rootComponent: null,
   };
 
-  const useState = <T>(initState: T): [() => T, (newState: T) => void] => {
+  const useState = <T>(initState: T): [T, (newState: T) => void] => {
     const { currentStateKey: key, states } = options;
+
     if (states.length === key) states.push(initState);
 
     const setState = (newState: T) => {
       states[key] = newState;
       _render();
     };
+
     options.currentStateKey += 1;
-    const state = () => states[key];
+    const state = states[key];
     return [state, setState];
   };
 
