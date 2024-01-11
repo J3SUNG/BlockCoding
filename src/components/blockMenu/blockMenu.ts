@@ -1,11 +1,10 @@
 import { useState } from '../../core/core';
-import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { BLOCK_TYPE_OBJECT } from '../../constants/blockTypeObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { blockMenuProps } from '../../types/blockMenuProps';
-import { BLOCK_MAP } from '../../constants/blockMap';
+import { BlockMenuProps } from '../../types/blockMenuProps';
+import { blockMenuBlockNav } from './blockMenuBlockNav';
 
-export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlockList }: blockMenuProps) => {
+export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlockList }: BlockMenuProps) => {
   const [selectedType, setSelectedType] = useState(0);
   const [selectedTypeBlock, setSelectedTypeBlock] = useState(-1);
 
@@ -24,27 +23,14 @@ export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlock
     blockTypeNav.appendChild(button);
   });
 
-  const BlockNav = createElementCommon('nav', {});
-  BLOCK_OBJECT.filter((block) => block.type === BLOCK_TYPE_OBJECT[selectedType].name).forEach((block, index) => {
-    const button = createElementCommon('button', {
-      name: block.name,
-      textContent: block.korName,
-      className: `${selectedTypeBlock === index ? 'bg-yellow' : 'bg-lightgray'}`,
-    });
-    button.onclick = (e) => {
-      setSelectedTypeBlock(index);
-      const name = (e.target as HTMLButtonElement).name;
-      const blockIndex = BLOCK_MAP[name];
-
-      if (selectedBlock === blockIndex) {
-        setSelectedBlock(-1);
-        setSelectedTypeBlock(-1);
-        setBlockList([...blockList, { ...BLOCK_OBJECT[blockIndex] }]);
-      } else {
-        setSelectedBlock(blockIndex);
-      }
-    };
-    BlockNav.appendChild(button);
+  const BlockNav = blockMenuBlockNav({
+    selectedType,
+    selectedBlock,
+    setSelectedBlock,
+    selectedTypeBlock,
+    setSelectedTypeBlock,
+    blockList,
+    setBlockList,
   });
 
   blockMenuDiv.appendChild(blockTypeNav);
