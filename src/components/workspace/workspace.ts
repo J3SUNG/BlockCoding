@@ -1,4 +1,4 @@
-import { createElementCommon } from '../utils/createElementCommon';
+import { createElementCommon } from '../../utils/createElementCommon';
 
 export const workspace = () => {
   const section = createElementCommon('section', { id: 'workspace' });

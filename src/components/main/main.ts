@@ -1,7 +1,7 @@
-import { createElementCommon } from '../utils/createElementCommon';
-import { blockMenu } from './blockMenu';
-import { consoleSpace } from './consoleSpace';
-import { workspace } from './workspace';
+import { createElementCommon } from '../../utils/createElementCommon';
+import { blockMenu } from '../blockMenu/blockMenu';
+import { consoleSpace } from '../consoleSpace/consoleSpace';
+import { workspace } from '../workspace/workspace';
 
 export const main = () => {
   const blockMenuComponent = blockMenu();

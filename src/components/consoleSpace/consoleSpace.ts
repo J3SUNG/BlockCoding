@@ -1,4 +1,4 @@
-import { createElementCommon } from '../utils/createElementCommon';
+import { createElementCommon } from '../../utils/createElementCommon';
 
 export const consoleSpace = () => {
   const div = createElementCommon('div', { id: 'console' });

@@ -1,7 +1,7 @@
 import './reset.css';
 import './index.css';
-import { gnb } from './components/gnb';
-import { main } from './components/main';
+import { gnb } from './components/gnb/gnb';
+import { main } from './components/main/main';
 
 export const app = () => {
   const gnbComponent = gnb();

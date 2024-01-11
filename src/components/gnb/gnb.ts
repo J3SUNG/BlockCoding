@@ -1,4 +1,4 @@
-import { createElementCommon } from '../utils/createElementCommon';
+import { createElementCommon } from '../../utils/createElementCommon';
 
 export const gnb = () => {
   const header = createElementCommon('header', { id: 'gnb' });
