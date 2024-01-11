@@ -1,6 +1,7 @@
 import { BlockObject } from './blockObjectType';
 
 export type SelectedType = number;
+export type SetSelectedType = (selectedType: SelectedType) => void;
 export type SelectedBlock = number;
 export type SetSelectedBlock = (selectedBlock: SelectedBlock) => void;
 export type SelectedTypeBlock = number;
