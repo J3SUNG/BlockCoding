@@ -1,6 +1,15 @@
-import { CreateElementCommonProps } from '../types/createElementCommonProps';
+import { HtmlTagInputProperties, HtmlTagTextProperties } from '@/types/htmlTagProperties';
 
-export const createElementCommon = (tagName: string, props: CreateElementCommonProps) => {
+export interface CreateElementCommonProps {
+  id?: string;
+  className?: string;
+  textContent?: string;
+  placeholder?: string;
+  name?: string;
+  type?: string;
+}
+
+export const createElementCommon = (tagName: string, props: HtmlTagInputProperties | HtmlTagTextProperties) => {
   const element = document.createElement(tagName);
 
   for (const prop in props) {
