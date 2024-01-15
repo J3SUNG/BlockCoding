@@ -1,4 +1,3 @@
-import { makeDraggable } from '../../utils/makeDraggable';
 import { BlockList } from '../../types/stateType';
 import { blockController } from '../block/blockController';
 import { BlockInputObj } from '../../types/blockInputObj';
@@ -17,7 +16,6 @@ export const workspaceSvg = ({ blockList, setBlockInputObj }: WorkspaceSvgProps)
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('width', '100%');
   svg.setAttribute('height', '100%');
-  makeDraggable(svg);
 
   function objParser(obj: any, x: number, y: number, width: number, height: number) {
     if (!obj) return;
