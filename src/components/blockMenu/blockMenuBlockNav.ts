@@ -1,15 +1,15 @@
+import { BlockMenuBlockNavProps } from '../../types/blockMenu';
 import { BLOCK_MAP } from '../../constants/blockMap';
 import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { BLOCK_TYPE_OBJECT } from '../../constants/blockTypeObject';
-import { BlockMenuBlockNavProps } from '../../types/blockMenuBlockNavProps';
 import { createElementCommon } from '../../utils/createElementCommon';
 
 export const blockMenuBlockNav = ({
   selectedType,
   selectedTypeBlock,
   setSelectedTypeBlock,
-  selectedBlock,
-  setSelectedBlock,
+  selectedMenuBlock,
+  setSelectedMenuBlock,
   setBlockList,
   blockList,
 }: BlockMenuBlockNavProps) => {
@@ -27,12 +27,12 @@ export const blockMenuBlockNav = ({
       const name = (e.target as HTMLButtonElement).name;
       const blockIndex = BLOCK_MAP[name];
 
-      if (selectedBlock === blockIndex) {
-        setSelectedBlock(-1);
+      if (selectedMenuBlock === blockIndex) {
+        setSelectedMenuBlock(-1);
         setSelectedTypeBlock(-1);
         setBlockList([...blockList, { ...BLOCK_OBJECT[blockIndex] }]);
       } else {
-        setSelectedBlock(blockIndex);
+        setSelectedMenuBlock(blockIndex);
       }
     };
     BlockNav.appendChild(button);
