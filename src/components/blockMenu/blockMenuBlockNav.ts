@@ -18,7 +18,7 @@ export const blockMenuBlockNav = ({
   BLOCK_OBJECT.filter((block) => block.type === BLOCK_TYPE_OBJECT[selectedType].name).forEach((block, index) => {
     const button = createElementCommon('button', {
       name: block.name,
-      textContent: block.korName,
+      textContent: block.name,
       className: `${selectedTypeBlock === index ? 'bg-yellow' : 'bg-lightgray'}`,
     });
 
