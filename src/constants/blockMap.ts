@@ -22,5 +22,6 @@ export const BLOCK_TYPE_MAP = {
   declare: 0,
   general: 1,
   control: 2,
-  expression: 3,
+  expressionValue: 3,
+  expressionLogical: 4,
 };

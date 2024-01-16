@@ -21,6 +21,7 @@ export const blockMenuBlockNav = ({
       textContent: block.korName,
       className: `${selectedTypeBlock === index ? 'bg-yellow' : 'bg-lightgray'}`,
     });
+
     button.onclick = (e) => {
       setSelectedTypeBlock(index);
       const name = (e.target as HTMLButtonElement).name;

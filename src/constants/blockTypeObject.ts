@@ -12,7 +12,11 @@ export const BLOCK_TYPE_OBJECT = [
     korName: '제어문',
   },
   {
-    name: 'expression',
-    korName: '표현식',
+    name: 'expressionValue',
+    korName: '표현식 값',
+  },
+  {
+    name: 'expressionLogical',
+    korName: '표현식 논리',
   },
 ];
