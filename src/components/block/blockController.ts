@@ -14,5 +14,7 @@ export const blockController = ({ x, y, width, height, name, setBlockInputObj }:
     return blockOutput({ x, y, width: 105, height, name });
   } else if (name === 'value') {
     return blockValue({ x, y, width, height, name, setBlockInputObj });
+  } else {
+    return document.createAttributeNS('http://www.w3.org/2000/svg', 'g');
   }
 };
