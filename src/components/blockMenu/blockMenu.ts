@@ -4,7 +4,14 @@ import { createElementCommon } from '../../utils/createElementCommon';
 import { blockMenuBlockNav } from './blockMenuBlockNav';
 import { blockMenuTypeNav } from './blockMenuTypeNav';
 
-export const blockMenu = ({ selectedMenuBlock, setSelectedMenuBlock, blockList, setBlockList }: BlockMenuProps) => {
+export const blockMenu = ({
+  selectedMenuBlock,
+  setSelectedMenuBlock,
+  blockList,
+  setBlockList,
+  uniqueId,
+  setUniqueId,
+}: BlockMenuProps) => {
   const [selectedType, setSelectedType] = useState(0);
   const [selectedTypeBlock, setSelectedTypeBlock] = useState(-1);
 
@@ -14,10 +21,11 @@ export const blockMenu = ({ selectedMenuBlock, setSelectedMenuBlock, blockList, 
     selectedType,
     selectedMenuBlock,
     setSelectedMenuBlock,
-    selectedTypeBlock,
     setSelectedTypeBlock,
     blockList,
     setBlockList,
+    uniqueId,
+    setUniqueId,
   });
 
   blockMenuDiv.appendChild(blockTypeNav);
