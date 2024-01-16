@@ -1,7 +1,7 @@
 import { BlockList, SetBlockList } from '../../types/stateType';
 import { blockController } from '../block/blockController';
 import { BlockInputObj } from '../../types/blockInputObj';
-import { makeDraggable } from '../../utils/makeDraggable';
+// import { makeDraggable } from '../../utils/makeDraggable';
 
 interface WorkspaceSvgProps {
   blockList: BlockList;
