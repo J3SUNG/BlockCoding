@@ -2,11 +2,12 @@ import {
   BlockList,
   SelectedMenuBlock,
   SelectedType,
-  SelectedTypeBlock,
   SetBlockList,
   SetSelectedMenuBlock,
   SetSelectedType,
   SetSelectedTypeBlock,
+  SetUniqueId,
+  UniqueId,
 } from './stateType';
 
 export interface BlockMenuProps {
@@ -14,11 +15,12 @@ export interface BlockMenuProps {
   setSelectedMenuBlock: SetSelectedMenuBlock;
   blockList: BlockList;
   setBlockList: SetBlockList;
+  uniqueId: UniqueId;
+  setUniqueId: SetUniqueId;
 }
 
 export interface BlockMenuBlockNavProps extends BlockMenuProps {
   selectedType: SelectedType;
-  selectedTypeBlock: SelectedTypeBlock;
   setSelectedTypeBlock: SetSelectedTypeBlock;
 }
 
