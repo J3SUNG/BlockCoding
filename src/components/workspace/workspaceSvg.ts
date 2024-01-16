@@ -30,7 +30,7 @@ export const workspaceSvg = ({ blockList, setBlockInputObj }: WorkspaceSvgProps)
     } else {
       if (obj.data && obj.data.value) {
         const g = blockController({ x, y, width, height, name: obj.name, setBlockInputObj });
-        svg.appendChild(g!);
+        svg.appendChild(g);
 
         objParser(obj.data.value + 1, x, y, width, height);
       }
