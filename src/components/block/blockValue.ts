@@ -2,12 +2,13 @@ import { useState } from '../../core/core';
 import { BlockPaintProps } from '../../types/blockPaintProps';
 
 interface BlockValueProps extends BlockPaintProps {
-  setBlockInputObj: ({ x, y, value, isView, setBlockValue }: any) => void;
+  setBlockInputObj?: ({ x, y, value, isView, setBlockValue }: any) => void;
+  value?: string;
 }
 
-export const blockValue = ({ x, y, width, height, setBlockInputObj }: BlockValueProps) => {
-  const [value, setValue] = useState('10');
-  const valueWidth = value.length * 18 < 60 ? 60 : value.length * 18;
+export const blockValue = ({ x, y, width, height, value, id }: BlockValueProps) => {
+  const valueWidth = value!.length || value!.length * 18 < 60 ? 60 : value!.length * 18;
+
   const color = 'lemonchiffon';
   const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
@@ -19,6 +20,7 @@ export const blockValue = ({ x, y, width, height, setBlockInputObj }: BlockValue
   path.setAttribute('fill', color);
   path.setAttribute('d', d);
   path.setAttribute('stroke', 'black');
+  path.setAttribute('id', id.toString());
 
   const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
   text.setAttribute('x', (x + 20 + valueWidth / 2).toString());
@@ -29,16 +31,12 @@ export const blockValue = ({ x, y, width, height, setBlockInputObj }: BlockValue
   text.setAttribute('text-anchor', 'middle');
   text.setAttribute('alignment-baseline', 'middle');
 
-  const textNode = document.createTextNode(value);
+  const textNode = document.createTextNode(value!);
   text.appendChild(textNode);
 
   g.appendChild(path);
   g.appendChild(text);
-  g.classList.add('draggable');
-
-  g.addEventListener('click', (e) => {
-    setBlockInputObj({ x, y, value, isView: true, setBlockValue: setValue });
-  });
+  g.setAttribute('id', 'block-menu__button');
 
   return g;
 };

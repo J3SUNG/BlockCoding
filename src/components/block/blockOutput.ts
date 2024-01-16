@@ -42,6 +42,7 @@ export const blockOutput = ({ x, y, width, height }: BlockPaintProps) => {
   g.appendChild(pathValue);
   g.appendChild(text);
   g.classList.add('draggable');
+  g.setAttribute('id', 'block-menu__button');
 
   return g;
 };

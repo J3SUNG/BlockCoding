@@ -48,6 +48,7 @@ export const blockStart = ({ x, y, width, height }: BlockPaintProps) => {
   g.appendChild(pathStartImg);
   g.appendChild(text);
   g.classList.add('draggable');
+  g.setAttribute('id', 'block-menu__button');
 
   return g;
 };

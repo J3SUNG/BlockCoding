@@ -4,17 +4,17 @@ import { blockOutput } from './blockOutput';
 import { blockValue } from './blockValue';
 
 interface BlockControllerProps extends BlockPaintProps {
-  setBlockInputObj: ({ x, y, value, isView, setBlockValue }: any) => void;
+  value?: string;
 }
 
-export const blockController = ({ x, y, width, height, name, setBlockInputObj }: BlockControllerProps) => {
+export const blockController = ({ x, y, width, height, name, value, id }: BlockControllerProps) => {
   if (name === 'start') {
-    return blockStart({ x, y, width: 220, height, name });
+    return blockStart({ x, y, width: 220, height, name, id });
   } else if (name === 'output') {
-    return blockOutput({ x, y, width: 105, height, name });
+    return blockOutput({ x, y, width: 105, height, name, id });
   } else if (name === 'value') {
-    return blockValue({ x, y, width, height, name, setBlockInputObj });
+    return blockValue({ x, y, width, height, name, value, id });
   } else {
-    return document.createAttributeNS('http://www.w3.org/2000/svg', 'g');
+    return document.createElementNS('http://www.w3.org/2000/svg', 'g');
   }
 };

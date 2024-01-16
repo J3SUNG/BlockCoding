@@ -4,4 +4,5 @@ export interface BlockPaintProps {
   y: number;
   width: number;
   height: number;
+  id: number;
 }
