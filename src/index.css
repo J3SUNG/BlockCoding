@@ -59,7 +59,8 @@ button {
   display: flex;
   background-color: #fff;
   border-right: 1px solid #e1e1e1;
-  min-width: 20rem;
+  min-width: 30rem;
+  width: 20rem;
 }
 
 #block-menu > nav {
@@ -69,6 +70,18 @@ button {
   min-height: 100%;
   padding: 1rem;
   border-left: 1px solid #e1e1e1;
+}
+
+#block-menu__nav-type {
+  width: 10rem;
+}
+
+#block-menu__nav-block {
+  width: 20rem;
+}
+
+#block-menu__button:hover {
+  cursor: pointer;
 }
 
 /* 워크스페이스 영역 */
