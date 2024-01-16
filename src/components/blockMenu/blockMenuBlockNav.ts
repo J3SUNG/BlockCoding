@@ -15,7 +15,7 @@ export const blockMenuBlockNav = ({
   uniqueId,
   setUniqueId,
 }: BlockMenuBlockNavProps) => {
-  const BlockNav = createElementCommon('nav', { id: 'block-menu__nav-block' });
+  const BlockNav = createElementCommon('nav', { id: 'nav-block' });
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('width', '100%');
   svg.setAttribute('height', '100%');

@@ -10,7 +10,7 @@ interface BlockMenuTypeNavProps {
 }
 
 export const blockMenuTypeNav = ({ selectedType, setSelectedType, setSelectedTypeBlock }: BlockMenuTypeNavProps) => {
-  const blockTypeNav = createElementCommon('nav', { id: 'block-menu__nav-type' });
+  const blockTypeNav = createElementCommon('nav', { id: 'nav-type' });
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('width', '100%');
   svg.setAttribute('height', '100%');
