@@ -72,17 +72,22 @@ button {
   border-left: 1px solid #e1e1e1;
 }
 
-#block-menu__nav-type {
-  width: 10rem;
-}
-
-#block-menu__nav-block {
-  width: 20rem;
-}
-
 #block-menu__button:hover {
   cursor: pointer;
 }
+
+/* nav 타입블럭 버튼 영역 */
+
+#nav-type {
+  width: 10rem;
+}
+
+/* nav 블럭 버튼 영역 */
+
+#nav-block {
+  width: 20rem;
+}
+
 
 /* 워크스페이스 영역 */
 #workspace {
