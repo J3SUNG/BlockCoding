@@ -1,13 +1,15 @@
-import { BlockList } from '../../types/stateType';
+import { BlockList, SetBlockList } from '../../types/stateType';
 import { blockController } from '../block/blockController';
 import { BlockInputObj } from '../../types/blockInputObj';
+import { makeDraggable } from '../../utils/makeDraggable';
 
 interface WorkspaceSvgProps {
   blockList: BlockList;
+  setBlockList: SetBlockList;
   setBlockInputObj: ({ x, y, value, isView, setBlockValue }: BlockInputObj) => void;
 }
 
-export const workspaceSvg = ({ blockList, setBlockInputObj }: WorkspaceSvgProps) => {
+export const workspaceSvg = ({ blockList, setBlockList, setBlockInputObj }: WorkspaceSvgProps) => {
   const x = 50;
   const y = 50;
   const width = 100;
@@ -29,7 +31,15 @@ export const workspaceSvg = ({ blockList, setBlockInputObj }: WorkspaceSvgProps)
       y = originalY;
     } else {
       if (obj.data && obj.data.value) {
-        const g = blockController({ x, y, width, height, name: obj.name, setBlockInputObj });
+        const g = blockController({
+          x: obj.data.x,
+          y: obj.data.y,
+          width,
+          height,
+          name: obj.name,
+          value: obj.data.value.toString(),
+          id: obj.data.id,
+        });
         svg.appendChild(g!);
 
         objParser(obj.data.value + 1, x, y, width, height);
@@ -38,6 +48,8 @@ export const workspaceSvg = ({ blockList, setBlockInputObj }: WorkspaceSvgProps)
   }
 
   objParser(blockList, x, y, width, height);
+
+  // makeDraggable({ svg, blockList, setBlockList });
 
   return svg;
 };

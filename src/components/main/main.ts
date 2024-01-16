@@ -8,9 +8,17 @@ import { workspace } from '../workspace/workspace';
 export const main = () => {
   const [selectedMenuBlock, setSelectedMenuBlock] = useState(-1);
   const [blockList, setBlockList] = useState<BlockObject[]>([]);
+  const [uniqueId, setUniqueId] = useState(0);
 
-  const blockMenuComponent = blockMenu({ selectedMenuBlock, setSelectedMenuBlock, blockList, setBlockList });
-  const workspaceComponent = workspace({ blockList });
+  const blockMenuComponent = blockMenu({
+    selectedMenuBlock,
+    setSelectedMenuBlock,
+    blockList,
+    setBlockList,
+    uniqueId,
+    setUniqueId,
+  });
+  const workspaceComponent = workspace({ blockList, setBlockList });
   const consoleSpaceComponent = consoleSpace();
 
   const main = createElementCommon('div', { id: 'main' });
