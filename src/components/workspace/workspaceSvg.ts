@@ -30,10 +30,6 @@ export const workspaceSvg = ({ blockList, setBlockList, setBlockInputObj }: Work
   svg.setAttribute('height', '100%');
 
   objParser({ svg, obj: test, x, y, width, height });
-  // objParser(blockList, x, y, width, height);
-
-  // makeDraggable({ svg, blockList, setBlockList });
-
   return svg;
 };
 
@@ -42,7 +38,7 @@ const objParser = ({ svg, obj, x, y, width, height }: objParserProps) => {
 
   if (Array.isArray(obj)) {
     let originalY = y;
-    for (let item of obj) {
+    for (const item of obj) {
       objParser({ svg, obj: item, x, y, width, height });
       y += height;
     }
