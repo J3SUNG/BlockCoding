@@ -3,7 +3,7 @@ import { BLOCK_MAP } from '../../constants/blockMap';
 import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { BLOCK_TYPE_OBJECT } from '../../constants/blockTypeObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { blockController } from '../block/blockController';
+import { blockMenuBlockButton } from './blockMenuBlockButton';
 
 export const blockMenuBlockNav = ({
   selectedType,
@@ -15,25 +15,18 @@ export const blockMenuBlockNav = ({
   uniqueId,
   setUniqueId,
 }: BlockMenuBlockNavProps) => {
-  const BlockNav = createElementCommon('nav', { id: 'nav-block' });
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', '100%');
-  svg.setAttribute('height', '100%');
+  const blockNav = createElementCommon('nav', { id: 'nav-block' });
+  const ul = createElementCommon('ul', {});
 
-  const blockListG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-
-  BLOCK_OBJECT.filter((block) => block.type === BLOCK_TYPE_OBJECT[selectedType].name).forEach((block, index) => {
-    const blockG = blockController({
-      x: 40,
-      y: 10,
-      width: 200,
-      height: 50,
+  BLOCK_OBJECT.filter((block, index) => block.type === BLOCK_TYPE_OBJECT[selectedType].name).forEach((block, index) => {
+    const li = blockMenuBlockButton({
       name: block.name,
-      value: block.name === 'value' ? block.data.value.toString() : undefined,
-      id: block.data.id!,
+      type: block.type,
+      x: 20,
+      y: index * 80 + 20,
     });
 
-    blockG!.addEventListener('click', (e) => {
+    li?.addEventListener('click', (e) => {
       setSelectedTypeBlock(index);
       const name = block.name;
 
@@ -52,11 +45,10 @@ export const blockMenuBlockNav = ({
         setSelectedMenuBlock(blockIndex);
       }
     });
-    blockListG.appendChild(blockG!);
+    ul.appendChild(li!);
   });
 
-  svg.appendChild(blockListG);
-  BlockNav.appendChild(svg);
+  blockNav.appendChild(ul);
 
-  return BlockNav;
+  return blockNav;
 };
