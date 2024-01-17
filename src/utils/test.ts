@@ -4,8 +4,8 @@ export const test = [
     type: 'declare',
     data: {
       id: '1',
-      x: 40,
-      y: 20,
+      x: 60,
+      y: 30,
       value: [
         {
           name: 'output',
@@ -31,15 +31,15 @@ export const test = [
           type: 'general',
           data: {
             id: '4',
-            x: 20,
-            y: 320,
+            x: 40,
+            y: 130,
             value: {
               name: 'value',
               type: 'expressionValue',
               data: {
                 id: '5',
-                x: 20,
-                y: 320,
+                x: 40,
+                y: 130,
                 value: 200,
               },
             },
@@ -54,14 +54,14 @@ export const test = [
     data: {
       id: '6',
       x: 320,
-      y: 20,
+      y: 120,
       value: {
         name: 'value',
         type: 'expressionValue',
         data: {
           id: '7',
           x: 320,
-          y: 20,
+          y: 120,
           value: 333,
         },
       },
@@ -82,8 +82,8 @@ export const test = [
     type: 'declare',
     data: {
       id: '9',
-      x: 620,
-      y: 20,
+      x: 640,
+      y: 30,
       value: [
         {
           name: 'output',
