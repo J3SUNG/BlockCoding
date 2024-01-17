@@ -1,7 +1,6 @@
 import { BlockObject } from '../types/blockObject';
 import { PROGRAM_STOP } from '../constants/programState';
 import { BlockList, SetConsoleLog, SetProgramState } from '../types/stateType';
-import { test } from './test';
 
 interface RunProgramProps {
   blockList: BlockList;
@@ -10,7 +9,7 @@ interface RunProgramProps {
 }
 
 export const runProgram = ({ blockList, setConsoleLog, setProgramState }: RunProgramProps) => {
-  const startBlock = test.filter((block) => {
+  const startBlock = blockList.filter((block) => {
     return block.name === 'start' && block.data;
   });
   const log: string[] = [];
