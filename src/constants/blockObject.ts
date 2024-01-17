@@ -1,196 +1,140 @@
-export const BLOCK_OBJECT = [
+import { BlockObject } from '../types/blockObject';
+
+export const BLOCK_OBJECT: BlockObject[] = [
   {
     name: 'start',
     type: 'declare',
     data: {
-      id: 0,
+      id: '',
       x: 20,
       y: 20,
-      value: [],
+      value: [] as BlockObject[],
     },
   },
   {
     name: 'variable',
     type: 'general',
     data: {
-      varName: {},
-      value: {},
+      id: '',
+      x: 20,
+      y: 20,
+      varName: {} as BlockObject,
+      value: {} as BlockObject,
     },
   },
   {
     name: 'output',
     type: 'general',
     data: {
-      id: 0,
+      id: '',
       x: 20,
       y: 20,
-      value: {},
+      value: {} as BlockObject,
     },
   },
   {
     name: 'timer',
     type: 'general',
     data: {
-      value: {},
+      id: '',
+      x: 20,
+      y: 20,
+      value: {} as BlockObject,
     },
   },
   {
     name: 'condition',
     type: 'control',
     data: {
-      condition: {},
-      value: [],
+      id: '',
+      x: 20,
+      y: 20,
+      condition: {} as BlockObject,
+      value: [] as BlockObject[],
     },
   },
   {
     name: 'loop',
     type: 'control',
     data: {
-      condition: {},
-      value: [],
+      id: '',
+      x: 20,
+      y: 20,
+      condition: {} as BlockObject,
+      value: [] as BlockObject[],
     },
   },
   {
     name: 'value',
     type: 'expressionValue',
     data: {
-      id: 0,
+      id: '',
       x: 20,
       y: 20,
-      value: 10,
+      value: '10' as string,
     },
   },
   {
     name: 'input',
     type: 'expressionValue',
     data: {
-      value: {},
+      id: '',
+      x: 20,
+      y: 20,
+      value: {} as BlockObject,
     },
   },
   {
     name: 'refVariable',
     type: 'expressionValue',
     data: {
-      value: {},
+      id: '',
+      x: 20,
+      y: 20,
+      value: {} as BlockObject,
     },
   },
   {
     name: 'arithmetic',
     type: 'expressionValue',
     data: {
-      operator: {},
-      value: [],
+      id: '',
+      x: 20,
+      y: 20,
+      operator: {} as BlockObject,
+      value: [] as BlockObject[],
     },
   },
   {
     name: 'comparison',
     type: 'expressionLogical',
     data: {
-      operator: {},
-      value: [],
+      id: '',
+      x: 20,
+      y: 20,
+      operator: {} as BlockObject,
+      value: [] as BlockObject[],
     },
   },
   {
     name: 'negation',
     type: 'expressionLogical',
     data: {
-      value: {},
+      id: '',
+      x: 20,
+      y: 20,
+      value: {} as BlockObject,
     },
   },
   {
     name: 'logical',
     type: 'expressionLogical',
     data: {
-      operator: {},
-      value: [],
+      id: '',
+      x: 20,
+      y: 20,
+      operator: {} as BlockObject,
+      value: [] as BlockObject[],
     },
   },
 ];
-
-// export const BLOCK_OBJECT2 = [
-//   {
-//     name: 'start',
-//     type: 'declare',
-//     child: [],
-//     x: 0,
-//     y: 0,
-//     width: 200,
-//     height: 60,
-//   },
-//   {
-//     name: 'variable',
-//     type: 'general',
-//     varName: {},
-//     value: {},
-//   },
-//   {
-//     name: 'output',
-//     type: 'general',
-//     value: {},
-//   },
-//   {
-//     name: 'timer',
-//     type: 'general',
-//     value: {},
-//   },
-//   {
-//     name: 'condition',
-//     type: 'control',
-//     condition: {},
-//     value: [],
-//   },
-//   {
-//     name: 'loop',
-//     type: 'control',
-//     condition: {},
-//     value: [],
-//   },
-//   {
-//     name: 'value',
-//     type: 'expressionValue',
-//     value: {},
-//   },
-//   {
-//     name: 'input',
-//     type: 'expressionValue',
-//     value: {},
-//   },
-//   {
-//     name: 'refVariable',
-//     type: 'expressionValue',
-//     data: {
-//       value: {},
-//     },
-//   },
-//   {
-//     name: 'arithmetic',
-//     type: 'expressionValue',
-//     data: {
-//       operator: {},
-//       value: [],
-//     },
-//   },
-//   {
-//     name: 'comparison',
-//     type: 'expressionLogical',
-//     data: {
-//       operator: {},
-//       value: [],
-//     },
-//   },
-//   {
-//     name: 'negation',
-//     type: 'expressionLogical',
-//     data: {
-//       value: {},
-//     },
-//   },
-//   {
-//     name: 'logical',
-//     type: 'expressionLogical',
-//     data: {
-//       operator: {},
-//       value: [],
-//     },
-//   },
-// ];
