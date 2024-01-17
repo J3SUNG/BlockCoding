@@ -18,5 +18,5 @@ export type SetUniqueId = (uniqueId: number) => void;
 export type ConsoleLog = string[];
 export type SetConsoleLog = (consoleLog: ConsoleLog) => void;
 
-export type ProgramState = number;
+export type ProgramState = 0 | 1 | 2;
 export type SetProgramState = (programState: ProgramState) => void;
