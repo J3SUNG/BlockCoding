@@ -72,22 +72,55 @@ button {
   border-left: 1px solid #e1e1e1;
 }
 
-#block-menu__button:hover {
-  cursor: pointer;
-}
-
 /* nav 타입블럭 버튼 영역 */
 
 #nav-type {
   width: 10rem;
 }
 
+.nav-type__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  border-radius: 0.25rem;
+  border: 1px solid #e1e1e1;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.nav-type__button-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-type__button--declare {
+  background-color: #89D466
+}
+
+.nav-type__button--general {
+  background-color: #ED8B55
+}
+
+.nav-type__button--control {
+  background-color: #14B7D8
+}
+
+.nav-type__button--expression-value {
+  background-color: #F9DC6D
+}
+
+.nav-type__button--expression-logical {
+  background-color: #1C3C9A
+}
+
 /* nav 블럭 버튼 영역 */
 
 #nav-block {
+  position: relative;
   width: 20rem;
 }
-
 
 /* 워크스페이스 영역 */
 #workspace {
@@ -163,4 +196,46 @@ button {
 .bg-red {
   background-color: rgb(255 69 58);
   color: #fff;
+}
+
+/* 블럭 영역 */
+.block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  cursor: pointer;
+  padding: 0px 20px;
+  position: absolute
+}
+
+.block--declare {
+  height: 50px;
+  background-color: #89D466;
+}
+
+.block--general {
+  height: 50px;
+  background-color: #ED8B55;
+}
+
+.block--control {
+  height: 50px;
+  background-color: #14B7D8;
+}
+
+.block--expression-value {
+  height: 40px;
+  background-color: #F9DC6D;
+}
+
+.block--expression-logical {
+  height: 40px;
+  background-color: #1C3C9A;
+}
+
+.block__text {
+  font-size: 18px;
+  font-weight: bold;
+  color:white;
 }
