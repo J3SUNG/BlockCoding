@@ -1,7 +1,6 @@
-import { App } from './App';
+import { app } from './app';
+import { render } from './core/core';
 
-const rootElement = document.querySelector('#root') as HTMLElement;
-const appComponent = App();
+const root = document.querySelector('#root') as HTMLElement;
 
-rootElement.innerHTML = '';
-rootElement.innerHTML = appComponent;
+render(app, root);
