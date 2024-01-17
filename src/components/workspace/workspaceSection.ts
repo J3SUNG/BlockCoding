@@ -9,7 +9,7 @@ interface WorkspaceSectionProps {
   setBlockList: SetBlockList;
 }
 
-interface ObjParserProps {
+interface paintBlockListProps {
   section: any;
   obj: any;
   x: number;
@@ -35,21 +35,21 @@ export const workspaceSection = ({ blockList, setBlockList }: WorkspaceSectionPr
     event.preventDefault();
     const name = event.dataTransfer!.getData('name');
     const newBlockList: BlockList = [...blockList, BLOCK_OBJECT[BLOCK_MAP[name]]];
-    console.log(event);
+
     setBlockList(newBlockList);
   });
 
-  objParser({ section, obj: blockList, x, y, width, height });
+  paintBlockList({ section, obj: blockList, x, y, width, height });
   return section;
 };
 
-const objParser = ({ section, obj, x, y, width, height }: ObjParserProps) => {
+const paintBlockList = ({ section, obj, x, y, width, height }: paintBlockListProps) => {
   if (!obj) return;
 
   if (Array.isArray(obj)) {
     let originalY = y;
     for (const item of obj) {
-      objParser({ section, obj: item, x, y, width, height });
+      paintBlockList({ section, obj: item, x, y, width, height });
       y += height;
     }
     y = originalY;
@@ -65,7 +65,7 @@ const objParser = ({ section, obj, x, y, width, height }: ObjParserProps) => {
       });
       section.appendChild(g);
 
-      objParser({ section, obj: obj.data.value, x, y, width, height });
+      paintBlockList({ section, obj: obj.data.value, x, y, width, height });
     }
   }
 };
