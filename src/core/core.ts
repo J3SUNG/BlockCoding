@@ -10,23 +10,32 @@ const core = () => {
     rootComponent: null,
   };
 
-  const useState = <T>(initState: T): [() => T, (newState: T) => void] => {
+  const useState = <T>(initState: T): [T, (newState: T) => void] => {
     const { currentStateKey: key, states } = options;
-    if (states.length === key) states.push(initState);
+
+    if (states.length === key) {
+      states.push(initState);
+    }
 
     const setState = (newState: T) => {
       states[key] = newState;
       _render();
     };
+    const state = states[key];
+
     options.currentStateKey += 1;
-    const state = () => states[key];
+
     return [state, setState];
   };
 
   const _render = debounceFrame(() => {
     options.currentStateKey = 0;
     const { root, rootComponent } = options;
-    if (!root || !rootComponent) return;
+
+    if (!root || !rootComponent) {
+      return;
+    }
+
     root.innerHTML = '';
     root.appendChild(rootComponent());
     options.renderCount += 1;
