@@ -1,4 +1,8 @@
-export const BLOCK_MAP = {
+interface BlockMapObject {
+  [key: string]: number;
+}
+
+export const BLOCK_MAP: BlockMapObject = {
   start: 0,
   variable: 1,
   output: 2,
