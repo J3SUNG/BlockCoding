@@ -45,8 +45,8 @@ const objParser = ({ obj, log }: any) => {
     //     objParser(item);
     //   });
     // }
-    return;
+    return null;
   } else {
-    return;
+    return null;
   }
 };
