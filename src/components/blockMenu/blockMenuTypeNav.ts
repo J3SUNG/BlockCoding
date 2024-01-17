@@ -10,10 +10,12 @@ export const blockMenuTypeNav = ({ selectedType, setSelectedType, setSelectedTyp
       textContent: blockType.korName,
       className: `${selectedType === index ? 'bg-yellow' : 'bg-lightgray'}`,
     });
+
     button.onclick = () => {
       setSelectedType(index);
       setSelectedTypeBlock(-1);
     };
+
     blockTypeNav.appendChild(button);
   });
 

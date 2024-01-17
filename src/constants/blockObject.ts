@@ -53,7 +53,7 @@ export const BLOCK_OBJECT = [
   {
     name: 'value',
     korName: '값',
-    type: 'expression',
+    type: 'expressionValue',
     data: {
       value: {},
     },
@@ -61,7 +61,7 @@ export const BLOCK_OBJECT = [
   {
     name: 'input',
     korName: '입력',
-    type: 'expression',
+    type: 'expressionValue',
     data: {
       value: {},
     },
@@ -69,7 +69,7 @@ export const BLOCK_OBJECT = [
   {
     name: 'refVariable',
     korName: '변수 호출',
-    type: 'expression',
+    type: 'expressionValue',
     data: {
       varName: {},
     },
@@ -77,7 +77,7 @@ export const BLOCK_OBJECT = [
   {
     name: 'arithmetic',
     korName: '산술 연산',
-    type: 'expression',
+    type: 'expressionValue',
     data: {
       operator: {},
       value: [],
@@ -86,7 +86,7 @@ export const BLOCK_OBJECT = [
   {
     name: 'comparison',
     korName: '비교 연산',
-    type: 'expression',
+    type: 'expressionLogical',
     data: {
       operator: {},
       value: [],
@@ -95,7 +95,7 @@ export const BLOCK_OBJECT = [
   {
     name: 'negation',
     korName: '부정 연산',
-    type: 'expression',
+    type: 'expressionLogical',
     data: {
       value: {},
     },
@@ -103,7 +103,7 @@ export const BLOCK_OBJECT = [
   {
     name: 'logical',
     korName: '논리 연산',
-    type: 'expression',
+    type: 'expressionLogical',
     data: {
       operator: {},
       value: [],
