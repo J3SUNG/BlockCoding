@@ -5,16 +5,38 @@ import { blockValue } from './blockValue';
 
 interface BlockControllerProps extends BlockPaintProps {
   value?: string;
+  type: string;
+  name: string;
 }
 
-export const blockController = ({ x, y, width, height, name, value, id }: BlockControllerProps) => {
+export const blockController = ({ x, y, name, value, id, type }: BlockControllerProps) => {
+  let block = null;
+
   if (name === 'start') {
-    return blockStart({ x, y, width: 220, height, name, id });
+    block = blockStart({ x, y, id });
   } else if (name === 'output') {
-    return blockOutput({ x, y, width: 105, height, name, id });
+    block = blockOutput({ x, y, id });
   } else if (name === 'value') {
-    return blockValue({ x, y, width, height, name, value, id });
+    block = blockValue({ x, y, value, id });
   } else {
-    return document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    block = document.createElement('li');
   }
+
+  console.log(x, y);
+
+  if (type === 'declare') {
+    block.setAttribute('class', 'block block--declare');
+  } else if (type === 'general') {
+    block.setAttribute('class', 'block block--general');
+  } else if (type === 'control') {
+    block.setAttribute('class', 'block block--control');
+  } else if (type === 'expressionValue') {
+    block.setAttribute('class', 'block block--expression-value');
+  } else if (type === 'expressionLogical') {
+    block.setAttribute('class', 'block block--expression-logical');
+  }
+
+  block.setAttribute('style', `left: ${x}px; top: ${y}px`);
+
+  return block;
 };
