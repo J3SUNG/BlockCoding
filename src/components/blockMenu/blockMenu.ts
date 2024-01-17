@@ -1,10 +1,10 @@
+import { BlockMenuProps } from '../../types/blockMenu';
 import { useState } from '../../core/core';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { BlockMenuProps } from '../../types/blockMenuProps';
 import { blockMenuBlockNav } from './blockMenuBlockNav';
 import { blockMenuTypeNav } from './blockMenuTypeNav';
 
-export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlockList }: BlockMenuProps) => {
+export const blockMenu = ({ selectedMenuBlock, setSelectedMenuBlock, blockList, setBlockList }: BlockMenuProps) => {
   const [selectedType, setSelectedType] = useState(0);
   const [selectedTypeBlock, setSelectedTypeBlock] = useState(-1);
 
@@ -12,8 +12,8 @@ export const blockMenu = ({ selectedBlock, setSelectedBlock, blockList, setBlock
   const blockTypeNav = blockMenuTypeNav({ selectedType, setSelectedType, setSelectedTypeBlock });
   const blockNav = blockMenuBlockNav({
     selectedType,
-    selectedBlock,
-    setSelectedBlock,
+    selectedMenuBlock,
+    setSelectedMenuBlock,
     selectedTypeBlock,
     setSelectedTypeBlock,
     blockList,

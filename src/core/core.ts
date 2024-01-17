@@ -1,5 +1,12 @@
-import { StateOptions } from '../types/coreStateObject';
 import { debounceFrame } from '../utils/debounceFrame';
+
+export interface StateOptions {
+  currentStateKey: number;
+  renderCount: number;
+  states: any[];
+  root: HTMLElement | null;
+  rootComponent: (() => DocumentFragment) | null;
+}
 
 const core = () => {
   const options: StateOptions = {

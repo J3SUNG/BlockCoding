@@ -79,6 +79,16 @@ button {
   position: relative;
 }
 
+#block-input {
+  position: absolute; 
+  font-size: 18px; 
+  font-weight: bold; 
+  text-align: center; 
+  height: 20px;
+  margin-top: 3px;
+  width: 100%;
+}
+
 #trash-bin {
   position: absolute;
   bottom: 2rem;

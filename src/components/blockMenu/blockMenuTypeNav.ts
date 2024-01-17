@@ -1,6 +1,12 @@
 import { BLOCK_TYPE_OBJECT } from '../../constants/blockTypeObject';
-import { BlockMenuTypeNavProps } from '../../types/blockMenuTypeNavProps';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { SelectedType, SetSelectedType, SetSelectedTypeBlock } from '../../types/stateType';
+
+interface BlockMenuTypeNavProps {
+  selectedType: SelectedType;
+  setSelectedType: SetSelectedType;
+  setSelectedTypeBlock: SetSelectedTypeBlock;
+}
 
 export const blockMenuTypeNav = ({ selectedType, setSelectedType, setSelectedTypeBlock }: BlockMenuTypeNavProps) => {
   const blockTypeNav = createElementCommon('nav', {});
