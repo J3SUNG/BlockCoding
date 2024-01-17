@@ -39,13 +39,6 @@ const objParser = ({ obj, log }: any) => {
     log.push(returnValue);
   } else if (obj.name === 'value') {
     return obj.data.value;
-  } else if (obj.name === 'condition') {
-    // if (Array.isArray(obj.data.value)) {
-    //   obj.data.value.forEach((item: BlockObject) => {
-    //     objParser(item);
-    //   });
-    // }
-    return null;
   } else {
     return null;
   }
