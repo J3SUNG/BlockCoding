@@ -31,7 +31,7 @@ const objParser = ({ obj, log }: any) => {
     });
   }
   if (obj.name === 'start') {
-    // 예외처리 추가 필요
+    // TODO: 예외처리 추가 필요
     return null;
   } else if (obj.name === 'output') {
     const value = obj.data.value as BlockObject;
