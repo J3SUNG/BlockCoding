@@ -89,12 +89,6 @@ button {
   margin-bottom: 20px;
 }
 
-.nav-type__button-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-}
-
 .nav-type__button--declare {
   background-color: #89D466
 }
@@ -113,6 +107,12 @@ button {
 
 .nav-type__button--expression-logical {
   background-color: #1C3C9A
+}
+
+.nav-type__button-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
 }
 
 /* nav 블럭 버튼 영역 */
