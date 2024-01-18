@@ -12,5 +12,5 @@ export type SetSeqNo = (seqNo: SeqNo) => void;
 export type ConsoleLog = string[];
 export type SetConsoleLog = (consoleLog: ConsoleLog) => void;
 
-export type ProgramState = 0 | 1 | 2;
+export type ProgramState = 'run' | 'stop' | 'pause';
 export type SetProgramState = (programState: ProgramState) => void;

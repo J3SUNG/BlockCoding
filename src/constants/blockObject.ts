@@ -71,7 +71,7 @@ export const BLOCK_OBJECT: BlockObject[] = [
       id: '',
       x: 20,
       y: 20,
-      value: '10' as string,
+      value: '값' as string,
     },
   },
   {

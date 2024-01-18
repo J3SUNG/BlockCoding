@@ -4,7 +4,6 @@ import { blockMenu } from '../blockMenu/blockMenu';
 import { consoleSpace } from '../consoleSpace/consoleSpace';
 import { workspace } from '../workspace/workspace';
 import { BlockList, ConsoleLog, ProgramState, SetConsoleLog, SetProgramState } from '../../types/stateType';
-import { PROGRAM_RUN } from '../../constants/programState';
 import { runProgram } from '../../utils/runProgram';
 
 interface MainProps {
@@ -18,7 +17,7 @@ export const main = ({ consoleLog, programState, setConsoleLog, setProgramState 
   const [blockList, setBlockList] = useState<BlockList>([]);
   const [seqNo, setSeqNo] = useState(0);
 
-  if (programState === PROGRAM_RUN) {
+  if (programState === 'run') {
     runProgram({ blockList, setConsoleLog, setProgramState });
   }
 

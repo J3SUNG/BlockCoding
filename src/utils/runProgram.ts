@@ -1,5 +1,4 @@
 import { BlockObject } from '../types/blockObject';
-import { PROGRAM_STOP } from '../constants/programState';
 import { BlockList, SetConsoleLog, SetProgramState } from '../types/stateType';
 
 interface RunProgramProps {
@@ -19,11 +18,10 @@ export const runProgram = ({ blockList, setConsoleLog, setProgramState }: RunPro
   });
 
   setConsoleLog(log);
-  setProgramState(PROGRAM_STOP);
+  setProgramState('stop');
 };
 
 const objParser = ({ obj, log }: any) => {
-  console.log(obj);
   if (Array.isArray(obj)) {
     obj.forEach((item: BlockObject) => {
       objParser({ obj: item, log });

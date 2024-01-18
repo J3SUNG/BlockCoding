@@ -1,11 +1,10 @@
 import { useState } from '../core/core';
 import { gnb } from '../components/gnb/gnb';
 import { main } from '../components/main/main';
-import { PROGRAM_STOP } from '../constants/programState';
 import { ConsoleLog, ProgramState } from '../types/stateType';
 
 export const blockCoding = () => {
-  const [programState, setProgramState] = useState<ProgramState>(PROGRAM_STOP);
+  const [programState, setProgramState] = useState<ProgramState>('stop');
   const [consoleLog, setConsoleLog] = useState<ConsoleLog>([]);
 
   const gnbComponent = gnb({ setProgramState });

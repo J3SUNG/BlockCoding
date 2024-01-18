@@ -1,4 +1,3 @@
-import { PROGRAM_RUN } from '../../constants/programState';
 import { SetProgramState } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 
@@ -16,7 +15,7 @@ export const gnb = ({ setProgramState }: GnbProps) => {
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
 
   playButton.addEventListener('click', () => {
-    setProgramState(PROGRAM_RUN);
+    setProgramState('run');
   });
 
   nav.appendChild(saveButton);
