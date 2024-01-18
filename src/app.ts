@@ -1,5 +1,5 @@
-import './reset.css';
-import './index.css';
+import './styles/reset.css';
+import './styles/index.css';
 import { blockCoding } from './pages/blockCoding';
 
 export const app = () => {
