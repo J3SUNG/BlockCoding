@@ -3,7 +3,6 @@ import { blockController } from '../block/blockController';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { BLOCK_MAP } from '../../constants/blockMap';
-import { findTargetBlock } from '../../utils/findTargetBlock';
 
 interface WorkspaceSectionProps {
   blockList: BlockList;
@@ -46,14 +45,7 @@ export const workspaceSection = ({ blockList, setBlockList, seqNo, setSeqNo }: W
     event.preventDefault();
     console.log(blockList);
     if (event.target !== section) {
-      const target = event.target as Element;
-      const uniqueId = target.closest('div')?.id ?? '';
-      const name = event.dataTransfer!.getData('name');
-      const type = event.dataTransfer!.getData('type');
-
-      findTargetBlock({ targetUniqueId: uniqueId, name, type, obj: blockList, seqNo, setSeqNo });
-      // TODO: uniqueId 넣어줘야함.
-      setBlockList([...blockList]);
+      // TODO: 다른 블럭들과 이벤트 발생
     } else {
       dropWorkspace({ section, event, blockList, setBlockList, seqNo, setSeqNo });
     }
