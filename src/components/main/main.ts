@@ -15,23 +15,15 @@ interface MainProps {
 }
 
 export const main = ({ consoleLog, programState, setConsoleLog, setProgramState }: MainProps) => {
-  const [selectedMenuBlock, setSelectedMenuBlock] = useState(-1);
   const [blockList, setBlockList] = useState<BlockList>([]);
-  const [uniqueId, setUniqueId] = useState(0);
+  const [seqNo, setSeqNo] = useState(0);
 
   if (programState === PROGRAM_RUN) {
     runProgram({ blockList, setConsoleLog, setProgramState });
   }
 
-  const blockMenuComponent = blockMenu({
-    selectedMenuBlock,
-    setSelectedMenuBlock,
-    blockList,
-    setBlockList,
-    uniqueId,
-    setUniqueId,
-  });
-  const workspaceComponent = workspace({ blockList, setBlockList });
+  const blockMenuComponent = blockMenu();
+  const workspaceComponent = workspace({ blockList, setBlockList, seqNo, setSeqNo });
   const consoleSpaceComponent = consoleSpace({ consoleLog });
 
   const main = createElementCommon('div', { id: 'main' });

@@ -1,28 +1,28 @@
-import { BlockPaintProps } from '../../types/blockPaintProps';
 import { blockStart } from './blockStart';
 import { blockOutput } from './blockOutput';
 import { blockValue } from './blockValue';
 
-interface BlockControllerProps extends BlockPaintProps {
+interface BlockControllerProps {
   value?: string;
   type: string;
   name: string;
+  x: number;
+  y: number;
+  id: string;
 }
 
 export const blockController = ({ x, y, name, value, id, type }: BlockControllerProps) => {
   let block = null;
 
   if (name === 'start') {
-    block = blockStart({ x, y, id });
+    block = blockStart({ id });
   } else if (name === 'output') {
-    block = blockOutput({ x, y, id });
+    block = blockOutput({ id });
   } else if (name === 'value') {
-    block = blockValue({ x, y, value, id });
+    block = blockValue({ id });
   } else {
     block = document.createElement('li');
   }
-
-  console.log(x, y);
 
   if (type === 'declare') {
     block.setAttribute('class', 'block block--declare');

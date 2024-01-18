@@ -1,7 +1,10 @@
 import { createElementCommon } from '../../utils/createElementCommon';
-import { BlockPaintProps } from '../../types/blockPaintProps';
 
-export const blockOutput = ({ x, y, id }: BlockPaintProps) => {
+interface BlockOutputProps {
+  id: string;
+}
+
+export const blockOutput = ({ id }: BlockOutputProps) => {
   const div = createElementCommon('div', { id });
   const p = createElementCommon('p', { className: 'block__text', textContent: '출력' });
 

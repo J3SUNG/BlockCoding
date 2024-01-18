@@ -1,5 +1,3 @@
-import { BlockPaintProps } from '../../types/blockPaintProps';
-
 interface BlockMenuBlockButtonProps {
   name: string;
   type: string;
@@ -27,19 +25,11 @@ export const blockMenuBlockButton = ({ name, type, x, y }: BlockMenuBlockButtonP
   li.setAttribute('style', `left: ${x}px; top: ${y}px`);
 
   li.draggable = true;
-  li.addEventListener('dragstart', function (event: any) {
-    console.log(event.clientX, event.clientY);
-    event.dataTransfer.setData('name', name);
-    event.dataTransfer.setData('x', event.offsetX);
-    event.dataTransfer.setData('y', event.offsetY);
-    console.log(event);
-  });
-  li.addEventListener('dragend', function (event: any) {
-    console.log(event);
-  });
-
-  li.addEventListener('mouseup', function (event: any) {
-    console.log(event);
+  li.addEventListener('dragstart', function (event: DragEvent) {
+    event.dataTransfer?.setData('name', name);
+    event.dataTransfer?.setData('type', type);
+    event.dataTransfer?.setData('offsetX', event.offsetX.toString());
+    event.dataTransfer?.setData('offsetY', event.offsetY.toString());
   });
 
   li.appendChild(p);
