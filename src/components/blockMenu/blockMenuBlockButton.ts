@@ -1,3 +1,5 @@
+import { createElementCommon } from '../../utils/createElementCommon';
+
 interface BlockMenuBlockButtonProps {
   name: string;
   type: string;
@@ -6,10 +8,8 @@ interface BlockMenuBlockButtonProps {
 }
 
 export const blockMenuBlockButton = ({ name, type, x, y }: BlockMenuBlockButtonProps) => {
-  const li = document.createElement('li');
-  const p = document.createElement('p');
-  p.setAttribute('class', 'block__text');
-  p.textContent = name;
+  const li = createElementCommon('li', {});
+  const p = createElementCommon('p', { className: 'block__text', textContent: name });
 
   if (type === 'declare') {
     li.setAttribute('class', 'block block--declare');
