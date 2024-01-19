@@ -59,8 +59,8 @@ button {
   display: flex;
   background-color: #fff;
   border-right: 1px solid #e1e1e1;
-  min-width: 30rem;
-  width: 20rem;
+  min-width: 500px;
+  width: 500px;
 }
 
 #block-menu > nav {
@@ -296,4 +296,9 @@ button {
   color: white;
   text-align: center;
   border: none;
+}
+
+[draggable="true"] {
+  position: relative;
+  z-index: 1;
 }
