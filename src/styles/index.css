@@ -196,7 +196,8 @@ button {
   height: 50px;
   cursor: pointer;
   padding: 0px 20px;
-  position: absolute
+  position: absolute;
+  transform: translate(0, 0);
 }
 
 .block--declare {
@@ -296,9 +297,4 @@ button {
   color: white;
   text-align: center;
   border: none;
-}
-
-[draggable="true"] {
-  position: relative;
-  z-index: 1;
 }
