@@ -128,16 +128,7 @@ button {
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc1JyBoZWlnaHQ9JzUnPgo8cmVjdCB3aWR0aD0nNScgaGVpZ2h0PSc1JyBmaWxsPScjZmZmJy8+CjxyZWN0IHdpZHRoPScxJyBoZWlnaHQ9JzEnIGZpbGw9JyNjY2MnLz4KPC9zdmc+');
   background-repeat: repeat;
   position: relative;
-}
-
-#block-input {
-  position: absolute; 
-  font-size: 18px; 
-  font-weight: bold; 
-  text-align: center; 
-  height: 20px;
-  margin-top: 3px;
-  width: 100%;
+  overflow: hidden;
 }
 
 #trash-bin {
@@ -202,7 +193,6 @@ button {
 .block {
   display: flex;
   align-items: center;
-  justify-content: center;
   height: 50px;
   cursor: pointer;
   padding: 0px 20px;
@@ -210,32 +200,100 @@ button {
 }
 
 .block--declare {
+  width: 250px;
   height: 50px;
   background-color: #89D466;
 }
 
+.block--declare::after {
+  content: '';
+  position:absolute; 
+  right: -25px; 
+  border-left: 25px solid #89D466; 
+  border-top: 25px solid transparent; 
+  border-bottom: 25px solid transparent;
+  background-color: transparent;
+}
+
 .block--general {
+  width: 250px;
   height: 50px;
   background-color: #ED8B55;
 }
 
 .block--control {
-  height: 50px;
+  width: 120px;
+  height: 60px;
+  background-color: #14B7D8;
+}
+
+.block--control::before {
+  content: '';
+  position: inherit;
+  left: 0px;
+  top: 0px;
+  width: 250px;
+  height: 20px;
+  background-color: #14B7D8;
+}
+
+.block--control::after {
+  content: '';
+  position: inherit;
+  left: 0px;
+  bottom: 0px;
+  width: 250px;
+  height: 20px;
   background-color: #14B7D8;
 }
 
 .block--expression-value {
+  width: 180px;
   height: 40px;
   background-color: #F9DC6D;
+  border-radius: 20px;
 }
 
 .block--expression-logical {
+  width: 180px;
   height: 40px;
   background-color: #1C3C9A;
+  margin-left: 20px;
+}
+
+.block--expression-logical::after {
+  content: '';
+  position:absolute; 
+  right: -20px; 
+  border-left: 20px solid #1C3C9A; 
+  border-top: 20px solid transparent; 
+  border-bottom: 20px solid transparent;
+  background-color: transparent;
+}
+
+.block--expression-logical::before {
+  content: '';
+  position:absolute; 
+  left: -20px; 
+  border-right: 20px solid #1C3C9A; 
+  border-top: 20px solid transparent; 
+  border-bottom: 20px solid transparent;
+  background-color: transparent;
 }
 
 .block__text {
   font-size: 18px;
   font-weight: bold;
   color:white;
+}
+
+.block__input {
+  width: 140px;
+  height: 100%;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #F9DC6D;
+  color: white;
+  text-align: center;
+  border: none;
 }
