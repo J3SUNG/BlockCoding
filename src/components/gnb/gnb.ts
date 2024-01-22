@@ -22,7 +22,7 @@ export const gnb = ({ programState, setProgramState, consoleLog, setConsoleLog, 
   playButton.addEventListener('mousedown', () => {
     setTimeout(() => {
       runProgram({ blockList, setConsoleLog, setProgramState });
-    });
+    }, 300);
   });
 
   nav.appendChild(saveButton);
