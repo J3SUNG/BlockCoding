@@ -90,23 +90,23 @@ button {
 }
 
 .nav-type__button--declare {
-  background-color: #89D466
+  background-color: #89d466;
 }
 
 .nav-type__button--general {
-  background-color: #ED8B55
+  background-color: #ed8b55;
 }
 
 .nav-type__button--control {
-  background-color: #14B7D8
+  background-color: #14b7d8;
 }
 
 .nav-type__button--expression-value {
-  background-color: #F9DC6D
+  background-color: #f9dc6d;
 }
 
 .nav-type__button--expression-logical {
-  background-color: #1C3C9A
+  background-color: #1c3c9a;
 }
 
 .nav-type__button-text {
@@ -138,7 +138,11 @@ button {
 }
 
 .material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
   font-size: 4rem;
 }
 
@@ -203,15 +207,15 @@ button {
 .block--declare {
   width: 250px;
   height: 50px;
-  background-color: #89D466;
+  background-color: #89d466;
 }
 
 .block--declare::after {
   content: '';
-  position:absolute; 
-  right: -25px; 
-  border-left: 25px solid #89D466; 
-  border-top: 25px solid transparent; 
+  position: absolute;
+  right: -25px;
+  border-left: 25px solid #89d466;
+  border-top: 25px solid transparent;
   border-bottom: 25px solid transparent;
   background-color: transparent;
 }
@@ -219,13 +223,13 @@ button {
 .block--general {
   width: 250px;
   height: 50px;
-  background-color: #ED8B55;
+  background-color: #ed8b55;
 }
 
 .block--control {
   width: 120px;
   height: 60px;
-  background-color: #14B7D8;
+  background-color: #14b7d8;
 }
 
 .block--control::before {
@@ -235,7 +239,7 @@ button {
   top: 0px;
   width: 250px;
   height: 20px;
-  background-color: #14B7D8;
+  background-color: #14b7d8;
 }
 
 .block--control::after {
@@ -245,39 +249,39 @@ button {
   bottom: 0px;
   width: 250px;
   height: 20px;
-  background-color: #14B7D8;
+  background-color: #14b7d8;
 }
 
 .block--expression-value {
   width: 180px;
   height: 40px;
-  background-color: #F9DC6D;
+  background-color: #f9dc6d;
   border-radius: 20px;
 }
 
 .block--expression-logical {
   width: 180px;
   height: 40px;
-  background-color: #1C3C9A;
+  background-color: #1c3c9a;
   margin-left: 20px;
 }
 
 .block--expression-logical::after {
   content: '';
-  position:absolute; 
-  right: -20px; 
-  border-left: 20px solid #1C3C9A; 
-  border-top: 20px solid transparent; 
+  position: absolute;
+  right: -20px;
+  border-left: 20px solid #1c3c9a;
+  border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
   background-color: transparent;
 }
 
 .block--expression-logical::before {
   content: '';
-  position:absolute; 
-  left: -20px; 
-  border-right: 20px solid #1C3C9A; 
-  border-top: 20px solid transparent; 
+  position: absolute;
+  left: -20px;
+  border-right: 20px solid #1c3c9a;
+  border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
   background-color: transparent;
 }
@@ -285,7 +289,7 @@ button {
 .block__text {
   font-size: 18px;
   font-weight: bold;
-  color:white;
+  color: white;
 }
 
 .block__input {
@@ -293,7 +297,7 @@ button {
   height: 100%;
   font-size: 18px;
   font-weight: bold;
-  background-color: #F9DC6D;
+  background-color: #f9dc6d;
   color: white;
   text-align: center;
   border: none;
