@@ -1,16 +1,33 @@
-import { ConsoleLog, ProgramState, BlockList, SetConsoleLog, SetProgramState } from '../../types/stateType';
+import { ConsoleLog, ProgramState, UpdateConsoleLog, UpdateProgramState, WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockObject } from '../../types/blockObject';
 
 interface GnbProps {
   programState: ProgramState;
-  setProgramState: SetProgramState;
   consoleLog: ConsoleLog;
-  setConsoleLog: SetConsoleLog;
-  blockList: BlockList;
+  workspaceData: WorkspaceData;
+  updateProgramStateRun: UpdateProgramState;
+  updateProgramStateStop: UpdateProgramState;
+  updateProgramStatePause: UpdateProgramState;
+  updateConsoleLog: UpdateConsoleLog;
 }
 
-export const gnb = ({ programState, setProgramState, consoleLog, setConsoleLog, blockList }: GnbProps) => {
+interface RunProgramProps {
+  workspaceData: WorkspaceData;
+  updateConsoleLog: UpdateConsoleLog;
+  updateProgramStateRun: UpdateProgramState;
+  updateProgramStateStop: UpdateProgramState;
+}
+
+export const gnb = ({
+  programState,
+  consoleLog,
+  workspaceData,
+  updateProgramStateRun,
+  updateProgramStateStop,
+  updateProgramStatePause,
+  updateConsoleLog,
+}: GnbProps) => {
   const header = createElementCommon('header', { id: 'gnb' });
   const h1 = createElementCommon('h1', { id: 'title', textContent: 'Block Coding' });
   const nav = createElementCommon('nav', {});
@@ -20,9 +37,7 @@ export const gnb = ({ programState, setProgramState, consoleLog, setConsoleLog, 
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
 
   playButton.addEventListener('mousedown', () => {
-    setTimeout(() => {
-      runProgram({ blockList, setConsoleLog, setProgramState });
-    }, 300);
+    runProgram({ workspaceData, updateConsoleLog, updateProgramStateRun, updateProgramStateStop });
   });
 
   nav.appendChild(saveButton);
@@ -36,31 +51,30 @@ export const gnb = ({ programState, setProgramState, consoleLog, setConsoleLog, 
   return header;
 };
 
-interface RunProgramProps {
-  blockList: BlockList;
-  setConsoleLog: SetConsoleLog;
-  setProgramState: SetProgramState;
-}
-
-export const runProgram = ({ blockList, setConsoleLog, setProgramState }: RunProgramProps) => {
-  setProgramState('run');
-  const startBlock = blockList.filter((block) => {
+const runProgram = ({
+  workspaceData,
+  updateConsoleLog,
+  updateProgramStateRun,
+  updateProgramStateStop,
+}: RunProgramProps) => {
+  updateProgramStateRun;
+  const startBlock = workspaceData.filter((block) => {
     return block.name === 'start' && block.data;
   });
   const log: string[] = [];
 
   startBlock.forEach((block) => {
-    objParser({ obj: block.data.value, log });
+    updateLogData({ obj: block.data.value, log });
   });
 
-  setConsoleLog(log);
-  setProgramState('stop');
+  updateConsoleLog(log);
+  updateProgramStateStop;
 };
 
-const objParser = ({ obj, log }: any) => {
+const updateLogData = ({ obj, log }: any) => {
   if (Array.isArray(obj)) {
     obj.forEach((item: BlockObject) => {
-      objParser({ obj: item, log });
+      updateLogData({ obj: item, log });
     });
   }
   if (obj.name === 'start') {
@@ -68,7 +82,7 @@ const objParser = ({ obj, log }: any) => {
     return null;
   } else if (obj.name === 'output') {
     const value = obj.data.value as BlockObject;
-    const returnValue = objParser({ obj: value, log });
+    const returnValue = updateLogData({ obj: value, log });
     log.push(returnValue);
   } else if (obj.name === 'value') {
     return obj.data.value;
