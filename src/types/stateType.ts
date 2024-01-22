@@ -1,16 +1,16 @@
 import { BlockObject } from './blockObject';
 
-export type SelectedType = number;
-export type SetSelectedType = (selectedType: SelectedType) => void;
+export type SelectedType = 'declare' | 'general' | 'control' | 'expressionValue' | 'expressionLogical';
+export type UpdateSelectedType = (selectedType: SelectedType) => void;
 
-export type BlockList = BlockObject[];
-export type SetBlockList = (blockList: BlockList) => void;
+export type WorkspaceData = BlockObject[];
+export type UpdateWorkspaceData = (workspaceData: WorkspaceData) => void;
 
 export type SeqNo = number;
-export type SetSeqNo = (seqNo: SeqNo) => void;
+export type IncreaseSeqNo = () => void;
 
 export type ConsoleLog = string[];
-export type SetConsoleLog = (consoleLog: ConsoleLog) => void;
+export type UpdateConsoleLog = (consoleLog: ConsoleLog) => void;
 
 export type ProgramState = 'run' | 'stop' | 'pause';
-export type SetProgramState = (programState: ProgramState) => void;
+export type UpdateProgramState = () => void;
