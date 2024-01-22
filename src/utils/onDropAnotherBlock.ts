@@ -1,15 +1,15 @@
 import { BLOCK_OBJECT } from '../constants/blockObject';
 import { BlockObject } from '../types/blockObject';
-import { BLOCK_MAP } from '../constants/blockMap';
-import { SeqNo, SetSeqNo } from '../types/stateType';
+import { IncreaseSeqNo, SeqNo } from '../types/stateType';
+import { deepCopyObject } from './deepCopyObject';
 
-interface FindTargetBlockProps {
+interface OnDropAnotherBlockProps {
   targetUniqueId: string;
   name: string;
   type: string;
   obj: BlockObject | BlockObject[] | string;
   seqNo: SeqNo;
-  setSeqNo: SetSeqNo;
+  increaseSeqNo: IncreaseSeqNo;
 }
 
 interface BlockOverlapEventProps {
@@ -18,12 +18,19 @@ interface BlockOverlapEventProps {
   type: string;
 }
 
-export const findTargetBlock = ({ targetUniqueId, name, type, obj, seqNo, setSeqNo }: FindTargetBlockProps) => {
+export const onDropAnotherBlock = ({
+  targetUniqueId,
+  name,
+  type,
+  obj,
+  seqNo,
+  increaseSeqNo,
+}: OnDropAnotherBlockProps) => {
   if (!obj) return;
 
   if (Array.isArray(obj)) {
     for (const item of obj) {
-      findTargetBlock({ targetUniqueId, name, type, obj: item, seqNo, setSeqNo });
+      onDropAnotherBlock({ targetUniqueId, name, type, obj: item, seqNo, increaseSeqNo });
     }
   } else if (typeof obj === 'object' && 'data' in obj && obj.data.value) {
     if (obj.data.id === targetUniqueId) {
@@ -33,9 +40,9 @@ export const findTargetBlock = ({ targetUniqueId, name, type, obj, seqNo, setSeq
       if (value) {
         const uniqueId = `unique-id__${seqNo}`;
 
-        const deepCopiedObj = JSON.parse(JSON.stringify(BLOCK_OBJECT[BLOCK_MAP[name]]));
+        const deepCopiedObj = deepCopyObject({ obj: BLOCK_OBJECT[name] });
         deepCopiedObj.data.id = uniqueId;
-        setSeqNo(seqNo + 1);
+        increaseSeqNo();
 
         if (Array.isArray(value)) {
           value.push(deepCopiedObj);
@@ -47,7 +54,7 @@ export const findTargetBlock = ({ targetUniqueId, name, type, obj, seqNo, setSeq
       return;
     }
 
-    findTargetBlock({ targetUniqueId, name, type, obj: obj.data.value, seqNo, setSeqNo });
+    onDropAnotherBlock({ targetUniqueId, name, type, obj: obj.data.value, seqNo, increaseSeqNo });
   }
 };
 
