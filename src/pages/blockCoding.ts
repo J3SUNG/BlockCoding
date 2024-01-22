@@ -7,10 +7,10 @@ import { consoleSpace } from '../components/consoleSpace/consoleSpace';
 import { createElementCommon } from '../utils/createElementCommon';
 
 export const blockCoding = () => {
-  const [programState, setProgramState] = useState<ProgramState>('stop');
-  const [consoleLog, setConsoleLog] = useState<ConsoleLog>([]);
-  const [workspaceData, setWorkspaceData] = useState<WorkspaceData>([]);
-  const [seqNo, setSeqNo] = useState(0);
+  const [programState, setProgramState] = useState<ProgramState>('programState', 'stop');
+  const [consoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
+  const [workspaceData, setWorkspaceData] = useState<WorkspaceData>('workspaceData', []);
+  const [seqNo, setSeqNo] = useState('seqNo', 0);
 
   const updateProgramStateRun = () => {
     setProgramState('run');

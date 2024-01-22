@@ -5,7 +5,7 @@ import { blockMenuBlockNav } from './blockMenuBlockNav';
 import { blockMenuTypeNav } from './blockMenuTypeNav';
 
 export const blockMenu = () => {
-  const [selectedType, setSelectedType] = useState<SelectedType>('declare');
+  const [selectedType, setSelectedType] = useState<SelectedType>('selectedType', 'declare');
   const updateSelectedType = (newType: SelectedType) => {
     setSelectedType(newType);
   };
