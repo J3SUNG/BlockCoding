@@ -1,4 +1,4 @@
-import { BlockList, SetBlockList } from './stateType';
+import { UpdateWorkspaceData, WorkspaceData } from './stateType';
 
 export interface BlockCommonProps {
   value?: string;
@@ -7,6 +7,6 @@ export interface BlockCommonProps {
   x: number;
   y: number;
   id: string;
-  blockList?: BlockList;
-  setBlockList?: SetBlockList;
+  workspaceData?: WorkspaceData;
+  updateWorkspaceData?: UpdateWorkspaceData;
 }
