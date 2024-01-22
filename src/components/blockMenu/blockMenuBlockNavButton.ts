@@ -1,13 +1,13 @@
 import { createElementCommon } from '../../utils/createElementCommon';
 
-interface BlockMenuBlockButtonProps {
+interface BlockMenuBlockNavButtonProps {
   name: string;
   type: string;
   x: number;
   y: number;
 }
 
-export const blockMenuBlockButton = ({ name, type, x, y }: BlockMenuBlockButtonProps) => {
+export const blockMenuBlockNavButton = ({ name, type, x, y }: BlockMenuBlockNavButtonProps) => {
   const li = createElementCommon('li', {});
   const p = createElementCommon('p', { className: 'block__text', textContent: name });
 

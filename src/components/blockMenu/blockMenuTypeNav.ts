@@ -1,24 +1,24 @@
 import { BLOCK_TYPE_OBJECT } from '../../constants/blockTypeObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { SetSelectedType } from '../../types/stateType';
-import { blockMenuTypeButton } from './blockMenuTypeButton';
+import { UpdateSelectedType } from '../../types/stateType';
+import { blockMenuTypeNavButton } from './blockMenuTypeNavButton';
 
 interface BlockMenuTypeNavProps {
-  setSelectedType: SetSelectedType;
+  updateSelectedType: UpdateSelectedType;
 }
 
-export const blockMenuTypeNav = ({ setSelectedType }: BlockMenuTypeNavProps) => {
+export const blockMenuTypeNav = ({ updateSelectedType }: BlockMenuTypeNavProps) => {
   const blockTypeNav = createElementCommon('nav', { id: 'nav-type' });
   const ul = createElementCommon('ul', {});
 
-  BLOCK_TYPE_OBJECT.forEach((block, index) => {
-    const li = blockMenuTypeButton({
-      type: block.name,
-      korName: block.korName,
+  Object.values(BLOCK_TYPE_OBJECT).forEach((type) => {
+    const li = blockMenuTypeNavButton({
+      type: type.name,
+      korName: type.korName,
     });
 
     li.addEventListener('click', () => {
-      setSelectedType(index);
+      updateSelectedType(type.name);
     });
 
     ul.appendChild(li);

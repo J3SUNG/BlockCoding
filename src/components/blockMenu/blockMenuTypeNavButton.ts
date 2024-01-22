@@ -1,6 +1,6 @@
 import { createElementCommon } from '../../utils/createElementCommon';
 
-interface BlockMenuTypeButtonProps {
+interface BlockMenuTypeNavButtonProps {
   type: string;
   korName: string;
 }
@@ -9,7 +9,7 @@ interface BlockTypePaintProps {
   korName: string;
 }
 
-export const blockMenuTypeButton = ({ type, korName }: BlockMenuTypeButtonProps) => {
+export const blockMenuTypeNavButton = ({ type, korName }: BlockMenuTypeNavButtonProps) => {
   if (type === 'declare') {
     return blockTypeDeclare({ korName });
   } else if (type === 'general') {
