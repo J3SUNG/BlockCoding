@@ -8,6 +8,6 @@ export interface BlockObject {
     value: BlockObject | BlockObject[] | string;
     varName?: BlockObject;
     condition?: BlockObject;
-    operator?: BlockObject;
+    operator?: string;
   };
 }
