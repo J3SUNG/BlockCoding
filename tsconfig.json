@@ -1,21 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES6",                      
+    "target": "ES6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,                       
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ES6",                   
+    "module": "ES6",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": false,                       
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "noEmit": false,
+    "baseUrl": "./src"
   },
   "exclude": ["node_modules"]
 }
