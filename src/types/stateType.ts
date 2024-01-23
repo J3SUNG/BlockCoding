@@ -6,9 +6,6 @@ export type UpdateSelectedType = (selectedType: SelectedType) => void;
 export type WorkspaceData = BlockObject[];
 export type UpdateWorkspaceData = (workspaceData: WorkspaceData) => void;
 
-export type SeqNo = number;
-export type IncreaseSeqNo = () => void;
-
 export type ConsoleLog = string[];
 export type UpdateConsoleLog = (consoleLog: ConsoleLog) => void;
 

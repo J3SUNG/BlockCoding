@@ -1,6 +1,6 @@
 import { debounceFrame } from '../utils/debounceFrame';
 
-export interface StateOptions {
+interface StateOptions {
   currentStateKey: number;
   renderCount: number;
   states: any[];

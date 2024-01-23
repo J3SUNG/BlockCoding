@@ -55,7 +55,7 @@ const runProgram = ({
   updateProgramStateRun,
   updateProgramStateStop,
 }: RunProgramProps) => {
-  updateProgramStateRun;
+  updateProgramStateRun();
   const startBlock = workspaceData.filter((block) => {
     return block.name === 'start' && block.data;
   });
@@ -66,7 +66,7 @@ const runProgram = ({
   });
 
   updateConsoleLog(log);
-  updateProgramStateStop;
+  updateProgramStateStop();
 };
 
 const updateLogData = ({ obj, log }: any) => {
