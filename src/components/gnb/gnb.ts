@@ -59,32 +59,27 @@ const runProgram = ({
   const startBlock = workspaceData.filter((block) => {
     return block.name === 'start' && block.data;
   });
-  const log: string[] = [];
+  const logList: string[] = [];
 
   startBlock.forEach((block) => {
-    updateLogData({ obj: block.data.value, log });
+    const log = getLogData(block.data.value as BlockObject);
+    logList.push(...log);
   });
 
-  updateConsoleLog(log);
-  updateProgramStateStop();
+  updateConsoleLog(logList);
+  updateProgramStateStop;
 };
 
-const updateLogData = ({ obj, log }: any) => {
+const getLogData = (obj: BlockObject): string[] => {
   if (Array.isArray(obj)) {
-    obj.forEach((item: BlockObject) => {
-      updateLogData({ obj: item, log });
-    });
-  }
-  if (obj.name === 'start') {
-    // TODO: 예외처리 추가 필요
-    return null;
+    return obj.reduce((acc, item) => acc.concat(getLogData(item)), []);
+  } else if (obj.name === 'start') {
+    return [];
   } else if (obj.name === 'output') {
-    const value = obj.data.value as BlockObject;
-    const returnValue = updateLogData({ obj: value, log });
-    log.push(returnValue);
+    return getLogData(obj.data.value as BlockObject);
   } else if (obj.name === 'value') {
-    return obj.data.value;
+    return [obj.data.value as string];
   } else {
-    return null;
+    return [];
   }
 };
