@@ -3,8 +3,6 @@ import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockObject } from '../../types/blockObject';
 
 interface GnbProps {
-  programState: ProgramState;
-  consoleLog: ConsoleLog;
   workspaceData: WorkspaceData;
   updateProgramStateRun: UpdateProgramState;
   updateProgramStateStop: UpdateProgramState;
@@ -20,8 +18,6 @@ interface RunProgramProps {
 }
 
 export const gnb = ({
-  programState,
-  consoleLog,
   workspaceData,
   updateProgramStateRun,
   updateProgramStateStop,
@@ -59,7 +55,7 @@ const runProgram = ({
   updateProgramStateRun,
   updateProgramStateStop,
 }: RunProgramProps) => {
-  updateProgramStateRun;
+  updateProgramStateRun();
   const startBlock = workspaceData.filter((block) => {
     return block.name === 'start' && block.data;
   });
@@ -70,7 +66,7 @@ const runProgram = ({
   });
 
   updateConsoleLog(log);
-  updateProgramStateStop;
+  updateProgramStateStop();
 };
 
 const updateLogData = ({ obj, log }: any) => {

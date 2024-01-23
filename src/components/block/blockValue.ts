@@ -12,7 +12,7 @@ export const blockValue = ({ id, x, y, type, value, workspaceData, updateWorkspa
   const div = createElementCommon('div', { id, className: `block block--${camelToKebab({ str: type })}` });
   const input = createElementCommon('input', { className: 'block__input', value });
 
-  input.addEventListener('blur', (e: any) => {
+  input.addEventListener('blur', (e: FocusEvent) => {
     const target = e.target as HTMLInputElement;
     const { value } = target;
 
@@ -49,7 +49,7 @@ const onUpdateValueBlock = ({ targetUniqueId, obj }: OnUpdateValueBlockProps): B
     }
   } else if (typeof obj === 'object' && obj !== null) {
     if (obj.data.id === targetUniqueId) {
-      return obj; // 매칭되는 객체 반환
+      return obj;
     } else {
       return onUpdateValueBlock({ targetUniqueId, obj: obj.data.value });
     }

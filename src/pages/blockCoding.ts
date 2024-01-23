@@ -37,8 +37,6 @@ export const blockCoding = () => {
   };
 
   const gnbComponent = gnb({
-    programState,
-    consoleLog,
     workspaceData,
     updateProgramStateRun,
     updateProgramStateStop,
@@ -47,7 +45,7 @@ export const blockCoding = () => {
   });
 
   const blockMenuComponent = blockMenu();
-  const workspaceComponent = workspace({ workspaceData, seqNo, updateWorkspaceData, increaseSeqNo });
+  const workspaceComponent = workspace({ workspaceData, updateWorkspaceData });
   const consoleSpaceComponent = consoleSpace({ consoleLog });
 
   const mainComponent = createElementCommon('div', { id: 'main' });

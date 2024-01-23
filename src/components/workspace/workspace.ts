@@ -1,4 +1,4 @@
-import { WorkspaceData, SeqNo, IncreaseSeqNo } from '../../types/stateType';
+import { WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { onDropAnotherBlock } from '../../utils/onDropAnotherBlock';
@@ -7,19 +7,16 @@ import { BlockCommonProps } from '../../types/blockCommonProps';
 import { blockOutput } from '../../components/block/blockOutput';
 import { blockValue } from '../../components/block/blockValue';
 import { deepCopyObject } from '../../utils/deepCopyObject';
+import { createUniqueId } from '../../utils/createUniqueId';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
-  seqNo: SeqNo;
   updateWorkspaceData: (workspaceData: WorkspaceData) => void;
-  increaseSeqNo: IncreaseSeqNo;
 }
 
 interface WorkspaceSectionProps {
   workspaceData: WorkspaceData;
-  seqNo: SeqNo;
   updateWorkspaceData: (workspaceData: WorkspaceData) => void;
-  increaseSeqNo: IncreaseSeqNo;
 }
 
 interface PaintWorkspaceProps {
@@ -37,23 +34,44 @@ interface OnDropWorkspaceProps {
   section: any;
   event: DragEvent;
   workspaceData: WorkspaceData;
-  seqNo: SeqNo;
   updateWorkspaceData: (workspaceData: WorkspaceData) => void;
-  increaseSeqNo: IncreaseSeqNo;
 }
 
-export const workspace = ({ workspaceData, seqNo, updateWorkspaceData, increaseSeqNo }: WorkspaceProps) => {
-  const section = workspaceSection({ workspaceData, seqNo, updateWorkspaceData, increaseSeqNo });
+export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps) => {
+  const section = workspaceSection({ workspaceData, updateWorkspaceData });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
   const trashIcon = createElementCommon('span', { className: 'material-symbols-outlined', textContent: 'delete' });
 
-  trashBin.appendChild(trashIcon);
-  section.appendChild(trashBin);
+  section.addEventListener('dragover', function (event) {
+    event.preventDefault();
+  });
+
+  section.addEventListener('drop', function (event) {
+    event.preventDefault();
+    if (event.target !== section) {
+      // TODO: 다른 블럭들과 이벤트 발생
+    } else {
+      onDropWorkspace({ section, event, workspaceData, updateWorkspaceData });
+    }
+  });
+
+  workspaceData.forEach((obj) => {
+    paintWorkspace({
+      section,
+      obj,
+      x: obj.data.x,
+      y: obj.data.y,
+      width: 100,
+      height: 50,
+      workspaceData,
+      updateWorkspaceData,
+    });
+  });
 
   return section;
 };
 
-const workspaceSection = ({ workspaceData, seqNo, updateWorkspaceData, increaseSeqNo }: WorkspaceSectionProps) => {
+const workspaceSection = ({ workspaceData, updateWorkspaceData }: WorkspaceSectionProps) => {
   const x = 50;
   const y = 50;
   const width = 100;
@@ -73,10 +91,10 @@ const workspaceSection = ({ workspaceData, seqNo, updateWorkspaceData, increaseS
       const name = event.dataTransfer!.getData('name');
       const type = event.dataTransfer!.getData('type');
 
-      onDropAnotherBlock({ targetUniqueId: uniqueId, name, type, obj: workspaceData, seqNo, increaseSeqNo });
+      onDropAnotherBlock({ targetUniqueId: uniqueId, name, type, obj: workspaceData });
       updateWorkspaceData([...workspaceData]);
     } else {
-      onDropWorkspace({ section, event, workspaceData, updateWorkspaceData, seqNo, increaseSeqNo });
+      onDropWorkspace({ section, event, workspaceData, updateWorkspaceData });
     }
   });
 
@@ -87,14 +105,7 @@ const workspaceSection = ({ workspaceData, seqNo, updateWorkspaceData, increaseS
   return section;
 };
 
-const onDropWorkspace = ({
-  section,
-  event,
-  workspaceData,
-  seqNo,
-  updateWorkspaceData,
-  increaseSeqNo,
-}: OnDropWorkspaceProps) => {
+const onDropWorkspace = ({ section, event, workspaceData, updateWorkspaceData }: OnDropWorkspaceProps) => {
   const name = event.dataTransfer!.getData('name');
   const offsetX = event.dataTransfer?.getData('offsetX');
   const offsetY = event.dataTransfer?.getData('offsetY');
@@ -103,8 +114,8 @@ const onDropWorkspace = ({
   const y = event.clientY - rect.top - Number(offsetY);
   const deepCopiedObj = deepCopyObject({ obj: BLOCK_OBJECT[name] });
 
-  deepCopiedObj.data.id = `unique-id__${seqNo}`;
-  increaseSeqNo();
+  const uniqueId = createUniqueId();
+  deepCopiedObj.data.id = uniqueId;
   deepCopiedObj.data.x = x;
   deepCopiedObj.data.y = y;
 

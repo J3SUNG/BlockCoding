@@ -1,6 +1,6 @@
 import { BLOCK_OBJECT } from '../constants/blockObject';
 import { BlockObject } from '../types/blockObject';
-import { IncreaseSeqNo, SeqNo } from '../types/stateType';
+import { createUniqueId } from './createUniqueId';
 import { deepCopyObject } from './deepCopyObject';
 
 interface OnDropAnotherBlockProps {
@@ -8,8 +8,6 @@ interface OnDropAnotherBlockProps {
   name: string;
   type: string;
   obj: BlockObject | BlockObject[] | string;
-  seqNo: SeqNo;
-  increaseSeqNo: IncreaseSeqNo;
 }
 
 interface BlockOverlapEventProps {
@@ -18,19 +16,12 @@ interface BlockOverlapEventProps {
   type: string;
 }
 
-export const onDropAnotherBlock = ({
-  targetUniqueId,
-  name,
-  type,
-  obj,
-  seqNo,
-  increaseSeqNo,
-}: OnDropAnotherBlockProps) => {
+export const onDropAnotherBlock = ({ targetUniqueId, name, type, obj }: OnDropAnotherBlockProps) => {
   if (!obj) return;
 
   if (Array.isArray(obj)) {
     for (const item of obj) {
-      onDropAnotherBlock({ targetUniqueId, name, type, obj: item, seqNo, increaseSeqNo });
+      onDropAnotherBlock({ targetUniqueId, name, type, obj: item });
     }
   } else if (typeof obj === 'object' && 'data' in obj && obj.data.value) {
     if (obj.data.id === targetUniqueId) {
@@ -38,11 +29,10 @@ export const onDropAnotherBlock = ({
       const value: any = blockOverlapEvent({ obj, name, type });
 
       if (value) {
-        const uniqueId = `unique-id__${seqNo}`;
+        const uniqueId = createUniqueId();
 
         const deepCopiedObj = deepCopyObject({ obj: BLOCK_OBJECT[name] });
         deepCopiedObj.data.id = uniqueId;
-        increaseSeqNo();
 
         if (Array.isArray(value)) {
           value.push(deepCopiedObj);
@@ -54,7 +44,7 @@ export const onDropAnotherBlock = ({
       return;
     }
 
-    onDropAnotherBlock({ targetUniqueId, name, type, obj: obj.data.value, seqNo, increaseSeqNo });
+    onDropAnotherBlock({ targetUniqueId, name, type, obj: obj.data.value });
   }
 };
 
