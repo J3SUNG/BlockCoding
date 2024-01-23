@@ -1,16 +1,24 @@
 import { camelToKebab } from '../../utils/camelToKebab';
 import { BlockCommonProps } from '../../types/blockCommonProps';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { BlockObject } from '../../types/blockObject';
+import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 
 interface OnUpdateValueBlockProps {
   targetUniqueId: string;
-  obj: BlockObject | BlockObject[] | string;
+  obj: BlockObjectValue;
 }
 
 export const blockValue = ({ id, x, y, type, value, workspaceData, updateWorkspaceData }: BlockCommonProps) => {
   const div = createElementCommon('div', { id, className: `block block--${camelToKebab({ str: type })}` });
-  const input = createElementCommon('input', { className: 'block__input', value });
+  const input = createElementCommon('input', {
+    className: 'block__input',
+    value: value ? value : '10',
+    readonly: value ? 'false' : 'true',
+  });
+
+  if (!value) {
+    input.setAttribute('readonly', 'true');
+  }
 
   input.addEventListener('blur', (e: FocusEvent) => {
     const target = e.target as HTMLInputElement;

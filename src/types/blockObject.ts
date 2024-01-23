@@ -1,3 +1,5 @@
+export type BlockObjectValue = BlockObject | BlockObject[] | string;
+
 export interface BlockObject {
   name: string;
   type: string;
@@ -5,7 +7,7 @@ export interface BlockObject {
     id: string;
     x: number;
     y: number;
-    value: BlockObject | BlockObject[] | string;
+    value: BlockObjectValue;
     varName?: BlockObject;
     condition?: BlockObject;
     operator?: string;
