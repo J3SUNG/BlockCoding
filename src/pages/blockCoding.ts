@@ -37,8 +37,6 @@ export const blockCoding = () => {
   };
 
   const gnbComponent = gnb({
-    programState,
-    consoleLog,
     workspaceData,
     updateProgramStateRun,
     updateProgramStateStop,

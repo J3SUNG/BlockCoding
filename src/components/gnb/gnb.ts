@@ -3,8 +3,6 @@ import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockObject } from '../../types/blockObject';
 
 interface GnbProps {
-  programState: ProgramState;
-  consoleLog: ConsoleLog;
   workspaceData: WorkspaceData;
   updateProgramStateRun: UpdateProgramState;
   updateProgramStateStop: UpdateProgramState;
@@ -20,8 +18,6 @@ interface RunProgramProps {
 }
 
 export const gnb = ({
-  programState,
-  consoleLog,
   workspaceData,
   updateProgramStateRun,
   updateProgramStateStop,
