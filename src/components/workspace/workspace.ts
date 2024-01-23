@@ -2,12 +2,9 @@ import { WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { onDropAnotherBlock } from '../../utils/onDropAnotherBlock';
-import { blockStart } from '../../components/block/blockStart';
-import { BlockCommonProps } from '../../types/blockCommonProps';
-import { blockOutput } from '../../components/block/blockOutput';
-import { blockValue } from '../../components/block/blockValue';
 import { deepCopyObject } from '../../utils/deepCopyObject';
 import { createUniqueId } from '../../utils/createUniqueId';
+import { blockController } from '../../utils/blockController';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
@@ -72,11 +69,6 @@ export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps
 };
 
 const workspaceSection = ({ workspaceData, updateWorkspaceData }: WorkspaceSectionProps) => {
-  const x = 50;
-  const y = 50;
-  const width = 100;
-  const height = 50;
-
   const section = createElementCommon('section', { id: 'workspace' });
 
   section.addEventListener('dragover', function (event) {
@@ -90,6 +82,7 @@ const workspaceSection = ({ workspaceData, updateWorkspaceData }: WorkspaceSecti
       const uniqueId = target.closest('div')?.id ?? '';
       const name = event.dataTransfer!.getData('name');
       const type = event.dataTransfer!.getData('type');
+      const newWorkspaceData = deepCopyObject({ obj: workspaceData });
 
       onDropAnotherBlock({ targetUniqueId: uniqueId, name, type, obj: workspaceData });
       updateWorkspaceData([...workspaceData]);
@@ -99,7 +92,16 @@ const workspaceSection = ({ workspaceData, updateWorkspaceData }: WorkspaceSecti
   });
 
   workspaceData.forEach((obj) => {
-    paintWorkspace({ section, obj, x: obj.data.x, y: obj.data.y, width, height, workspaceData, updateWorkspaceData });
+    paintWorkspace({
+      section,
+      obj,
+      x: obj.data.x,
+      y: obj.data.y,
+      width: 100,
+      height: 50,
+      workspaceData,
+      updateWorkspaceData,
+    });
   });
 
   return section;
@@ -182,18 +184,5 @@ const paintWorkspace = ({
         updateWorkspaceData,
       });
     }
-  }
-};
-
-const blockController = ({ id, x, y, type, name, value, workspaceData, updateWorkspaceData }: BlockCommonProps) => {
-  switch (name) {
-    case 'start':
-      return blockStart({ id, x, y, type, name, value });
-    case 'output':
-      return blockOutput({ id, x, y, type, name, value });
-    case 'value':
-      return blockValue({ id, x, y, type, name, value, workspaceData, updateWorkspaceData });
-    default:
-      throw new Error('blockController: 구현 되지 않은 블럭입니다.');
   }
 };
