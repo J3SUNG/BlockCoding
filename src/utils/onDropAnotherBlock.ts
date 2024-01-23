@@ -1,5 +1,5 @@
 import { BLOCK_OBJECT } from '../constants/blockObject';
-import { BlockObject } from '../types/blockObject';
+import { BlockObject, BlockObjectValue } from '../types/blockObject';
 import { createUniqueId } from './createUniqueId';
 import { deepCopyObject } from './deepCopyObject';
 
@@ -26,7 +26,7 @@ export const onDropAnotherBlock = ({ targetUniqueId, name, type, obj }: OnDropAn
   } else if (typeof obj === 'object' && 'data' in obj && obj.data.value) {
     if (obj.data.id === targetUniqueId) {
       // TODO: any 타입 지정
-      const value: any = blockOverlapEvent({ obj, name, type });
+      const value: BlockObjectValue | undefined = blockOverlapEvent({ obj, name, type });
 
       if (value) {
         const uniqueId = createUniqueId();
@@ -79,6 +79,4 @@ const blockOverlapEvent = ({ obj, name, type }: BlockOverlapEventProps) => {
       // TODO: 논리 블럭의 값에 값, 논리식 삽입
     }
   }
-
-  return null;
 };
