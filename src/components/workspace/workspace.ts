@@ -1,4 +1,4 @@
-import { WorkspaceData } from '../../types/stateType';
+import { UpdateWorkspaceDataAll, UpdateWorkspaceDataValue, WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { deepCopyObject } from '../../utils/deepCopyObject';
@@ -9,10 +9,11 @@ import { findTargetBlock } from '../../utils/findTargetBlock';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
-  updateWorkspaceData: (workspaceData: WorkspaceData) => void;
+  updateWorkspaceDataAll: UpdateWorkspaceDataAll;
+  updateWorkspaceDataValue: UpdateWorkspaceDataValue;
 }
 
-export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps) => {
+export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspaceDataValue }: WorkspaceProps) => {
   const section = createElementCommon('section', { id: 'workspace' });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
   const trashIcon = createElementCommon('span', { className: 'material-symbols-outlined', textContent: 'delete' });
@@ -30,15 +31,15 @@ export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps
       const type = event.dataTransfer!.getData('type');
 
       const newWorkspaceData = onDropAnotherBlock(uniqueId, name, type, workspaceData);
-      updateWorkspaceData([...newWorkspaceData]);
+      updateWorkspaceDataAll([...newWorkspaceData]);
     } else {
       const newWorkspaceData = onDropWorkspace(section, event, workspaceData);
-      updateWorkspaceData([...newWorkspaceData]);
+      updateWorkspaceDataAll([...newWorkspaceData]);
     }
   });
 
   workspaceData.forEach((obj) => {
-    paintWorkspace(section, obj, obj.data.x, obj.data.y, 100, 50, workspaceData, updateWorkspaceData);
+    paintWorkspace(section, obj, obj.data.x, obj.data.y, 100, 50, updateWorkspaceDataValue);
   });
 
   return section;
@@ -135,8 +136,7 @@ const paintWorkspace = (
   y: number,
   width: number,
   height: number,
-  workspaceData: WorkspaceData,
-  updateWorkspaceData: (workspaceData: WorkspaceData) => void,
+  updateWorkspaceDataValue: UpdateWorkspaceDataValue,
 ) => {
   if (!obj) {
     return;
@@ -144,7 +144,7 @@ const paintWorkspace = (
 
   if (Array.isArray(obj)) {
     obj.forEach((item, index) => {
-      paintWorkspace(section, item, x, y + height * index, width, height, workspaceData, updateWorkspaceData);
+      paintWorkspace(section, item, x, y + height * index, width, height, updateWorkspaceDataValue);
     });
   } else {
     if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
@@ -163,12 +163,11 @@ const paintWorkspace = (
         value: obj.data.value.toString(),
         id: obj.data.id,
         type: obj.type,
-        workspaceData,
-        updateWorkspaceData,
+        updateWorkspaceDataValue,
       });
       section.appendChild(div);
 
-      paintWorkspace(section, obj.data.value, x, y + addY, width, height, workspaceData, updateWorkspaceData);
+      paintWorkspace(section, obj.data.value, x, y + addY, width, height, updateWorkspaceDataValue);
     }
   }
 };

@@ -1,4 +1,4 @@
-import { UpdateWorkspaceData, WorkspaceData } from './stateType';
+import { UpdateWorkspaceDataValue } from './stateType';
 
 export interface BlockCommonProps {
   value?: string;
@@ -7,6 +7,5 @@ export interface BlockCommonProps {
   x: number;
   y: number;
   id: string;
-  workspaceData?: WorkspaceData;
-  updateWorkspaceData?: UpdateWorkspaceData;
+  updateWorkspaceDataValue?: UpdateWorkspaceDataValue;
 }
