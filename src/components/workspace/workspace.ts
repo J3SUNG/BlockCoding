@@ -45,14 +45,14 @@ export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps
 };
 
 const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: WorkspaceData) => {
-  const newWorkspaceData = deepCopyObject({ obj: workspaceData });
+  const newWorkspaceData = deepCopyObject(workspaceData);
   const name = event.dataTransfer!.getData('name');
   const offsetX = event.dataTransfer?.getData('offsetX');
   const offsetY = event.dataTransfer?.getData('offsetY');
   const rect = section.getBoundingClientRect();
   const x = event.clientX - rect.left - Number(offsetX);
   const y = event.clientY - rect.top - Number(offsetY);
-  const newBlock = deepCopyObject({ obj: BLOCK_OBJECT[name] });
+  const newBlock = deepCopyObject(BLOCK_OBJECT[name]);
 
   const uniqueId = createUniqueId();
   newBlock.data.id = uniqueId;
@@ -69,7 +69,7 @@ export const onDropAnotherBlock = (
   type: string,
   workspaceData: BlockObject[],
 ) => {
-  const newWorkspaceData = deepCopyObject({ obj: workspaceData });
+  const newWorkspaceData = deepCopyObject(workspaceData);
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
   if (!targetObj) {
     return;
@@ -79,7 +79,7 @@ export const onDropAnotherBlock = (
   if (newObj) {
     const uniqueId = createUniqueId();
 
-    const newBlock = deepCopyObject({ obj: BLOCK_OBJECT[name] });
+    const newBlock = deepCopyObject(BLOCK_OBJECT[name]);
     newBlock.data.id = uniqueId;
 
     if (Array.isArray(newObj.data.value)) {
