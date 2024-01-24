@@ -5,30 +5,48 @@ import { blockMenu } from '../components/blockMenu/blockMenu';
 import { workspace } from '../components/workspace/workspace';
 import { consoleSpace } from '../components/consoleSpace/consoleSpace';
 import { createElementCommon } from '../utils/createElementCommon';
+import { deepCopyObject } from '../utils/deepCopyObject';
+import { findTargetBlock } from '../utils/findTargetBlock';
+import { BlockObject, BlockObjectValue } from '../types/blockObject';
 
 export const blockCoding = () => {
   const [programState, setProgramState] = useState<ProgramState>('programState', 'stop');
   const [consoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
   const [workspaceData, setWorkspaceData] = useState<WorkspaceData>('workspaceData', []);
 
-  const updateProgramStateRun = () => {
+  const updateProgramStateRun = (): void => {
     setProgramState('run');
   };
 
-  const updateProgramStateStop = () => {
+  const updateProgramStateStop = (): void => {
     setProgramState('stop');
   };
 
-  const updateProgramStatePause = () => {
+  const updateProgramStatePause = (): void => {
     setProgramState('pause');
   };
 
-  const updateConsoleLog = (log: ConsoleLog) => {
+  const updateConsoleLog = (log: ConsoleLog): void => {
     setConsoleLog(log);
   };
 
-  const updateWorkspaceData = (data: WorkspaceData) => {
+  const updateWorkspaceDataAll = (data: WorkspaceData): void => {
     setWorkspaceData(data);
+  };
+
+  const updateWorkspaceDataValue = (targetId: string, value: BlockObjectValue): void => {
+    const newWorkspaceData = deepCopyObject(workspaceData);
+    const targetObj = findTargetBlock(targetId, newWorkspaceData);
+
+    if (targetObj) {
+      if (Array.isArray(targetObj.data.value)) {
+        targetObj.data.value.push(value as BlockObject);
+      } else {
+        targetObj.data.value = value;
+      }
+    }
+
+    setWorkspaceData(newWorkspaceData);
   };
 
   const gnbComponent = gnb({
@@ -40,7 +58,7 @@ export const blockCoding = () => {
   });
 
   const blockMenuComponent = blockMenu();
-  const workspaceComponent = workspace({ workspaceData, updateWorkspaceData });
+  const workspaceComponent = workspace({ workspaceData, updateWorkspaceDataAll, updateWorkspaceDataValue });
   const consoleSpaceComponent = consoleSpace({ consoleLog });
 
   const mainComponent = createElementCommon('div', { id: 'main' });
