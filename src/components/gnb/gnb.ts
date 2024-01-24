@@ -26,9 +26,7 @@ export const gnb = ({
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
 
   playButton.addEventListener('mousedown', () => {
-    setTimeout(() => {
-      runProgram(workspaceData, updateConsoleLog, updateProgramStateRun, updateProgramStateStop);
-    });
+    runProgram(workspaceData, updateConsoleLog, updateProgramStateRun, updateProgramStateStop);
   });
 
   nav.appendChild(saveButton);
