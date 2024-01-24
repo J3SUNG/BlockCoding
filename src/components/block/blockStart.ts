@@ -3,7 +3,7 @@ import { BlockCommonProps } from '../../types/blockCommonProps';
 import { createElementCommon } from '../../utils/createElementCommon';
 
 export const blockStart = ({ id, x, y, type }: BlockCommonProps) => {
-  const div = createElementCommon('div', { id, className: `block block--${camelToKebab({ str: type })}` });
+  const div = createElementCommon('div', { id, className: `block block--${camelToKebab(type)}` });
   const p = createElementCommon('p', { className: 'block__text', textContent: '시작' });
 
   const triangle = createElementCommon('div', { className: 'block--declare-triangle' });

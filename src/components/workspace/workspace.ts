@@ -12,41 +12,6 @@ interface WorkspaceProps {
   updateWorkspaceData: (workspaceData: WorkspaceData) => void;
 }
 
-interface WorkspaceSectionProps {
-  workspaceData: WorkspaceData;
-  updateWorkspaceData: (workspaceData: WorkspaceData) => void;
-}
-
-interface OnDropAnotherBlockProps {
-  targetUniqueId: string;
-  name: string;
-  type: string;
-  workspaceData: BlockObject[];
-}
-
-interface BlockOverlapEventProps {
-  obj: BlockObject;
-  name: string;
-  type: string;
-}
-
-interface PaintWorkspaceProps {
-  section: any;
-  obj: any;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  workspaceData: WorkspaceData;
-  updateWorkspaceData: (workspaceData: WorkspaceData) => void;
-}
-
-interface OnDropWorkspaceProps {
-  section: any;
-  event: DragEvent;
-  workspaceData: WorkspaceData;
-}
-
 export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps) => {
   const section = createElementCommon('section', { id: 'workspace' });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
@@ -64,36 +29,22 @@ export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps
       const name = event.dataTransfer!.getData('name');
       const type = event.dataTransfer!.getData('type');
 
-      const newWorkspaceData = onDropAnotherBlock({
-        targetUniqueId: uniqueId,
-        name,
-        type,
-        workspaceData,
-      });
+      const newWorkspaceData = onDropAnotherBlock(uniqueId, name, type, workspaceData);
       updateWorkspaceData([...newWorkspaceData]);
     } else {
-      const newWorkspaceData = onDropWorkspace({ section, event, workspaceData });
+      const newWorkspaceData = onDropWorkspace(section, event, workspaceData);
       updateWorkspaceData([...newWorkspaceData]);
     }
   });
 
   workspaceData.forEach((obj) => {
-    paintWorkspace({
-      section,
-      obj,
-      x: obj.data.x,
-      y: obj.data.y,
-      width: 100,
-      height: 50,
-      workspaceData,
-      updateWorkspaceData,
-    });
+    paintWorkspace(section, obj, obj.data.x, obj.data.y, 100, 50, workspaceData, updateWorkspaceData);
   });
 
   return section;
 };
 
-const onDropWorkspace = ({ section, event, workspaceData }: OnDropWorkspaceProps) => {
+const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: WorkspaceData) => {
   const newWorkspaceData = deepCopyObject({ obj: workspaceData });
   const name = event.dataTransfer!.getData('name');
   const offsetX = event.dataTransfer?.getData('offsetX');
@@ -112,13 +63,18 @@ const onDropWorkspace = ({ section, event, workspaceData }: OnDropWorkspaceProps
   return newWorkspaceData;
 };
 
-export const onDropAnotherBlock = ({ targetUniqueId, name, type, workspaceData }: OnDropAnotherBlockProps) => {
+export const onDropAnotherBlock = (
+  targetUniqueId: string,
+  name: string,
+  type: string,
+  workspaceData: BlockObject[],
+) => {
   const newWorkspaceData = deepCopyObject({ obj: workspaceData });
-  const targetObj = findTargetBlock({ targetId: targetUniqueId, obj: newWorkspaceData });
+  const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
   if (!targetObj) {
     return;
   }
-  const newObj: BlockObjectValue = blockOverlapEvent({ obj: targetObj, name, type });
+  const newObj: BlockObjectValue = blockOverlapEvent(targetObj, name, type);
 
   if (newObj) {
     const uniqueId = createUniqueId();
@@ -137,7 +93,7 @@ export const onDropAnotherBlock = ({ targetUniqueId, name, type, workspaceData }
 };
 
 // TODO: 함수가 제대로 동작하지 않음 수정 필요.
-const blockOverlapEvent = ({ obj, name, type }: BlockOverlapEventProps): BlockObject => {
+const blockOverlapEvent = (obj: BlockObject, name: string, type: string): BlockObject => {
   const targetType = obj.type;
   if (targetType === 'declare') {
     if (type === 'general' || type === 'control') {
@@ -172,35 +128,26 @@ const blockOverlapEvent = ({ obj, name, type }: BlockOverlapEventProps): BlockOb
   // throw new Error('blockOverlapEvent 에러 - 예상치 못한 에러');
 };
 
-const paintWorkspace = ({
-  section,
-  obj,
-  x,
-  y,
-  width,
-  height,
-  workspaceData,
-  updateWorkspaceData,
-}: PaintWorkspaceProps) => {
+const paintWorkspace = (
+  section: HTMLElement,
+  obj: BlockObjectValue,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  workspaceData: WorkspaceData,
+  updateWorkspaceData: (workspaceData: WorkspaceData) => void,
+) => {
   if (!obj) {
     return;
   }
 
   if (Array.isArray(obj)) {
     obj.forEach((item, index) => {
-      paintWorkspace({
-        section,
-        obj: item,
-        x,
-        y: y + height * index,
-        width,
-        height,
-        workspaceData,
-        updateWorkspaceData,
-      });
+      paintWorkspace(section, item, x, y + height * index, width, height, workspaceData, updateWorkspaceData);
     });
   } else {
-    if (obj.data && (obj.data.value || obj.data.value == '')) {
+    if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
       let addX = 0;
       let addY = 0;
       if (obj.type === 'general' || obj.type === 'control') {
@@ -221,16 +168,7 @@ const paintWorkspace = ({
       });
       section.appendChild(div);
 
-      paintWorkspace({
-        section,
-        obj: obj.data.value,
-        x: x,
-        y: y + addY,
-        width,
-        height,
-        workspaceData,
-        updateWorkspaceData,
-      });
+      paintWorkspace(section, obj.data.value, x, y + addY, width, height, workspaceData, updateWorkspaceData);
     }
   }
 };

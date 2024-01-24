@@ -5,27 +5,23 @@ interface BlockMenuTypeNavButtonProps {
   korName: string;
 }
 
-interface BlockTypePaintProps {
-  korName: string;
-}
-
 export const blockMenuTypeNavButton = ({ type, korName }: BlockMenuTypeNavButtonProps) => {
   if (type === 'declare') {
-    return blockTypeDeclare({ korName });
+    return blockTypeDeclare(korName);
   } else if (type === 'general') {
-    return blockTypeGeneral({ korName });
+    return blockTypeGeneral(korName);
   } else if (type === 'control') {
-    return blockTypeControl({ korName });
+    return blockTypeControl(korName);
   } else if (type === 'expressionValue') {
-    return blockTypeExpressionValue({ korName });
+    return blockTypeExpressionValue(korName);
   } else if (type === 'expressionLogical') {
-    return blockTypeExpressionLogical({ korName });
+    return blockTypeExpressionLogical(korName);
   } else {
     throw new Error('타입메뉴 버튼 생성 오류 : 정의 되지 않은 타입입니다.');
   }
 };
 
-const blockTypeDeclare = ({ korName }: BlockTypePaintProps) => {
+const blockTypeDeclare = (korName: string) => {
   const li = createElementCommon('li', { className: 'nav-type__button nav-type__button--declare' });
   const div = createElementCommon('div', { className: 'block' });
   const p = createElementCommon('p', { className: 'nav-type__button-text', textContent: korName });
@@ -36,7 +32,7 @@ const blockTypeDeclare = ({ korName }: BlockTypePaintProps) => {
   return li;
 };
 
-const blockTypeGeneral = ({ korName }: BlockTypePaintProps) => {
+const blockTypeGeneral = (korName: string) => {
   const li = createElementCommon('li', { className: 'nav-type__button nav-type__button--general' });
   const div = createElementCommon('div', { className: 'block' });
   const p = createElementCommon('p', { className: 'nav-type__button-text', textContent: korName });
@@ -47,7 +43,7 @@ const blockTypeGeneral = ({ korName }: BlockTypePaintProps) => {
   return li;
 };
 
-const blockTypeControl = ({ korName }: BlockTypePaintProps) => {
+const blockTypeControl = (korName: string) => {
   const li = createElementCommon('li', { className: 'nav-type__button nav-type__button--control' });
   const div = createElementCommon('div', { className: 'block' });
   const p = createElementCommon('p', { className: 'nav-type__button-text', textContent: korName });
@@ -58,7 +54,7 @@ const blockTypeControl = ({ korName }: BlockTypePaintProps) => {
   return li;
 };
 
-const blockTypeExpressionValue = ({ korName }: BlockTypePaintProps) => {
+const blockTypeExpressionValue = (korName: string) => {
   const li = createElementCommon('li', { className: 'nav-type__button nav-type__button--expression-value' });
   const div = createElementCommon('div', { className: 'block' });
   const p = createElementCommon('p', { className: 'nav-type__button-text', textContent: korName });
@@ -69,7 +65,7 @@ const blockTypeExpressionValue = ({ korName }: BlockTypePaintProps) => {
   return li;
 };
 
-const blockTypeExpressionLogical = ({ korName }: BlockTypePaintProps) => {
+const blockTypeExpressionLogical = (korName: string) => {
   const li = createElementCommon('li', { className: 'nav-type__button nav-type__button--expression-logical' });
   const div = createElementCommon('div', { className: 'block' });
   const p = createElementCommon('p', { className: 'nav-type__button-text', textContent: korName });
