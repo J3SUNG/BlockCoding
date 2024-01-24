@@ -1,5 +1,5 @@
-import { BLOCK_OBJECT } from '../../constants/blockObject';
-import { BLOCK_TYPE_OBJECT } from '../../constants/blockTypeObject';
+import { BLOCK_MAP } from '../../constants/blockMap';
+import { BLOCK_TYPE_MAP } from '../../constants/blockTypeMap';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { blockMenuBlockNavButton } from './blockMenuBlockNavButton';
 import { SelectedType } from '../../types/stateType';
@@ -11,8 +11,8 @@ interface BlockMenuBlockNavProps {
 export const blockMenuBlockNav = ({ selectedType }: BlockMenuBlockNavProps) => {
   const blockNav = createElementCommon('nav', { id: 'nav-block' });
 
-  Object.values(BLOCK_OBJECT)
-    .filter((block) => block.type === BLOCK_TYPE_OBJECT[selectedType].name)
+  Object.values(BLOCK_MAP)
+    .filter((block) => block.type === BLOCK_TYPE_MAP[selectedType].name)
     .forEach((block, index) => {
       const div = blockMenuBlockNavButton({
         name: block.name,

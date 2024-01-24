@@ -8,7 +8,7 @@ export interface BlockObject {
     x: number;
     y: number;
     value: BlockObjectValue;
-    varName?: BlockObject;
+    varName?: string;
     condition?: BlockObject;
     operator?: string;
   };

@@ -1,11 +1,11 @@
 import { UpdateWorkspaceDataAll, UpdateWorkspaceDataValue, WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { BLOCK_OBJECT } from '../../constants/blockObject';
 import { deepCopyObject } from '../../utils/deepCopyObject';
 import { createUniqueId } from '../../utils/createUniqueId';
 import { blockController } from '../../utils/blockController';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock } from '../../utils/findTargetBlock';
+import { createNewBlockClass } from '../../constants/blockClass';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
@@ -53,12 +53,9 @@ const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: 
   const rect = section.getBoundingClientRect();
   const x = event.clientX - rect.left - Number(offsetX);
   const y = event.clientY - rect.top - Number(offsetY);
-  const newBlock = deepCopyObject(BLOCK_OBJECT[name]);
 
   const uniqueId = createUniqueId();
-  newBlock.data.id = uniqueId;
-  newBlock.data.x = x;
-  newBlock.data.y = y;
+  const newBlock = createNewBlockClass(name, uniqueId, x, y);
   newWorkspaceData.push(newBlock);
 
   return newWorkspaceData;
@@ -80,8 +77,7 @@ export const onDropAnotherBlock = (
   if (newObj) {
     const uniqueId = createUniqueId();
 
-    const newBlock = deepCopyObject(BLOCK_OBJECT[name]);
-    newBlock.data.id = uniqueId;
+    const newBlock = deepCopyObject(createNewBlockClass(name, uniqueId, 0, 0));
 
     if (Array.isArray(newObj.data.value)) {
       newObj.data.value.push(newBlock);
