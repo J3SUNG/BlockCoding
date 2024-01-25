@@ -42,10 +42,12 @@ export const blockCoding = () => {
       if (Array.isArray(targetObj.data.value)) {
         targetObj.data.value.push(value as BlockObject);
       } else {
+        if (targetObj.data.value === value) {
+          return;
+        }
         targetObj.data.value = value;
       }
     }
-
     setWorkspaceData(newWorkspaceData);
   };
 
