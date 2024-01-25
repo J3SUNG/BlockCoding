@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from 'types/blockObject';
+import { BlockObject, BlockObjectValue } from '../types/blockObject';
 
 class BlockClassCommon implements BlockObject {
   name = ''; // 기본값 제공
