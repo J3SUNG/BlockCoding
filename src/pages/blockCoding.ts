@@ -10,7 +10,6 @@ export const blockCoding = () => {
   const [programState, setProgramState] = useState<ProgramState>('programState', 'stop');
   const [consoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
   const [workspaceData, setWorkspaceData] = useState<WorkspaceData>('workspaceData', []);
-  const [seqNo, setSeqNo] = useState('seqNo', 0);
 
   const updateProgramStateRun = () => {
     setProgramState('run');
@@ -30,10 +29,6 @@ export const blockCoding = () => {
 
   const updateWorkspaceData = (data: WorkspaceData) => {
     setWorkspaceData(data);
-  };
-
-  const increaseSeqNo = () => {
-    setSeqNo(seqNo + 1);
   };
 
   const gnbComponent = gnb({

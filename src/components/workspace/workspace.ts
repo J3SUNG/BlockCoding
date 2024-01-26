@@ -1,10 +1,11 @@
 import { WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BLOCK_OBJECT } from '../../constants/blockObject';
-import { onDropAnotherBlock } from '../../utils/onDropAnotherBlock';
 import { deepCopyObject } from '../../utils/deepCopyObject';
 import { createUniqueId } from '../../utils/createUniqueId';
 import { blockController } from '../../utils/blockController';
+import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { findTargetBlock } from '../../utils/findTargetBlock';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
@@ -14,6 +15,19 @@ interface WorkspaceProps {
 interface WorkspaceSectionProps {
   workspaceData: WorkspaceData;
   updateWorkspaceData: (workspaceData: WorkspaceData) => void;
+}
+
+interface InsertBlockAnotherBlock {
+  targetUniqueId: string;
+  name: string;
+  type: string;
+  workspaceData: BlockObject[];
+}
+
+interface BlockOverlapEventProps {
+  obj: BlockObject;
+  name: string;
+  type: string;
 }
 
 interface PaintWorkspaceProps {
@@ -27,67 +41,39 @@ interface PaintWorkspaceProps {
   updateWorkspaceData: (workspaceData: WorkspaceData) => void;
 }
 
-interface OnDropWorkspaceProps {
+interface InserBlockWorkspaceData {
   section: any;
   event: DragEvent;
   workspaceData: WorkspaceData;
-  updateWorkspaceData: (workspaceData: WorkspaceData) => void;
 }
 
 export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps) => {
-  const section = workspaceSection({ workspaceData, updateWorkspaceData });
+  const section = createElementCommon('section', { id: 'workspace' });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
   const trashIcon = createElementCommon('span', { className: 'material-symbols-outlined', textContent: 'delete' });
 
-  section.addEventListener('dragover', function (event) {
+  section.addEventListener('dragover', function (event: DragEvent) {
     event.preventDefault();
   });
 
-  section.addEventListener('drop', function (event) {
-    event.preventDefault();
-    if (event.target !== section) {
-      // TODO: 다른 블럭들과 이벤트 발생
-    } else {
-      onDropWorkspace({ section, event, workspaceData, updateWorkspaceData });
-    }
-  });
-
-  workspaceData.forEach((obj) => {
-    paintWorkspace({
-      section,
-      obj,
-      x: obj.data.x,
-      y: obj.data.y,
-      width: 100,
-      height: 50,
-      workspaceData,
-      updateWorkspaceData,
-    });
-  });
-
-  return section;
-};
-
-const workspaceSection = ({ workspaceData, updateWorkspaceData }: WorkspaceSectionProps) => {
-  const section = createElementCommon('section', { id: 'workspace' });
-
-  section.addEventListener('dragover', function (event) {
-    event.preventDefault();
-  });
-
-  section.addEventListener('drop', function (event) {
+  section.addEventListener('drop', function (event: DragEvent) {
     event.preventDefault();
     if (event.target !== section) {
       const target = event.target as Element;
       const uniqueId = target.closest('div')?.id ?? '';
       const name = event.dataTransfer!.getData('name');
       const type = event.dataTransfer!.getData('type');
-      const newWorkspaceData = deepCopyObject({ obj: workspaceData });
 
-      onDropAnotherBlock({ targetUniqueId: uniqueId, name, type, obj: workspaceData });
-      updateWorkspaceData([...workspaceData]);
+      const newWorkspaceData = insertBlockAnotherBlock({
+        targetUniqueId: uniqueId,
+        name,
+        type,
+        workspaceData,
+      });
+      updateWorkspaceData(newWorkspaceData);
     } else {
-      onDropWorkspace({ section, event, workspaceData, updateWorkspaceData });
+      const newWorkspaceData = inserBlockWorkspaceData({ section, event, workspaceData });
+      updateWorkspaceData(newWorkspaceData);
     }
   });
 
@@ -107,21 +93,83 @@ const workspaceSection = ({ workspaceData, updateWorkspaceData }: WorkspaceSecti
   return section;
 };
 
-const onDropWorkspace = ({ section, event, workspaceData, updateWorkspaceData }: OnDropWorkspaceProps) => {
+const inserBlockWorkspaceData = ({ section, event, workspaceData }: InserBlockWorkspaceData) => {
+  const newWorkspaceData = deepCopyObject({ obj: workspaceData });
   const name = event.dataTransfer!.getData('name');
   const offsetX = event.dataTransfer?.getData('offsetX');
   const offsetY = event.dataTransfer?.getData('offsetY');
   const rect = section.getBoundingClientRect();
   const x = event.clientX - rect.left - Number(offsetX);
   const y = event.clientY - rect.top - Number(offsetY);
-  const deepCopiedObj = deepCopyObject({ obj: BLOCK_OBJECT[name] });
+  const newBlock = deepCopyObject({ obj: BLOCK_OBJECT[name] });
 
   const uniqueId = createUniqueId();
-  deepCopiedObj.data.id = uniqueId;
-  deepCopiedObj.data.x = x;
-  deepCopiedObj.data.y = y;
+  newBlock.data.id = uniqueId;
+  newBlock.data.x = x;
+  newBlock.data.y = y;
+  newWorkspaceData.push(newBlock);
 
-  updateWorkspaceData([...workspaceData, { ...deepCopiedObj }]);
+  return newWorkspaceData;
+};
+
+export const insertBlockAnotherBlock = ({ targetUniqueId, name, type, workspaceData }: InsertBlockAnotherBlock) => {
+  const newWorkspaceData = deepCopyObject({ obj: workspaceData });
+  const targetObj = findTargetBlock({ targetId: targetUniqueId, obj: newWorkspaceData });
+  if (!targetObj) {
+    return;
+  }
+  const newObj: BlockObjectValue = blockOverlapEvent({ obj: targetObj, name, type });
+
+  if (newObj) {
+    const uniqueId = createUniqueId();
+
+    const newBlock = deepCopyObject({ obj: BLOCK_OBJECT[name] });
+    newBlock.data.id = uniqueId;
+
+    if (Array.isArray(newObj.data.value)) {
+      newObj.data.value.push(newBlock);
+    } else if (typeof newObj === 'object' && newObj !== null) {
+      newObj.data.value = newBlock;
+    }
+  }
+
+  return newWorkspaceData;
+};
+
+// TODO: 함수가 제대로 동작하지 않음 수정 필요.
+const blockOverlapEvent = ({ obj, name, type }: BlockOverlapEventProps): BlockObject => {
+  const targetType = obj.type;
+  if (targetType === 'declare') {
+    if (type === 'general' || type === 'control') {
+      // TODO: 선언 블럭 안에 일반, 제어 블럭 삽입
+    }
+  } else if (targetType === 'general') {
+    if (type === 'general' || type === 'control') {
+      // TODO: 일반 블럭 위, 아래에 일반, 제어 블럭 연결
+    } else if (type === 'expressionValue' || type === 'expressionLogical') {
+      // TODO: 일반 블럭의 값에 표현식 삽입
+      if (name === 'value') {
+      }
+    }
+  } else if (obj.type === 'control') {
+    if (type === 'general' || type === 'control') {
+      // TODO: 조건 블럭 내부에 일반, 제어 블럭 삽입
+    } else if (type === 'expressionLogical') {
+      // TODO: 조건 블럭의 조건에 논리식 삽입
+    }
+  } else if (obj.type === 'expressionValue') {
+    if (type === 'expressionValue' || type === 'expressionLogical') {
+      // TODO: 값 블럭의 값에 값, 논리식 삽입
+    }
+  } else if (obj.type === 'expressionLogical') {
+    if (type === 'expressionValue' || type === 'expressionLogical') {
+      // TODO: 논리 블럭의 값에 값, 논리식 삽입
+    }
+  }
+
+  return obj;
+  // EXCEPTION : blockOverlapEvent 에러
+  // throw new Error('blockOverlapEvent 에러 - 예상치 못한 에러');
 };
 
 const paintWorkspace = ({
