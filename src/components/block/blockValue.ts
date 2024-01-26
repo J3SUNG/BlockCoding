@@ -2,7 +2,7 @@ import { camelToKebab } from '../../utils/camelToKebab';
 import { BlockCommonProps } from '../../types/blockCommonProps';
 import { createElementCommon } from '../../utils/createElementCommon';
 
-export const blockValue = ({ id, x, y, type, value, updateWorkspaceDataValue }: BlockCommonProps) => {
+export const blockValue = ({ id, x, y, type, value, onValueChange }: BlockCommonProps) => {
   const div = createElementCommon('div', { id, className: `block block--${camelToKebab(type)}` });
   const input = createElementCommon('input', {
     className: 'block__input',
@@ -20,8 +20,8 @@ export const blockValue = ({ id, x, y, type, value, updateWorkspaceDataValue }: 
 
     const div = target.closest('div');
 
-    if (updateWorkspaceDataValue) {
-      updateWorkspaceDataValue(div?.id ?? '', value);
+    if (onValueChange) {
+      onValueChange(div?.id ?? '', value);
     }
   });
 

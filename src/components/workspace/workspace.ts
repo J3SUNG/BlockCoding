@@ -159,7 +159,7 @@ const paintWorkspace = (
         value: obj.data.value.toString(),
         id: obj.data.id,
         type: obj.type,
-        updateWorkspaceDataValue,
+        onValueChange: updateWorkspaceDataValue,
       });
       section.appendChild(div);
 
