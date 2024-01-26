@@ -5,7 +5,7 @@ import { blockMenu } from '../components/blockMenu/blockMenu';
 import { workspace } from '../components/workspace/workspace';
 import { consoleSpace } from '../components/consoleSpace/consoleSpace';
 import { createElementCommon } from '../utils/createElementCommon';
-import { deepCopyObject } from '../utils/deepCopyObject';
+import { deepCopy } from '../utils/deepCopy';
 import { findTargetBlock } from '../utils/findTargetBlock';
 import { BlockObject, BlockObjectValue } from '../types/blockObject';
 
@@ -35,7 +35,7 @@ export const blockCoding = () => {
   };
 
   const updateWorkspaceDataValue = (targetId: string, value: BlockObjectValue): void => {
-    const newWorkspaceData = deepCopyObject(workspaceData);
+    const newWorkspaceData = deepCopy(workspaceData);
     const targetObj = findTargetBlock(targetId, newWorkspaceData);
 
     if (targetObj) {
