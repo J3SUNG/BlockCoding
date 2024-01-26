@@ -17,7 +17,7 @@ interface WorkspaceSectionProps {
   updateWorkspaceData: (workspaceData: WorkspaceData) => void;
 }
 
-interface OnDropAnotherBlockProps {
+interface InsertBlockAnotherBlock {
   targetUniqueId: string;
   name: string;
   type: string;
@@ -41,7 +41,7 @@ interface PaintWorkspaceProps {
   updateWorkspaceData: (workspaceData: WorkspaceData) => void;
 }
 
-interface OnDropWorkspaceProps {
+interface InserBlockWorkspaceData {
   section: any;
   event: DragEvent;
   workspaceData: WorkspaceData;
@@ -64,16 +64,16 @@ export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps
       const name = event.dataTransfer!.getData('name');
       const type = event.dataTransfer!.getData('type');
 
-      const newWorkspaceData = onDropAnotherBlock({
+      const newWorkspaceData = insertBlockAnotherBlock({
         targetUniqueId: uniqueId,
         name,
         type,
         workspaceData,
       });
-      updateWorkspaceData([...newWorkspaceData]);
+      updateWorkspaceData(newWorkspaceData);
     } else {
-      const newWorkspaceData = onDropWorkspace({ section, event, workspaceData });
-      updateWorkspaceData([...newWorkspaceData]);
+      const newWorkspaceData = inserBlockWorkspaceData({ section, event, workspaceData });
+      updateWorkspaceData(newWorkspaceData);
     }
   });
 
@@ -93,7 +93,7 @@ export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps
   return section;
 };
 
-const onDropWorkspace = ({ section, event, workspaceData }: OnDropWorkspaceProps) => {
+const inserBlockWorkspaceData = ({ section, event, workspaceData }: InserBlockWorkspaceData) => {
   const newWorkspaceData = deepCopyObject({ obj: workspaceData });
   const name = event.dataTransfer!.getData('name');
   const offsetX = event.dataTransfer?.getData('offsetX');
@@ -112,7 +112,7 @@ const onDropWorkspace = ({ section, event, workspaceData }: OnDropWorkspaceProps
   return newWorkspaceData;
 };
 
-export const onDropAnotherBlock = ({ targetUniqueId, name, type, workspaceData }: OnDropAnotherBlockProps) => {
+export const insertBlockAnotherBlock = ({ targetUniqueId, name, type, workspaceData }: InsertBlockAnotherBlock) => {
   const newWorkspaceData = deepCopyObject({ obj: workspaceData });
   const targetObj = findTargetBlock({ targetId: targetUniqueId, obj: newWorkspaceData });
   if (!targetObj) {
