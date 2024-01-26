@@ -5,7 +5,7 @@ import { createUniqueId } from '../../utils/createUniqueId';
 import { blockController } from '../../utils/blockController';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock } from '../../utils/findTargetBlock';
-import { createNewBlockClass } from '../../constants/blockClass';
+import { createBlock } from '../../classes/factory/createBlock';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
@@ -55,7 +55,7 @@ const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: 
   const y = event.clientY - rect.top - Number(offsetY);
 
   const uniqueId = createUniqueId();
-  const newBlock = createNewBlockClass(name, uniqueId, x, y);
+  const newBlock = createBlock(name, uniqueId, x, y);
   newWorkspaceData.push(newBlock);
 
   return newWorkspaceData;
@@ -77,7 +77,7 @@ export const onDropAnotherBlock = (
   if (newObj) {
     const uniqueId = createUniqueId();
 
-    const newBlock = deepCopyObject(createNewBlockClass(name, uniqueId, 0, 0));
+    const newBlock = deepCopyObject(createBlock(name, uniqueId, 0, 0));
 
     if (Array.isArray(newObj.data.value)) {
       newObj.data.value.push(newBlock);
