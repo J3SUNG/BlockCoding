@@ -1,8 +1,7 @@
 import { UpdateWorkspaceDataAll, UpdateWorkspaceDataValue, WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { deepCopyObject } from '../../utils/deepCopyObject';
+import { deepCopy } from '../../utils/deepCopy';
 import { createUniqueId } from '../../utils/createUniqueId';
-import { blockController } from '../../utils/blockController';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock } from '../../utils/findTargetBlock';
 import { createBlock } from '../../classes/factory/createBlock';
@@ -31,22 +30,22 @@ export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspa
       const type = event.dataTransfer!.getData('type');
 
       const newWorkspaceData = onDropAnotherBlock(uniqueId, name, type, workspaceData);
-      updateWorkspaceDataAll([...newWorkspaceData]);
+      updateWorkspaceDataAll(newWorkspaceData!);
     } else {
       const newWorkspaceData = onDropWorkspace(section, event, workspaceData);
-      updateWorkspaceDataAll([...newWorkspaceData]);
+      updateWorkspaceDataAll(newWorkspaceData);
     }
   });
 
   workspaceData.forEach((obj) => {
-    paintWorkspace(section, obj, obj.data.x, obj.data.y, 100, 50, updateWorkspaceDataValue);
+    paintWorkspace(section, obj, { x: obj.data.x, y: obj.data.y, index: 0 }, updateWorkspaceDataValue);
   });
 
   return section;
 };
 
 const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: WorkspaceData) => {
-  const newWorkspaceData = deepCopyObject(workspaceData);
+  const newWorkspaceData = deepCopy(workspaceData);
   const name = event.dataTransfer!.getData('name');
   const offsetX = event.dataTransfer?.getData('offsetX');
   const offsetY = event.dataTransfer?.getData('offsetY');
@@ -58,6 +57,8 @@ const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: 
   const newBlock = createBlock(name, uniqueId, x, y);
   newWorkspaceData.push(newBlock);
 
+  console.log(workspaceData);
+
   return newWorkspaceData;
 };
 
@@ -67,7 +68,7 @@ export const onDropAnotherBlock = (
   type: string,
   workspaceData: BlockObject[],
 ) => {
-  const newWorkspaceData = deepCopyObject(workspaceData);
+  const newWorkspaceData = deepCopy(workspaceData);
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
   if (!targetObj) {
     return;
@@ -77,7 +78,7 @@ export const onDropAnotherBlock = (
   if (newObj) {
     const uniqueId = createUniqueId();
 
-    const newBlock = deepCopyObject(createBlock(name, uniqueId, 0, 0));
+    const newBlock = deepCopy(createBlock(name, uniqueId, 0, 0));
 
     if (Array.isArray(newObj.data.value)) {
       newObj.data.value.push(newBlock);
@@ -126,13 +127,15 @@ const blockOverlapEvent = (obj: BlockObject, name: string, type: string): BlockO
 };
 
 const paintWorkspace = (
-  section: HTMLElement,
+  parent: HTMLElement,
   obj: BlockObjectValue,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
+  data: {
+    x: number;
+    y: number;
+    index?: number;
+  },
   updateWorkspaceDataValue: UpdateWorkspaceDataValue,
+  setPosition?: (x: number, y: number, index: number) => { childX: number; childY: number },
 ) => {
   if (!obj) {
     return;
@@ -140,30 +143,33 @@ const paintWorkspace = (
 
   if (Array.isArray(obj)) {
     obj.forEach((item, index) => {
-      paintWorkspace(section, item, x, y + height * index, width, height, updateWorkspaceDataValue);
+      paintWorkspace(parent, item, { x: data.x, y: data.y, index }, updateWorkspaceDataValue, setPosition);
     });
   } else {
     if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
-      let addX = 0;
-      let addY = 0;
-      if (obj.type === 'general' || obj.type === 'control') {
-        addY = height;
-      } else if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
-        addX = 60;
-        addY = 5;
+      console.log(obj.name, data.x, data.y, data.index);
+      let newX = data.x;
+      let newY = data.y;
+      if (setPosition) {
+        const { childX, childY } = setPosition(data.x, data.y, data.index!);
+        newX = childX;
+        newY = childY;
       }
-      const div = blockController({
-        x: x + addX,
-        y: y + addY,
-        name: obj.name,
-        value: obj.data.value.toString(),
-        id: obj.data.id,
-        type: obj.type,
-        onValueChange: updateWorkspaceDataValue,
-      });
-      section.appendChild(div);
 
-      paintWorkspace(section, obj.data.value, x, y + addY, width, height, updateWorkspaceDataValue);
+      const { childX, childY } = obj.setChildPosition!(data.x, data.y, data.index);
+
+      if (obj.paintBlock) {
+        const div = obj.paintBlock(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
+        parent.appendChild(div);
+
+        paintWorkspace(
+          div,
+          obj.data.value,
+          { x: childX, y: childY, index: data.index },
+          updateWorkspaceDataValue,
+          obj.setChildPosition,
+        );
+      }
     }
   }
 };
