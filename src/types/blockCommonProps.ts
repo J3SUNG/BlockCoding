@@ -7,5 +7,5 @@ export interface BlockCommonProps {
   x: number;
   y: number;
   id: string;
-  updateWorkspaceDataValue?: UpdateWorkspaceDataValue;
+  onValueChange?: UpdateWorkspaceDataValue;
 }

@@ -1,4 +1,4 @@
-import { createNewBlockClass } from '../../../constants/blockClass';
+import { createBlock } from '../../../classes/factory/createBlock';
 import { BlockObject, BlockObjectValue } from '../../../types/blockObject';
 import { WorkspaceData } from '../../../types/stateType';
 import { createUniqueId } from '../../../utils/createUniqueId';
@@ -15,7 +15,7 @@ export const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspac
   const y = event.clientY - rect.top - Number(offsetY);
 
   const uniqueId = createUniqueId();
-  const newBlock = createNewBlockClass(name, uniqueId, x, y);
+  const newBlock = createBlock(name, uniqueId, x, y);
   newWorkspaceData.push(newBlock);
 
   return newWorkspaceData;
@@ -35,7 +35,7 @@ export const onDropAnotherBlock = (
   const newObj: BlockObjectValue = blockOverlapEvent(targetObj, name, type);
 
   if (newObj) {
-    const newBlock = inputBlock ? inputBlock : deepCopyObject(createNewBlockClass(name, createUniqueId(), 0, 0));
+    const newBlock = inputBlock ? inputBlock : deepCopyObject(createBlock(name, createUniqueId(), 0, 0));
 
     if (Array.isArray(newObj.data.value)) {
       newObj.data.value.push(newBlock);
