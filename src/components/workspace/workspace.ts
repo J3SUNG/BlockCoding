@@ -29,10 +29,10 @@ export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps
       const name = event.dataTransfer!.getData('name');
       const type = event.dataTransfer!.getData('type');
 
-      const newWorkspaceData = onDropAnotherBlock(uniqueId, name, type, workspaceData);
+      const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, type, workspaceData);
       updateWorkspaceData([...newWorkspaceData]);
     } else {
-      const newWorkspaceData = onDropWorkspace(section, event, workspaceData);
+      const newWorkspaceData = inserBlockWorkspaceData(section, event, workspaceData);
       updateWorkspaceData([...newWorkspaceData]);
     }
   });
@@ -44,7 +44,7 @@ export const workspace = ({ workspaceData, updateWorkspaceData }: WorkspaceProps
   return section;
 };
 
-const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: WorkspaceData) => {
+const inserBlockWorkspaceData = (section: HTMLElement, event: DragEvent, workspaceData: WorkspaceData) => {
   const newWorkspaceData = deepCopyObject(workspaceData);
   const name = event.dataTransfer!.getData('name');
   const offsetX = event.dataTransfer?.getData('offsetX');
@@ -63,7 +63,7 @@ const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: 
   return newWorkspaceData;
 };
 
-export const onDropAnotherBlock = (
+export const insertBlockAnotherBlock = (
   targetUniqueId: string,
   name: string,
   type: string,
