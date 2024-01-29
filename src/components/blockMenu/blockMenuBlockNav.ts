@@ -10,15 +10,16 @@ interface BlockMenuBlockNavProps {
 
 export const blockMenuBlockNav = ({ selectedType }: BlockMenuBlockNavProps) => {
   const blockNav = createElementCommon('nav', { id: 'nav-block' });
-
+  const NAV_BLOCK_PADDING = 20;
+  const NAV_BLOCK_HEIGHT = 60;
   Object.values(BLOCK_MAP)
     .filter((block) => block.type === BLOCK_TYPE_MAP[selectedType].name)
     .forEach((block, index) => {
       const div = blockMenuBlockNavButton({
         name: block.name,
         type: block.type,
-        x: 20,
-        y: index * 80 + 20,
+        x: NAV_BLOCK_PADDING,
+        y: index * NAV_BLOCK_HEIGHT + NAV_BLOCK_PADDING,
       });
       blockNav.appendChild(div);
     });
