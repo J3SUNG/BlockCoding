@@ -1,3 +1,4 @@
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockCommon } from './blockClassCommon';
 
@@ -24,5 +25,12 @@ export class BlockStart extends BlockCommon {
     div.appendChild(p);
 
     return div;
+  }
+  insertBlock(obj: BlockObject, type: string): void {
+    if (type === 'general' || type === 'control') {
+      if (Array.isArray(this.data.value)) {
+        this.data.value.splice(this.data.value.length, 0, obj);
+      }
+    }
   }
 }
