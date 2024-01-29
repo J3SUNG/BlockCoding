@@ -9,8 +9,8 @@ interface BlockMenuBlockNavButtonProps {
 
 export const blockMenuBlockNavButton = ({ name, type, x, y }: BlockMenuBlockNavButtonProps) => {
   const block = createBlock(name, '', x, y);
-  const div = block.paintBlock(block.data.id, block.data.x, block.data.y);
-  div.setAttribute('style', `position:relative;`);
+
+  const div = block.paintBlock!(block.data.id, block.data.x, block.data.y);
 
   div.draggable = true;
   div.addEventListener('dragstart', function (event: DragEvent) {
