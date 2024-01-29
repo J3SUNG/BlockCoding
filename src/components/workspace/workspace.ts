@@ -57,8 +57,6 @@ const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: 
   const newBlock = createBlock(name, uniqueId, x, y);
   newWorkspaceData.push(newBlock);
 
-  console.log(workspaceData);
-
   return newWorkspaceData;
 };
 
@@ -147,7 +145,6 @@ const paintWorkspace = (
     });
   } else {
     if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
-      console.log(obj.name, data.x, data.y, data.index);
       let newX = data.x;
       let newY = data.y;
       if (setPosition) {
