@@ -19,11 +19,22 @@ export class BlockCommon implements BlockObject {
     x: number,
     y: number,
     value?: BlockObjectValue,
-    onValueChange?: (id: string, value: BlockObjectValue) => void,
+    onValueChange?: (id: string, value: BlockObjectValue, insertLocation?: string) => void,
   ) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
 
     return div;
+  }
+  insertBlock(obj: BlockObject, type: string, name?: string) {
+    return;
+  }
+
+  getInnerBlock(): BlockObjectValue[] {
+    return [this.data.value];
+  }
+
+  runBlockLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
+    return '';
   }
 }

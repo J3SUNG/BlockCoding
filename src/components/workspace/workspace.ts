@@ -25,11 +25,11 @@ export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspa
     event.preventDefault();
     if (event.target !== section) {
       const target = event.target as Element;
-      const uniqueId = target.closest('div')?.id ?? '';
-      const name = event.dataTransfer!.getData('name');
-      const type = event.dataTransfer!.getData('type');
+      const targetBlockId = target.closest('div')?.id ?? '';
+      const dragBlockName = event.dataTransfer!.getData('name');
+      const dragBlockType = event.dataTransfer!.getData('type');
 
-      const newWorkspaceData = onDropAnotherBlock(uniqueId, name, type, workspaceData);
+      const newWorkspaceData = onDropAnotherBlock(targetBlockId, dragBlockName, dragBlockType, workspaceData);
       updateWorkspaceDataAll(newWorkspaceData!);
     } else {
       const newWorkspaceData = onDropWorkspace(section, event, workspaceData);
@@ -57,73 +57,27 @@ const onDropWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: 
   const newBlock = createBlock(name, uniqueId, x, y);
   newWorkspaceData.push(newBlock);
 
-  console.log(workspaceData);
-
   return newWorkspaceData;
 };
 
 export const onDropAnotherBlock = (
-  targetUniqueId: string,
-  name: string,
-  type: string,
+  targetBlockId: string,
+  dragBlockName: string,
+  dragBlockType: string,
   workspaceData: BlockObject[],
 ) => {
   const newWorkspaceData = deepCopy(workspaceData);
-  const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
-  if (!targetObj) {
+  const targetBlock = findTargetBlock(targetBlockId, newWorkspaceData);
+  if (!targetBlock) {
     return;
   }
-  const newObj: BlockObjectValue = blockOverlapEvent(targetObj, name, type);
 
-  if (newObj) {
-    const uniqueId = createUniqueId();
+  const uniqueId = createUniqueId();
+  const newBlock = createBlock(dragBlockName, uniqueId, 0, 0);
 
-    const newBlock = deepCopy(createBlock(name, uniqueId, 0, 0));
-
-    if (Array.isArray(newObj.data.value)) {
-      newObj.data.value.push(newBlock);
-    } else if (typeof newObj === 'object' && newObj !== null) {
-      newObj.data.value = newBlock;
-    }
-  }
+  targetBlock.insertBlock(newBlock, dragBlockType, dragBlockName);
 
   return newWorkspaceData;
-};
-
-// TODO: 함수가 제대로 동작하지 않음 수정 필요.
-const blockOverlapEvent = (obj: BlockObject, name: string, type: string): BlockObject => {
-  const targetType = obj.type;
-  if (targetType === 'declare') {
-    if (type === 'general' || type === 'control') {
-      // TODO: 선언 블럭 안에 일반, 제어 블럭 삽입
-    }
-  } else if (targetType === 'general') {
-    if (type === 'general' || type === 'control') {
-      // TODO: 일반 블럭 위, 아래에 일반, 제어 블럭 연결
-    } else if (type === 'expressionValue' || type === 'expressionLogical') {
-      // TODO: 일반 블럭의 값에 표현식 삽입
-      if (name === 'value') {
-      }
-    }
-  } else if (obj.type === 'control') {
-    if (type === 'general' || type === 'control') {
-      // TODO: 조건 블럭 내부에 일반, 제어 블럭 삽입
-    } else if (type === 'expressionLogical') {
-      // TODO: 조건 블럭의 조건에 논리식 삽입
-    }
-  } else if (obj.type === 'expressionValue') {
-    if (type === 'expressionValue' || type === 'expressionLogical') {
-      // TODO: 값 블럭의 값에 값, 논리식 삽입
-    }
-  } else if (obj.type === 'expressionLogical') {
-    if (type === 'expressionValue' || type === 'expressionLogical') {
-      // TODO: 논리 블럭의 값에 값, 논리식 삽입
-    }
-  }
-
-  return obj;
-  // EXCEPTION : blockOverlapEvent 에러
-  // throw new Error('blockOverlapEvent 에러 - 예상치 못한 에러');
 };
 
 const paintWorkspace = (
@@ -142,12 +96,17 @@ const paintWorkspace = (
   }
 
   if (Array.isArray(obj)) {
-    obj.forEach((item, index) => {
-      paintWorkspace(parent, item, { x: data.x, y: data.y, index }, updateWorkspaceDataValue, setPosition);
+    obj.forEach((item, itemIndex) => {
+      paintWorkspace(
+        parent,
+        item,
+        { x: data.x, y: data.y, index: itemIndex + (data.index ?? 0) },
+        updateWorkspaceDataValue,
+        setPosition,
+      );
     });
   } else {
     if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
-      console.log(obj.name, data.x, data.y, data.index);
       let newX = data.x;
       let newY = data.y;
       if (setPosition) {
@@ -156,19 +115,19 @@ const paintWorkspace = (
         newY = childY;
       }
 
-      const { childX, childY } = obj.setChildPosition!(data.x, data.y, data.index);
-
       if (obj.paintBlock) {
         const div = obj.paintBlock(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
         parent.appendChild(div);
 
-        paintWorkspace(
-          div,
-          obj.data.value,
-          { x: childX, y: childY, index: data.index },
-          updateWorkspaceDataValue,
-          obj.setChildPosition,
-        );
+        obj.getInnerBlock().forEach((item, itemIndex) => {
+          paintWorkspace(
+            div,
+            item,
+            { x: newX, y: newY, index: itemIndex },
+            updateWorkspaceDataValue,
+            obj.setChildPosition,
+          );
+        });
       }
     }
   }
