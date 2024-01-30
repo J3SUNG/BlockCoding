@@ -1,8 +1,4 @@
-interface CamelToKebabProps {
-  str: string;
-}
-
-export const camelToKebab = ({ str }: CamelToKebabProps) => {
+export const camelToKebab = (str: string) => {
   return str
     .split('')
     .map((char, index) => {

@@ -1,18 +1,13 @@
 import { BlockObject, BlockObjectValue } from '../types/blockObject';
 
-interface FindTargetBlockProps {
-  targetId: string;
-  obj: BlockObjectValue;
-}
-
-export const findTargetBlock = ({ targetId, obj }: FindTargetBlockProps): BlockObject | null => {
+export const findTargetBlock = (targetId: string, obj: BlockObjectValue): BlockObject | null => {
   if (!obj) {
     return null;
   }
 
   if (Array.isArray(obj)) {
     for (const item of obj) {
-      const targetObj = findTargetBlock({ targetId, obj: item });
+      const targetObj = findTargetBlock(targetId, item);
 
       if (targetObj) {
         return targetObj;
@@ -23,7 +18,7 @@ export const findTargetBlock = ({ targetId, obj }: FindTargetBlockProps): BlockO
       return obj;
     }
 
-    return findTargetBlock({ targetId, obj: obj.data.value });
+    return findTargetBlock(targetId, obj.data.value);
   }
 
   return null;

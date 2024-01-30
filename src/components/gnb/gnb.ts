@@ -10,13 +10,6 @@ interface GnbProps {
   updateConsoleLog: UpdateConsoleLog;
 }
 
-interface RunProgramProps {
-  workspaceData: WorkspaceData;
-  updateConsoleLog: UpdateConsoleLog;
-  updateProgramStateRun: UpdateProgramState;
-  updateProgramStateStop: UpdateProgramState;
-}
-
 export const gnb = ({
   workspaceData,
   updateProgramStateRun,
@@ -34,7 +27,7 @@ export const gnb = ({
 
   playButton.addEventListener('mousedown', () => {
     setTimeout(() => {
-      runProgram({ workspaceData, updateConsoleLog, updateProgramStateRun, updateProgramStateStop });
+      runProgram(workspaceData, updateConsoleLog, updateProgramStateRun, updateProgramStateStop);
     });
   });
 
@@ -49,12 +42,12 @@ export const gnb = ({
   return header;
 };
 
-const runProgram = ({
-  workspaceData,
-  updateConsoleLog,
-  updateProgramStateRun,
-  updateProgramStateStop,
-}: RunProgramProps) => {
+const runProgram = (
+  workspaceData: WorkspaceData,
+  updateConsoleLog: UpdateConsoleLog,
+  updateProgramStateRun: UpdateProgramState,
+  updateProgramStateStop: UpdateProgramState,
+) => {
   updateProgramStateRun();
   const startBlock = workspaceData.filter((block) => {
     return block.name === 'start' && block.data;

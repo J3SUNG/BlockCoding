@@ -9,7 +9,7 @@ interface OnUpdateValueBlockProps {
 }
 
 export const blockValue = ({ id, x, y, type, value, workspaceData, updateWorkspaceData }: BlockCommonProps) => {
-  const div = createElementCommon('div', { id, className: `block block--${camelToKebab({ str: type })}` });
+  const div = createElementCommon('div', { id, className: `block block--${camelToKebab(type)}` });
   const input = createElementCommon('input', {
     className: 'block__input',
     value: value ? value : '10',
