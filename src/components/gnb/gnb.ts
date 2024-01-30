@@ -1,14 +1,16 @@
-import { ConsoleLog, ProgramState, UpdateConsoleLog, UpdateProgramState, WorkspaceData } from '../../types/stateType';
+import { ProgramState, UpdateConsoleLog, UpdateProgramState, WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockObject } from '../../types/blockObject';
+import { useState } from '../../core/core';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
-  updateProgramState: UpdateProgramState;
   updateConsoleLog: UpdateConsoleLog;
+  render: () => void;
 }
 
-export const gnb = ({ getWorkspaceData, updateProgramState, updateConsoleLog }: GnbProps) => {
+export const gnb = ({ getWorkspaceData, updateConsoleLog, render }: GnbProps) => {
+  const [getProgramState, setProgramState] = useState<ProgramState>('prgramState', 'stop');
   const header = createElementCommon('header', { id: 'gnb' });
   const h1 = createElementCommon('h1', { id: 'title', textContent: 'Block Coding' });
   const nav = createElementCommon('nav', {});
@@ -16,6 +18,11 @@ export const gnb = ({ getWorkspaceData, updateProgramState, updateConsoleLog }: 
   const loadButton = createElementCommon('button', { type: 'button', className: 'bg-gray', textContent: 'Load' });
   const playButton = createElementCommon('button', { type: 'button', className: 'bg-green', textContent: '▶' });
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
+
+  const updateProgramState = (state: ProgramState) => {
+    setProgramState(state);
+    render();
+  };
 
   playButton.addEventListener('click', () => {
     runProgram(getWorkspaceData(), updateConsoleLog, updateProgramState);

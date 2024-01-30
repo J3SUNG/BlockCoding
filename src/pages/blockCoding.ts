@@ -1,6 +1,6 @@
 import { render, useState } from '../core/core';
 import { gnb } from '../components/gnb/gnb';
-import { WorkspaceData, ConsoleLog, ProgramState, SelectedType } from '../types/stateType';
+import { WorkspaceData, ConsoleLog } from '../types/stateType';
 import { blockMenu } from '../components/blockMenu/blockMenu';
 import { workspace } from '../components/workspace/workspace';
 import { consoleSpace } from '../components/consoleSpace/consoleSpace';
@@ -10,37 +10,41 @@ import { findTargetBlock } from '../utils/findTargetBlock';
 import { BlockObject, BlockObjectValue } from '../types/blockObject';
 
 export const blockCoding = () => {
-  const [getProgramState, setProgramState] = useState<ProgramState>('stop');
-  const [getConsoleLog, setConsoleLog] = useState<ConsoleLog>([]);
-  const [getWorkspaceData, setWorkspaceData] = useState<WorkspaceData>([]);
-  const [getSelectedType, setSelectedType] = useState<SelectedType>('declare');
+  const [getConsoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
+  const [getWorkspaceData, setWorkspaceData] = useState<WorkspaceData>('workspaceData', []);
   const BLOCK_MENU_INDEX = 0;
   const WORKSPACE_INDEX = 1;
   const CONSOLE_SPACE_INDEX = 2;
   const GNB_INDEX = 0;
 
-  const updateSelectedType = (newType: SelectedType) => {
-    setSelectedType(newType);
-    render(blockMenu({ selectedType: getSelectedType(), updateSelectedType }), mainComponent, BLOCK_MENU_INDEX);
+  const blockMenuRender = () => {
+    render(blockMenu({ render: blockMenuRender }), mainComponent, BLOCK_MENU_INDEX);
   };
 
-  const updateProgramState = (state: ProgramState) => {
-    setProgramState(state);
-    render(gnb({ getWorkspaceData, updateProgramState, updateConsoleLog }), root, GNB_INDEX);
+  const gnbRender = () => {
+    render(gnb({ getWorkspaceData, updateConsoleLog, render: gnbRender }), root, GNB_INDEX);
+  };
+
+  const consoleRender = () => {
+    render(consoleSpace({ consoleLog: getConsoleLog() }), mainComponent, CONSOLE_SPACE_INDEX);
+  };
+
+  const workspaceRender = () => {
+    render(
+      workspace({ workspaceData: getWorkspaceData(), updateWorkspaceDataAll, updateWorkspaceDataValue }),
+      mainComponent,
+      WORKSPACE_INDEX,
+    );
   };
 
   const updateConsoleLog = (log: ConsoleLog) => {
     setConsoleLog(log);
-    render(consoleSpace({ consoleLog: log }), mainComponent, CONSOLE_SPACE_INDEX);
+    consoleRender();
   };
 
   const updateWorkspaceDataAll = (data: WorkspaceData) => {
     setWorkspaceData(data);
-    render(
-      workspace({ workspaceData: data, updateWorkspaceDataAll, updateWorkspaceDataValue }),
-      mainComponent,
-      WORKSPACE_INDEX,
-    );
+    workspaceRender();
   };
 
   const updateWorkspaceDataValue = (targetId: string, value: BlockObjectValue) => {
@@ -55,19 +59,11 @@ export const blockCoding = () => {
     }
 
     setWorkspaceData(newWorkspaceData);
-    render(
-      workspace({ workspaceData: newWorkspaceData, updateWorkspaceDataAll, updateWorkspaceDataValue }),
-      mainComponent,
-      WORKSPACE_INDEX,
-    );
+    workspaceRender();
   };
 
-  const gnbComponent = gnb({
-    getWorkspaceData,
-    updateProgramState,
-    updateConsoleLog,
-  });
-  const blockMenuComponent = blockMenu({ selectedType: getSelectedType(), updateSelectedType });
+  const gnbComponent = gnb({ getWorkspaceData, updateConsoleLog, render: gnbRender });
+  const blockMenuComponent = blockMenu({ render: blockMenuRender });
   const workspaceComponent = workspace({
     workspaceData: getWorkspaceData(),
     updateWorkspaceDataAll,
