@@ -24,7 +24,7 @@ export const blockCoding = () => {
     render(blockMenu({ selectedType: getSelectedType(), updateSelectedType }), mainComponent, BLOCK_MENU_INDEX);
   };
 
-  const updateProgramState = (state: 'run' | 'stop' | 'pause') => {
+  const updateProgramState = (state: ProgramState) => {
     setProgramState(state);
     render(gnb({ getWorkspaceData, updateProgramState, updateConsoleLog }), root, GNB_INDEX);
   };
