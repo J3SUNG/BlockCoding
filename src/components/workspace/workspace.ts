@@ -14,7 +14,7 @@ interface WorkspaceProps {
 }
 
 export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspaceDataValue }: WorkspaceProps) => {
-  const section = createElementCommon('section', { id: 'workspace' });
+  const section = createElementCommon('div', { id: 'workspace' });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
   const trashIcon = createElementCommon('span', { className: 'material-symbols-outlined', textContent: 'delete' });
 
@@ -178,8 +178,8 @@ const findTargetParentBlock = (
   }
 
   if (Array.isArray(obj)) {
-    const parent = obj.find((item) => findTargetParentBlock(targetId, item, obj));
-    if (parent) return parent;
+    const findTarget = obj.find((item) => findTargetParentBlock(targetId, item, obj)) || null;
+    if (findTarget) return obj;
   } else if (typeof obj === 'object' && 'data' in obj) {
     if (obj.data.id === targetId) {
       return parent;
