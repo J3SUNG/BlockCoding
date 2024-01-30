@@ -10,9 +10,9 @@ export class BlockCommon implements BlockObject {
     this.data = { id, x, y, value };
   }
 
-  setChildPosition() {
-    // TODO : 추후 구현 예정
-    return { childX: this.data.x, childY: this.data.y };
+  // TODO : 추후 구현 예정
+  setChildPosition(x: number, y: number, index?: number) {
+    return { childX: x, childY: y };
   }
 
   paintBlock(id: string, x: number, y: number) {
