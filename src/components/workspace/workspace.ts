@@ -162,7 +162,7 @@ const addWorkspaceMouseDragEvent = (
       currentY = e.clientY - initialY;
 
       if (target) {
-        target.style.transform = 'translate3d(' + currentX + 'px, ' + currentY + 'px, 0)';
+        target.style.transform = 'translate(' + currentX + 'px, ' + currentY + 'px, 0)';
       }
     }
   });
