@@ -6,31 +6,36 @@ export class BlockValue extends BlockCommon {
   type = 'expressionValue';
 
   constructor(id: string, x: number, y: number) {
-    super(id, x, y, '10');
+    super(id, x, y, '');
   }
 
   paintBlock(id: string, x: number, y: number, value?: string, onValueChange?: (id: string, value: string) => void) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
+    const p = createElementCommon('p', { className: 'block__text', textContent: '값' });
     const input = createElementCommon('input', {
       className: 'block__input',
-      value: value ? value : '10',
+      value: value ? value : '',
       readonly: value ? 'false' : 'true',
     });
 
-    if (!value) {
+    if (value === undefined) {
       input.setAttribute('readonly', 'true');
     }
 
     input.addEventListener('blur', (e: FocusEvent) => {
-      const target = e.target as HTMLInputElement;
-      const div = target.closest('div');
+      const target = e.target;
 
-      if (onValueChange && div) {
-        onValueChange(div.id ?? '', target.value);
+      if (target instanceof HTMLInputElement) {
+        const div = target.closest('div');
+
+        if (onValueChange) {
+          onValueChange(div?.id ?? '', target.value);
+        }
       }
     });
 
     div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
+    div.appendChild(p);
     div.appendChild(input);
 
     return div;
