@@ -1,15 +1,14 @@
-import { useState } from '../../core/core';
-import { SelectedType } from '../../types/stateType';
+import { SelectedType, UpdateSelectedType } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { blockMenuBlockNav } from './blockMenuBlockNav';
 import { blockMenuTypeNav } from './blockMenuTypeNav';
 
-export const blockMenu = () => {
-  const [selectedType, setSelectedType] = useState<SelectedType>('selectedType', 'declare');
-  const updateSelectedType = (newType: SelectedType) => {
-    setSelectedType(newType);
-  };
+interface BlockMenuProps {
+  selectedType: SelectedType;
+  updateSelectedType: UpdateSelectedType;
+}
 
+export const blockMenu = ({ selectedType, updateSelectedType }: BlockMenuProps) => {
   const blockMenuDiv = createElementCommon('div', { id: 'block-menu' });
   const blockTypeNav = blockMenuTypeNav({ updateSelectedType });
   const blockNav = blockMenuBlockNav({

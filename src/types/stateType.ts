@@ -11,4 +11,4 @@ export type ConsoleLog = string[];
 export type UpdateConsoleLog = (consoleLog: ConsoleLog) => void;
 
 export type ProgramState = 'run' | 'stop' | 'pause';
-export type UpdateProgramState = () => void;
+export type UpdateProgramState = (programState: ProgramState) => void;

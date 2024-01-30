@@ -3,20 +3,12 @@ import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockObject } from '../../types/blockObject';
 
 interface GnbProps {
-  workspaceData: WorkspaceData;
-  updateProgramStateRun: UpdateProgramState;
-  updateProgramStateStop: UpdateProgramState;
-  updateProgramStatePause: UpdateProgramState;
+  getWorkspaceData: () => WorkspaceData;
+  updateProgramState: UpdateProgramState;
   updateConsoleLog: UpdateConsoleLog;
 }
 
-export const gnb = ({
-  workspaceData,
-  updateProgramStateRun,
-  updateProgramStateStop,
-  updateProgramStatePause,
-  updateConsoleLog,
-}: GnbProps) => {
+export const gnb = ({ getWorkspaceData, updateProgramState, updateConsoleLog }: GnbProps) => {
   const header = createElementCommon('header', { id: 'gnb' });
   const h1 = createElementCommon('h1', { id: 'title', textContent: 'Block Coding' });
   const nav = createElementCommon('nav', {});
@@ -25,8 +17,8 @@ export const gnb = ({
   const playButton = createElementCommon('button', { type: 'button', className: 'bg-green', textContent: '▶' });
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
 
-  playButton.addEventListener('mousedown', () => {
-    runProgram(workspaceData, updateConsoleLog, updateProgramStateRun, updateProgramStateStop);
+  playButton.addEventListener('click', () => {
+    runProgram(getWorkspaceData(), updateConsoleLog, updateProgramState);
   });
 
   nav.appendChild(saveButton);
@@ -43,10 +35,9 @@ export const gnb = ({
 const runProgram = (
   workspaceData: WorkspaceData,
   updateConsoleLog: UpdateConsoleLog,
-  updateProgramStateRun: UpdateProgramState,
-  updateProgramStateStop: UpdateProgramState,
+  updateProgramState: UpdateProgramState,
 ) => {
-  updateProgramStateRun();
+  updateProgramState('run');
   const startBlock = workspaceData.filter((block) => {
     return block.name === 'start' && block.data;
   });
@@ -58,7 +49,7 @@ const runProgram = (
   });
 
   updateConsoleLog(logList);
-  updateProgramStateStop;
+  updateProgramState('stop');
 };
 
 const getLogData = (obj: BlockObject): string[] => {
