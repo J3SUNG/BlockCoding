@@ -21,7 +21,7 @@ export class BlockCommon implements BlockObject {
 
     return div;
   }
-  insertBlock(obj: BlockObject, type: string, name?: string) {
+  insertBlock(obj: BlockObject) {
     return;
   }
 
