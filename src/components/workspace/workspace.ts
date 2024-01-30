@@ -75,7 +75,7 @@ export const onDropAnotherBlock = (
   const uniqueId = createUniqueId();
   const newBlock = createBlock(dragBlockName, uniqueId, 0, 0);
 
-  targetBlock.insertBlock(newBlock, dragBlockType, dragBlockName);
+  targetBlock.insertBlock(newBlock);
 
   return newWorkspaceData;
 };

@@ -26,8 +26,8 @@ export class BlockStart extends BlockCommon {
 
     return div;
   }
-  insertBlock(obj: BlockObject, type: string): void {
-    if (type === 'general' || type === 'control') {
+  insertBlock(obj: BlockObject): void {
+    if (obj.type === 'general' || obj.type === 'control') {
       if (Array.isArray(this.data.value)) {
         this.data.value.splice(this.data.value.length, 0, obj);
       }

@@ -28,13 +28,13 @@ export class BlockVariable extends BlockCommon {
     return div;
   }
 
-  insertBlock(obj: BlockObject, type: string, name: string) {
+  insertBlock(obj: BlockObject) {
     if (this.data.varName && Object.keys(this.data.varName).length === 0) {
-      if (name === 'value') {
+      if (obj.name === 'value') {
         this.data.varName = obj;
       }
     } else if (Object.keys(this.data.value).length === 0) {
-      if (type === 'expressionValue' || type === 'expressionLogical') {
+      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
       }
     }
