@@ -77,7 +77,7 @@ const paintWorkspace = (
         newY = childY;
       }
 
-      const { childX, childY } = obj.setChildPosition!(data.x, data.y, data.index);
+      const { childX, childY } = obj.setChildPosition(data.x, data.y, data.index);
 
       if (obj.paintBlock) {
         const div = obj.paintBlock(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
