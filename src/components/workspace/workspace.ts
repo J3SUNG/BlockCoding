@@ -79,18 +79,16 @@ const paintWorkspace = (
 
       const { childX, childY } = obj.setChildPosition(data.x, data.y, data.index);
 
-      if (obj.paintBlock) {
-        const div = obj.paintBlock(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
-        parent.appendChild(div);
+      const div = obj.paintBlock(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
+      parent.appendChild(div);
 
-        paintWorkspace(
-          div,
-          obj.data.value,
-          { x: childX, y: childY, index: data.index },
-          updateWorkspaceDataValue,
-          obj.setChildPosition,
-        );
-      }
+      paintWorkspace(
+        div,
+        obj.data.value,
+        { x: childX, y: childY, index: data.index },
+        updateWorkspaceDataValue,
+        obj.setChildPosition,
+      );
     }
   }
 };
