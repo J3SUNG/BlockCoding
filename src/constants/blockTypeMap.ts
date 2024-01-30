@@ -1,11 +1,11 @@
-interface ConstantTypeObject {
+interface ConstantTypeMap {
   [key: string]: {
     name: 'declare' | 'general' | 'control' | 'expressionValue' | 'expressionLogical';
     korName: string;
   };
 }
 
-export const BLOCK_TYPE_OBJECT: ConstantTypeObject = {
+export const BLOCK_TYPE_MAP: ConstantTypeMap = {
   declare: {
     name: 'declare',
     korName: '선언문',
