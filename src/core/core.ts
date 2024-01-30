@@ -1,22 +1,12 @@
 const core = () => {
-  const options = {
-    states: [] as any[],
-    currentStateKey: 0,
-  };
+  const states = {} as { [key: string]: any };
 
-  const useState = <T>(initState: T): [() => T, (newState: T) => void] => {
-    const { states, currentStateKey: key } = options;
-    if (states.length === key) {
-      states.push(initState);
-    }
+  const useState = <T>(id: string, initState: T): [() => T, (newState: T) => void] => {
+    if (!states[id]) states[id] = initState;
 
-    const getState = () => states[key];
+    const getState = () => states[id];
+    const setState = (newState: T) => (states[id] = newState);
 
-    const setState = (newState: T) => {
-      states[key] = newState;
-    };
-
-    ++options.currentStateKey;
     return [getState, setState];
   };
 
@@ -32,7 +22,6 @@ const core = () => {
       root.appendChild(child);
     }
   };
-
   return { useState, render };
 };
 
