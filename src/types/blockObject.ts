@@ -14,8 +14,8 @@ export interface BlockObject {
     condition?: BlockObject;
     operator?: string;
   };
-  setChildPosition?(x?: number, y?: number, index?: number): { childX: number; childY: number };
-  paintBlock?(
+  setChildPosition(x?: number, y?: number, index?: number): { childX: number; childY: number };
+  paintBlock(
     id: string,
     x: number,
     y: number,
