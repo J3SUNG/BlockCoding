@@ -1,6 +1,6 @@
-import { app } from './app';
-import { render } from './core/core';
+import './styles/reset.css';
+import './styles/index.css';
+import { blockCoding } from './pages/blockCoding';
 
 const root = document.querySelector('#root') as HTMLElement;
-
-render(app, root);
+root.appendChild(blockCoding());

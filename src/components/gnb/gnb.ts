@@ -1,22 +1,16 @@
-import { ConsoleLog, ProgramState, UpdateConsoleLog, UpdateProgramState, WorkspaceData } from '../../types/stateType';
+import { ProgramState, UpdateConsoleLog, UpdateProgramState, WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockObject } from '../../types/blockObject';
+import { useState } from '../../core/core';
 
 interface GnbProps {
-  workspaceData: WorkspaceData;
-  updateProgramStateRun: UpdateProgramState;
-  updateProgramStateStop: UpdateProgramState;
-  updateProgramStatePause: UpdateProgramState;
+  getWorkspaceData: () => WorkspaceData;
   updateConsoleLog: UpdateConsoleLog;
+  render: () => void;
 }
 
-export const gnb = ({
-  workspaceData,
-  updateProgramStateRun,
-  updateProgramStateStop,
-  updateProgramStatePause,
-  updateConsoleLog,
-}: GnbProps) => {
+export const gnb = ({ getWorkspaceData, updateConsoleLog, render }: GnbProps) => {
+  const [getProgramState, setProgramState] = useState<ProgramState>('prgramState', 'stop');
   const header = createElementCommon('header', { id: 'gnb' });
   const h1 = createElementCommon('h1', { id: 'title', textContent: 'Block Coding' });
   const nav = createElementCommon('nav', {});
@@ -25,8 +19,13 @@ export const gnb = ({
   const playButton = createElementCommon('button', { type: 'button', className: 'bg-green', textContent: '▶' });
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
 
-  playButton.addEventListener('mousedown', () => {
-    runProgram(workspaceData, updateConsoleLog, updateProgramStateRun, updateProgramStateStop);
+  const updateProgramState = (state: ProgramState) => {
+    setProgramState(state);
+    render();
+  };
+
+  playButton.addEventListener('click', () => {
+    runProgram(getWorkspaceData(), updateConsoleLog, updateProgramState);
   });
 
   nav.appendChild(saveButton);
@@ -43,10 +42,9 @@ export const gnb = ({
 const runProgram = async (
   workspaceData: WorkspaceData,
   updateConsoleLog: UpdateConsoleLog,
-  updateProgramStateRun: UpdateProgramState,
-  updateProgramStateStop: UpdateProgramState,
+  updateProgramState: UpdateProgramState,
 ) => {
-  updateProgramStateRun();
+  updateProgramState('run');
   const startBlock = workspaceData.filter((block) => {
     return block.name === 'start' && block.data;
   });
@@ -59,7 +57,7 @@ const runProgram = async (
   }
 
   updateConsoleLog(logList);
-  updateProgramStateStop;
+  updateProgramState('stop');
 };
 
 const getLogData = async (obj: BlockObject, map: Map<string, string>): Promise<string[]> => {
