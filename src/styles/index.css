@@ -197,17 +197,20 @@ button {
 .block {
   display: flex;
   align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  max-width: 280px;
+  width: auto;
   height: 50px;
   cursor: pointer;
   padding: 0px 20px;
-  position: absolute;
   transform: translate(0, 0);
 }
 
 .block--declare {
-  width: 250px;
   height: 50px;
   background-color: #89d466;
+  position: absolute;
 }
 
 .block--declare::after {
@@ -221,15 +224,15 @@ button {
 }
 
 .block--general {
-  width: 250px;
   height: 50px;
   background-color: #ed8b55;
+  position: absolute;
 }
 
 .block--control {
-  width: 120px;
   height: 60px;
   background-color: #14b7d8;
+  position: relative;
 }
 
 .block--control::before {
@@ -253,14 +256,14 @@ button {
 }
 
 .block--expression-value {
-  width: 180px;
+  position: relative;
   height: 40px;
   background-color: #f9dc6d;
   border-radius: 20px;
 }
 
 .block--expression-logical {
-  width: 180px;
+  position: relative;
   height: 40px;
   background-color: #1c3c9a;
   margin-left: 20px;
@@ -287,13 +290,15 @@ button {
 }
 
 .block__text {
+  position: relative;
   font-size: 18px;
   font-weight: bold;
   color: white;
+  padding: 0 10px;
 }
 
 .block__input {
-  width: 140px;
+  width: 50px;
   height: 100%;
   font-size: 18px;
   font-weight: bold;
@@ -301,4 +306,5 @@ button {
   color: white;
   text-align: start;
   border: none;
+  position: relative;
 }

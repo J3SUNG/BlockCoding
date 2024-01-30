@@ -1,3 +1,4 @@
+import { BlockObject } from '../../types/blockObject';
 import { BlockArithmetic } from '../block/blockArithmetic';
 import { BlockComparison } from '../block/blockComparison';
 import { BlockCondition } from '../block/blockCondition';
@@ -12,35 +13,32 @@ import { BlockTimer } from '../block/blockTimer';
 import { BlockValue } from '../block/blockValue';
 import { BlockVariable } from '../block/blockVariable';
 
-export const createBlock = (name: string, id: string, x: number, y: number) => {
-  switch (name) {
-    case 'start':
-      return new BlockStart(id, x, y);
-    case 'variable':
-      return new BlockVariable(id, x, y);
-    case 'output':
-      return new BlockOutput(id, x, y);
-    case 'timer':
-      return new BlockTimer(id, x, y);
-    case 'condition':
-      return new BlockCondition(id, x, y);
-    case 'loop':
-      return new BlockLoop(id, x, y);
-    case 'value':
-      return new BlockValue(id, x, y);
-    case 'input':
-      return new BlockInput(id, x, y);
-    case 'refVariable':
-      return new BlockRefVariable(id, x, y);
-    case 'arithmetic':
-      return new BlockArithmetic(id, x, y);
-    case 'comparison':
-      return new BlockComparison(id, x, y);
-    case 'negation':
-      return new BlockNegation(id, x, y);
-    case 'logical':
-      return new BlockLogical(id, x, y);
-    default:
-      return new BlockStart(id, x, y);
+interface BlockTypeMap {
+  [key: string]: new (id: string, x: number, y: number) => BlockObject;
+}
+
+const blockTypes: BlockTypeMap = {
+  start: BlockStart,
+  variable: BlockVariable,
+  output: BlockOutput,
+  timer: BlockTimer,
+  condition: BlockCondition,
+  loop: BlockLoop,
+  value: BlockValue,
+  input: BlockInput,
+  refVariable: BlockRefVariable,
+  arithmetic: BlockArithmetic,
+  comparison: BlockComparison,
+  negation: BlockNegation,
+  logical: BlockLogical,
+};
+
+export const createBlock = (name: string, id: string, x: number, y: number): BlockObject => {
+  const BlockClass = blockTypes[name];
+
+  if (!BlockClass) {
+    throw new Error(`createBlock - ${name} 없는 블럭`);
   }
+
+  return new BlockClass(id, x, y);
 };

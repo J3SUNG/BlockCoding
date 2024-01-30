@@ -1,3 +1,5 @@
+import { UpdateWorkspaceDataValue } from './stateType';
+
 export type BlockObjectValue = BlockObject | BlockObject[] | string;
 
 export interface BlockObject {
@@ -12,4 +14,12 @@ export interface BlockObject {
     condition?: BlockObject;
     operator?: string;
   };
+  setChildPosition(x?: number, y?: number, index?: number): { childX: number; childY: number };
+  paintBlock(
+    id: string,
+    x: number,
+    y: number,
+    value?: BlockObjectValue,
+    onValueChange?: UpdateWorkspaceDataValue,
+  ): HTMLElement;
 }

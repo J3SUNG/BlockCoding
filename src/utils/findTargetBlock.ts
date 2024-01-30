@@ -6,8 +6,12 @@ export const findTargetBlock = (targetId: string, obj: BlockObjectValue): BlockO
   }
 
   if (Array.isArray(obj)) {
-    const findObj = obj.find((item) => findTargetBlock(targetId, item));
-    if (findObj) return findObj;
+    for (const item of obj) {
+      const findTarget = findTargetBlock(targetId, item);
+      if (findTarget) {
+        return findTarget;
+      }
+    }
   } else if (typeof obj === 'object' && 'data' in obj && obj.data.value) {
     if (obj.data.id === targetId) {
       return obj;

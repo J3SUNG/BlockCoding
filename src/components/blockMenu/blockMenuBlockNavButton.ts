@@ -1,4 +1,4 @@
-import { blockController } from '../../utils/blockController';
+import { createBlock } from '../../classes/factory/createBlock';
 
 interface BlockMenuBlockNavButtonProps {
   name: string;
@@ -8,14 +8,18 @@ interface BlockMenuBlockNavButtonProps {
 }
 
 export const blockMenuBlockNavButton = ({ name, type, x, y }: BlockMenuBlockNavButtonProps) => {
-  const div = blockController({ id: '', x, y, type, name });
+  const block = createBlock(name, '', x, y);
+
+  const div = block.paintBlock(block.data.id, block.data.x, block.data.y);
 
   div.draggable = true;
   div.addEventListener('dragstart', function (event: DragEvent) {
-    event.dataTransfer?.setData('name', name);
-    event.dataTransfer?.setData('type', type);
-    event.dataTransfer?.setData('offsetX', event.offsetX.toString());
-    event.dataTransfer?.setData('offsetY', event.offsetY.toString());
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('name', name);
+      event.dataTransfer.setData('type', type);
+      event.dataTransfer.setData('offsetX', event.offsetX.toString());
+      event.dataTransfer.setData('offsetY', event.offsetY.toString());
+    }
   });
 
   return div;
