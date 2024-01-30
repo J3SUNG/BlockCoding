@@ -22,19 +22,23 @@ export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspa
 
   section.addEventListener('drop', function (event: DragEvent) {
     event.preventDefault();
-    if (event.target !== section) {
+    if (event.target !== section && event.dataTransfer) {
       const target = event.target as Element;
-      const uniqueId = target.closest('div')?.id ?? '';
-      const name = event.dataTransfer!.getData('name');
+      const targetClosestDiv = target.closest('div');
 
-      const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, workspaceData);
-      if (!newWorkspaceData) {
-        return;
+      if (targetClosestDiv) {
+        const uniqueId = targetClosestDiv.id ?? '';
+        const name = event.dataTransfer.getData('name');
+
+        const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, workspaceData);
+        if (!newWorkspaceData) {
+          return;
+        }
+        updateWorkspaceDataAll(newWorkspaceData);
+      } else {
+        const newWorkspaceData = inserBlockWorkspace(section, event, workspaceData);
+        updateWorkspaceDataAll(newWorkspaceData);
       }
-      updateWorkspaceDataAll(newWorkspaceData);
-    } else {
-      const newWorkspaceData = inserBlockWorkspace(section, event, workspaceData);
-      updateWorkspaceDataAll(newWorkspaceData);
     }
   });
 
@@ -117,15 +121,18 @@ const addWorkspaceMouseDragEvent = (
 
     if (e.target instanceof HTMLElement) {
       target = e.target.closest('div');
-      const rect = target!.getBoundingClientRect();
 
-      xOffset = e.clientX - rect.left;
-      yOffset = e.clientY - rect.top;
+      if (target) {
+        const rect = target.getBoundingClientRect();
 
-      initialX = e.clientX;
-      initialY = e.clientY;
+        xOffset = e.clientX - rect.left;
+        yOffset = e.clientY - rect.top;
 
-      active = true;
+        initialX = e.clientX;
+        initialY = e.clientY;
+
+        active = true;
+      }
     }
   });
 
@@ -133,7 +140,8 @@ const addWorkspaceMouseDragEvent = (
     e.preventDefault();
     if (active && target) {
       target.style.display = 'none';
-      const anotherBlock = document.elementFromPoint(e.clientX, e.clientY);
+      const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+      const anotherBlockClosestDiv = anotherBlock.closest('div');
       target.style.display = 'flex';
 
       const newWorkspaceData = deepCopy(workspaceData);
@@ -155,10 +163,10 @@ const addWorkspaceMouseDragEvent = (
 
           newWorkspaceData.push(child);
           removeTargetBlockOjbect(parent, target.id);
-        } else if (anotherBlock.closest('div')?.id === 'trash-bin') {
+        } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
           removeTargetBlockOjbect(parent, target.id);
-        } else if (anotherBlock.closest('div')) {
-          insertBlockAnotherBlock(anotherBlock.closest('div')!.id, child.name, newWorkspaceData, child);
+        } else if (anotherBlockClosestDiv) {
+          insertBlockAnotherBlock(anotherBlockClosestDiv.id as string, child.name, newWorkspaceData, child);
           removeTargetBlockOjbect(parent, target.id);
         }
       }
@@ -247,30 +255,36 @@ const addWorkspaceReceiveDragEvent = (
     } else if (e.target === section) {
       const newWorkspaceData = inserBlockWorkspace(section, e, workspaceData);
       updateWorkspaceDataAll(newWorkspaceData);
-    } else {
+    } else if (e.dataTransfer) {
       const copyWorkspaceData = deepCopy(workspaceData);
       const target = e.target as Element;
-      const uniqueId = target.closest('div')?.id ?? '';
-      const name = e.dataTransfer!.getData('name');
+      const targetClosestDiv = target.closest('div');
 
-      const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, copyWorkspaceData);
-      updateWorkspaceDataAll(newWorkspaceData);
+      if (targetClosestDiv) {
+        const uniqueId = targetClosestDiv.id ?? '';
+        const name = e.dataTransfer.getData('name');
+        const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, copyWorkspaceData);
+
+        updateWorkspaceDataAll(newWorkspaceData);
+      }
     }
   });
 };
 
 const inserBlockWorkspace = (section: HTMLElement, event: DragEvent, workspaceData: WorkspaceData) => {
   const newWorkspaceData = deepCopy(workspaceData);
-  const name = event.dataTransfer!.getData('name');
-  const offsetX = event.dataTransfer?.getData('offsetX');
-  const offsetY = event.dataTransfer?.getData('offsetY');
-  const rect = section.getBoundingClientRect();
-  const x = event.clientX - rect.left - Number(offsetX);
-  const y = event.clientY - rect.top - Number(offsetY);
+  if (event.dataTransfer) {
+    const name = event.dataTransfer.getData('name');
+    const offsetX = event.dataTransfer.getData('offsetX');
+    const offsetY = event.dataTransfer.getData('offsetY');
+    const rect = section.getBoundingClientRect();
+    const x = event.clientX - rect.left - Number(offsetX);
+    const y = event.clientY - rect.top - Number(offsetY);
 
-  const uniqueId = createUniqueId();
-  const newBlock = createBlock(name, uniqueId, x, y);
-  newWorkspaceData.push(newBlock);
+    const uniqueId = createUniqueId();
+    const newBlock = createBlock(name, uniqueId, x, y);
+    newWorkspaceData.push(newBlock);
+  }
 
   return newWorkspaceData;
 };
