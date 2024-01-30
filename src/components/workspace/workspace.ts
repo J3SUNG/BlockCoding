@@ -178,12 +178,8 @@ const findTargetParentBlock = (
   }
 
   if (Array.isArray(obj)) {
-    for (const item of obj) {
-      const parent = findTargetParentBlock(targetId, item, obj);
-      if (parent) {
-        return parent;
-      }
-    }
+    const parent = obj.find((item) => findTargetParentBlock(targetId, item, obj));
+    if (parent) return parent;
   } else if (typeof obj === 'object' && 'data' in obj) {
     if (obj.data.id === targetId) {
       return parent;
