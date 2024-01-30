@@ -10,17 +10,12 @@ export class BlockCommon implements BlockObject {
     this.data = { id, x, y, value };
   }
 
+  // TODO : 추후 구현 예정
   setChildPosition(x: number, y: number, index?: number) {
-    return { childX: this.data.x, childY: this.data.y };
+    return { childX: x, childY: y };
   }
 
-  paintBlock(
-    id: string,
-    x: number,
-    y: number,
-    value?: BlockObjectValue,
-    onValueChange?: (id: string, value: BlockObjectValue, insertLocation?: string) => void,
-  ) {
+  paintBlock(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
 
