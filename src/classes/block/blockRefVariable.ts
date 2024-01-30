@@ -25,9 +25,9 @@ export class BlockRefVariable extends BlockCommon {
     return div;
   }
 
-  insertBlock(obj: BlockObject, type: string, name: string) {
+  insertBlock(obj: BlockObject) {
     if (Object.keys(this.data.value!).length === 0) {
-      if (name === 'value') {
+      if (obj.name === 'value') {
         this.data.value = obj;
       }
     }

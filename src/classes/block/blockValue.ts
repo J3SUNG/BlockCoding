@@ -9,7 +9,13 @@ export class BlockValue extends BlockCommon {
     super(id, x, y, '');
   }
 
-  paintBlock(id: string, x: number, y: number, value?: string, onValueChange?: (id: string, value: string) => void) {
+  paintBlock(
+    id: string,
+    x: number,
+    y: number,
+    value?: string,
+    onValueChange?: (id: string, value: string, insertLocation?: string) => void,
+  ) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '값' });
     const input = createElementCommon('input', {

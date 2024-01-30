@@ -47,11 +47,7 @@ export const blockCoding = () => {
     workspaceRender();
   };
 
-  const updateWorkspaceDataValue = (
-    targetId: string,
-    value: BlockObjectValue,
-    insertLocation: string | undefined,
-  ): void => {
+  const updateWorkspaceDataValue = (targetId: string, value: BlockObjectValue, insertLocation?: string): void => {
     const newWorkspaceData = deepCopy(getWorkspaceData());
     const targetObj = findTargetBlock(targetId, newWorkspaceData);
     if (targetObj) {
@@ -68,6 +64,7 @@ export const blockCoding = () => {
     }
     setWorkspaceData(newWorkspaceData);
     workspaceRender();
+    console.log(targetId, value, insertLocation, '!!');
   };
 
   const gnbComponent = gnb({ getWorkspaceData, updateConsoleLog, render: gnbRender });

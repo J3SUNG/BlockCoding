@@ -54,13 +54,13 @@ export class BlockComparison extends BlockCommon {
     return div;
   }
 
-  insertBlock(obj: BlockObject, type: string) {
+  insertBlock(obj: BlockObject) {
     if (Object.keys(this.data.value).length === 0) {
-      if (type === 'expressionValue' || type === 'expressionLogical') {
+      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
       }
     } else if (this.data.secondValue && Object.keys(this.data.secondValue).length === 0) {
-      if (type === 'expressionValue' || type === 'expressionLogical') {
+      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.secondValue = obj;
       }
     }

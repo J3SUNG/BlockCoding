@@ -26,13 +26,13 @@ export class BlockLoop extends BlockCommon {
     return div;
   }
 
-  insertBlock(obj: BlockObject, type: string) {
+  insertBlock(obj: BlockObject) {
     if (this.data.condition && Object.keys(this.data.condition).length === 0) {
-      if (type === 'expressionValue' || type === 'expressionLogical') {
+      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.condition = obj;
       }
     } else if (Array.isArray(this.data.value)) {
-      if (type === 'general' || type === 'control') {
+      if (obj.type === 'general' || obj.type === 'control') {
         this.data.value.push(obj);
       }
     }
