@@ -1,49 +1,36 @@
-import { debounceFrame } from '../utils/debounceFrame';
-
-export interface StateOptions {
-  renderCount: number;
-  states: { [key: string]: any };
-  root: HTMLElement | null;
-  rootComponent: (() => DocumentFragment) | null;
-}
-
 const core = () => {
-  const options: StateOptions = {
-    renderCount: 0,
-    states: {},
-    root: null,
-    rootComponent: null,
+  const options = {
+    states: [] as any[],
+    currentStateKey: 0,
   };
 
-  const useState = <T>(id: string, initState: T): [T, (newState: T) => void] => {
-    if (!options.states[id]) {
-      options.states[id] = initState;
+  const useState = <T>(initState: T): [() => T, (newState: T) => void] => {
+    const { states, currentStateKey: key } = options;
+    if (states.length === key) {
+      states.push(initState);
     }
 
+    const getState = () => states[key];
+
     const setState = (newState: T) => {
-      options.states[id] = newState;
-      innerRender();
+      states[key] = newState;
     };
 
-    return [options.states[id], setState];
+    ++options.currentStateKey;
+    return [getState, setState];
   };
 
-  const innerRender = debounceFrame(() => {
-    const { root, rootComponent } = options;
-
-    if (!root || !rootComponent) {
+  const render = (child: HTMLElement, root: HTMLElement, index?: number) => {
+    if (!root || !child) {
       return;
     }
 
-    root.innerHTML = '';
-    root.appendChild(rootComponent());
-    options.renderCount += 1;
-  });
-
-  const render = (rootComponent: () => DocumentFragment, root: HTMLElement) => {
-    options.root = root;
-    options.rootComponent = rootComponent;
-    innerRender();
+    if (index !== undefined) {
+      root.replaceChild(child, root.childNodes[index]);
+    } else {
+      root.innerHTML = '';
+      root.appendChild(child);
+    }
   };
 
   return { useState, render };
