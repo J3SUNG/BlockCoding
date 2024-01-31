@@ -15,13 +15,19 @@ export class BlockCommon implements BlockObject {
     return { childX: x, childY: y };
   }
 
-  paintBlock(id: string, x: number, y: number) {
+  paintBlock(
+    id: string,
+    x: number,
+    y: number,
+    value?: string,
+    onValueChange?: (id: string, value: string, insertLocation?: string) => void,
+  ) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
 
     return div;
   }
-  insertBlock(obj: BlockObject, type: string, name?: string) {
+  insertBlock(obj: BlockObject) {
     return;
   }
 
