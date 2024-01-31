@@ -68,8 +68,14 @@ const paintWorkspace = (
   }
 
   if (Array.isArray(obj)) {
-    obj.forEach((item, index) => {
-      paintWorkspace(parent, item, { x: data.x, y: data.y, index }, updateWorkspaceDataValue, setPosition);
+    obj.forEach((item, itemIndex) => {
+      paintWorkspace(
+        parent,
+        item,
+        { x: data.x, y: data.y, index: itemIndex + (data.index ?? 0) },
+        updateWorkspaceDataValue,
+        setPosition,
+      );
     });
   } else {
     if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
@@ -81,18 +87,20 @@ const paintWorkspace = (
         newY = childY;
       }
 
-      const { childX, childY } = obj.setChildPosition(data.x, data.y, data.index);
+      if (obj.paintBlock) {
+        const div = obj.paintBlock(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
+        parent.appendChild(div);
 
-      const div = obj.paintBlock(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
-      parent.appendChild(div);
-
-      paintWorkspace(
-        div,
-        obj.data.value,
-        { x: childX, y: childY, index: data.index },
-        updateWorkspaceDataValue,
-        obj.setChildPosition,
-      );
+        obj.getInnerBlock().forEach((item, itemIndex) => {
+          paintWorkspace(
+            div,
+            item,
+            { x: newX, y: newY, index: itemIndex },
+            updateWorkspaceDataValue,
+            obj.setChildPosition,
+          );
+        });
+      }
     }
   }
 };

@@ -34,12 +34,18 @@ export const blockCoding = () => {
     setWorkspaceData(data);
   };
 
-  const updateWorkspaceDataValue = (targetId: string, value: BlockObjectValue) => {
+  const updateWorkspaceDataValue = (
+    targetId: string,
+    value: BlockObjectValue,
+    insertLocation: string | undefined,
+  ): void => {
     const newWorkspaceData = deepCopy(workspaceData);
     const targetObj = findTargetBlock(targetId, newWorkspaceData);
 
     if (targetObj) {
-      if (Array.isArray(targetObj.data.value)) {
+      if (insertLocation === 'operator') {
+        targetObj.data.operator = value as string;
+      } else if (Array.isArray(targetObj.data.value)) {
         targetObj.data.value.push(value as BlockObject);
       } else {
         if (targetObj.data.value === value) {

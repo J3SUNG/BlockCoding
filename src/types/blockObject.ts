@@ -10,9 +10,10 @@ export interface BlockObject {
     x: number;
     y: number;
     value: BlockObjectValue;
-    varName?: string;
+    varName?: BlockObject;
     condition?: BlockObject;
     operator?: string;
+    secondValue?: BlockObject;
   };
   setChildPosition(x?: number, y?: number, index?: number): { childX: number; childY: number };
   paintBlock(
@@ -22,4 +23,7 @@ export interface BlockObject {
     value?: BlockObjectValue,
     onValueChange?: UpdateWorkspaceDataValue,
   ): HTMLElement;
+  insertBlock(obj: BlockObject, type: string, name?: string): void;
+  getInnerBlock(): BlockObjectValue[];
+  runBlockLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
 }

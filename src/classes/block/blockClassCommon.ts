@@ -21,4 +21,15 @@ export class BlockCommon implements BlockObject {
 
     return div;
   }
+  insertBlock(obj: BlockObject, type: string, name?: string) {
+    return;
+  }
+
+  getInnerBlock(): BlockObjectValue[] {
+    return [this.data.value];
+  }
+
+  runBlockLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
+    return '';
+  }
 }

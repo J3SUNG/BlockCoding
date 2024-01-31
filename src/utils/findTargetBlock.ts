@@ -12,12 +12,18 @@ export const findTargetBlock = (targetId: string, obj: BlockObjectValue): BlockO
         return findTarget;
       }
     }
-  } else if (typeof obj === 'object' && 'data' in obj && obj.data.value) {
+  } else if (typeof obj === 'object' && 'data' in obj && (obj.data.value || obj.data.value == '')) {
     if (obj.data.id === targetId) {
       return obj;
     }
 
-    return findTargetBlock(targetId, obj.data.value);
+    const innerBlocks = obj.getInnerBlock();
+    for (const item of innerBlocks) {
+      const targetObj = findTargetBlock(targetId, item);
+      if (targetObj) {
+        return targetObj;
+      }
+    }
   }
 
   return null;
