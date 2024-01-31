@@ -9,7 +9,7 @@ export class BlockValue extends BlockCommon {
     super(id, x, y, '');
   }
 
-  paintBlock(
+  paint(
     id: string,
     x: number,
     y: number,
