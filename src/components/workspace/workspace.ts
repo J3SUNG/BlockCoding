@@ -146,7 +146,7 @@ const addWorkspaceMouseDragEvent = (
 
   section.addEventListener('mouseup', function (e: MouseEvent) {
     e.preventDefault();
-    if (active && target) {
+    if (active && target && currentX && currentY) {
       target.style.display = 'none';
       const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
       const anotherBlockClosestDiv = anotherBlock.closest('div');
@@ -156,7 +156,6 @@ const addWorkspaceMouseDragEvent = (
       const parent = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
       const child = findTargetBlock(target.id, newWorkspaceData);
 
-      console.log('parent', parent, 'child', child);
       if (anotherBlock && parent && child) {
         if (anotherBlock.id === 'workspace') {
           const rect = section.getBoundingClientRect();
@@ -182,11 +181,11 @@ const addWorkspaceMouseDragEvent = (
       initialX = currentX;
       initialY = currentY;
 
-      target = null;
-      active = false;
-
       updateWorkspaceDataAll(newWorkspaceData);
     }
+
+    target = null;
+    active = false;
   });
 
   section.addEventListener('mousemove', function (e: MouseEvent) {
@@ -231,7 +230,6 @@ const findTargetParentBlock = (
 };
 
 const removeTargetBlockOjbect = (parent: BlockObject | BlockObject[], targetId: string) => {
-  console.log(parent, targetId);
   if (Array.isArray(parent)) {
     const index = parent.findIndex((item) => item.data.id === targetId);
     parent.splice(index, 1);
@@ -304,9 +302,6 @@ const insertBlockAnotherBlock = (
   insertBlock?: BlockObject,
 ): BlockObject[] => {
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
-  if (!targetObj) {
-    throw new Error('targetObj 에러 - 해당 id를 가진 블럭이 없습니다.');
-  }
 
   if (targetObj) {
     const newBlock = insertBlock ? insertBlock : createBlock(name, createUniqueId(), 0, 0);
