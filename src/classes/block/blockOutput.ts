@@ -27,10 +27,8 @@ export class BlockOutput extends BlockCommon {
   }
 
   insertBlock(obj: BlockObject) {
-    console.log(obj);
     if (Object.keys(this.data.value).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
-        console.log('??');
         this.data.value = obj;
       }
     }

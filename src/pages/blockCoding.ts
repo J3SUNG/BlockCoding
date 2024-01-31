@@ -64,7 +64,6 @@ export const blockCoding = () => {
     }
     setWorkspaceData(newWorkspaceData);
     workspaceRender();
-    console.log(targetId, value, insertLocation, '!!');
   };
 
   const gnbComponent = gnb({ getWorkspaceData, updateConsoleLog, render: gnbRender });
