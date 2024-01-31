@@ -5,6 +5,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockStart extends BlockCommon {
   name = 'start';
   type = 'declare';
+  BLOCK_START_MIN_WIDTH = 260;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -17,15 +18,19 @@ export class BlockStart extends BlockCommon {
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '시작하기 버튼을 클릭했을 때' });
-
+    const childWidth = this.calcWidth();
     const triangle = createElementCommon('div', { className: 'block--declare-triangle' });
-    div.appendChild(triangle);
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px`);
+    div.appendChild(triangle);
+    div.setAttribute(
+      'style',
+      `left: ${x}px; top: ${y}px; width: ${this.BLOCK_START_MIN_WIDTH > childWidth ? this.BLOCK_START_MIN_WIDTH : childWidth}px;`,
+    );
     div.appendChild(p);
 
     return { block: div, space: [div] };
   }
+
   insert(obj: BlockObject): void {
     if (obj.type === 'general' || obj.type === 'control') {
       if (Array.isArray(this.data.value)) {
