@@ -14,7 +14,7 @@ export class BlockLoop extends BlockCommon {
     return { childX: 50, childY: 50 * index };
   }
 
-  paintBlock(id: string, x: number, y: number) {
+  paint(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--control` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '반복문' });
     const space = createElementCommon('span', { className: 'block__space' });
@@ -26,7 +26,7 @@ export class BlockLoop extends BlockCommon {
     return div;
   }
 
-  insertBlock(obj: BlockObject) {
+  insert(obj: BlockObject) {
     if (this.data.condition && Object.keys(this.data.condition).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.condition = obj;

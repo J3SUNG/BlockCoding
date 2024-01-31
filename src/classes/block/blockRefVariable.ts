@@ -13,7 +13,7 @@ export class BlockRefVariable extends BlockCommon {
     return { childX: 50, childY: 0 };
   }
 
-  paintBlock(id: string, x: number, y: number) {
+  paint(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '변수 참조' });
     const space = createElementCommon('span', { className: 'block__space' });
@@ -25,7 +25,7 @@ export class BlockRefVariable extends BlockCommon {
     return div;
   }
 
-  insertBlock(obj: BlockObject) {
+  insert(obj: BlockObject) {
     if (Object.keys(this.data.value!).length === 0) {
       if (obj.name === 'value') {
         this.data.value = obj;

@@ -82,7 +82,7 @@ const getLogData = async (obj: BlockObject, map: Map<string, string>): Promise<s
   } else if (obj.name === 'arithmetic') {
     const operand1 = await getLogData(obj.data.value as BlockObject, map);
     const operand2 = await getLogData(obj.data.secondValue as BlockObject, map);
-    return [(await obj.runBlockLogic(operand1[0], operand2[0])) as string];
+    return [(await obj.runLogic(operand1[0], operand2[0])) as string];
   } else if (obj.name === 'condition') {
     const condition = await getLogData(obj.data.condition as BlockObject, map);
     if (condition[0] === 'true') {
@@ -105,10 +105,10 @@ const getLogData = async (obj: BlockObject, map: Map<string, string>): Promise<s
   } else if (obj.name === 'comparison' || obj.name === 'logical') {
     const operand1 = await getLogData(obj.data.value as BlockObject, map);
     const operand2 = await getLogData(obj.data.secondValue as BlockObject, map);
-    return [obj.runBlockLogic(operand1[0], operand2[0]) + ''];
+    return [obj.runLogic(operand1[0], operand2[0]) + ''];
   } else if (obj.name === 'negation') {
     const operand = await getLogData(obj.data.value as BlockObject, map);
-    return [obj.runBlockLogic(operand[0]) + ''];
+    return [obj.runLogic(operand[0]) + ''];
   } else if (obj.name === 'timer') {
     const time = await getLogData(obj.data.value as BlockObject, map);
     await new Promise((resolve) => setTimeout(resolve, Number(time[0]) * 1000));

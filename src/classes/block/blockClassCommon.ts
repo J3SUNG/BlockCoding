@@ -15,7 +15,7 @@ export class BlockCommon implements BlockObject {
     return { childX: x, childY: y };
   }
 
-  paintBlock(
+  paint(
     id: string,
     x: number,
     y: number,
@@ -27,7 +27,7 @@ export class BlockCommon implements BlockObject {
 
     return div;
   }
-  insertBlock(obj: BlockObject) {
+  insert(obj: BlockObject) {
     return;
   }
 
@@ -35,7 +35,7 @@ export class BlockCommon implements BlockObject {
     return [this.data.value];
   }
 
-  runBlockLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
+  runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
     return '';
   }
 }
