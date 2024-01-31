@@ -13,7 +13,7 @@ export class BlockNegation extends BlockCommon {
     return { childX: 50, childY: 0 };
   }
 
-  paintBlock(id: string, x: number, y: number) {
+  paint(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--expression-logical` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '논리 부정' });
     const space = createElementCommon('span', { className: 'block__space' });
@@ -25,7 +25,7 @@ export class BlockNegation extends BlockCommon {
     return div;
   }
 
-  insertBlock(obj: BlockObject) {
+  insert(obj: BlockObject) {
     if (Object.keys(this.data.value).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
@@ -33,7 +33,7 @@ export class BlockNegation extends BlockCommon {
     }
   }
 
-  runBlockLogic(operand1: string, operand2: string): boolean {
+  runLogic(operand1: string, operand2: string): boolean {
     const booleanOperand = operand1 === 'true' ? true : false;
     return !booleanOperand;
   }

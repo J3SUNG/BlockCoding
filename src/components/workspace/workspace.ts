@@ -20,28 +20,6 @@ export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspa
   addWorkspaceReceiveDragEvent(section, workspaceData, updateWorkspaceDataAll);
   addWorkspaceMouseDragEvent(section, workspaceData, updateWorkspaceDataAll);
 
-  section.addEventListener('drop', function (event: DragEvent) {
-    event.preventDefault();
-    if (event.target !== section && event.dataTransfer) {
-      const target = event.target as Element;
-      const targetClosestDiv = target.closest('div');
-
-      if (targetClosestDiv) {
-        const uniqueId = targetClosestDiv.id ?? '';
-        const name = event.dataTransfer.getData('name');
-
-        const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, workspaceData);
-        if (!newWorkspaceData) {
-          return;
-        }
-        updateWorkspaceDataAll(newWorkspaceData);
-      } else {
-        const newWorkspaceData = inserBlockWorkspace(section, event, workspaceData);
-        updateWorkspaceDataAll(newWorkspaceData);
-      }
-    }
-  });
-
   workspaceData.forEach((obj) => {
     paintWorkspace(section, obj, { x: obj.data.x, y: obj.data.y, index: 0 }, updateWorkspaceDataValue);
   });
@@ -87,8 +65,8 @@ const paintWorkspace = (
         newY = childY;
       }
 
-      if (obj.paintBlock) {
-        const div = obj.paintBlock(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
+      if (obj.paint) {
+        const div = obj.paint(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
         parent.appendChild(div);
 
         obj.getInnerBlock().forEach((item, itemIndex) => {
@@ -168,13 +146,13 @@ const addWorkspaceMouseDragEvent = (
             child.data.id = target.id;
           }
 
-          newWorkspaceData.push(child);
           removeTargetBlockOjbect(parent, target.id);
+          newWorkspaceData.push(child);
         } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
           removeTargetBlockOjbect(parent, target.id);
         } else if (anotherBlockClosestDiv) {
-          insertBlockAnotherBlock(anotherBlockClosestDiv.id as string, child.name, newWorkspaceData, child);
           removeTargetBlockOjbect(parent, target.id);
+          insertBlockAnotherBlock(anotherBlockClosestDiv.id as string, child.name, newWorkspaceData, child);
         }
       }
 
@@ -264,15 +242,12 @@ const addWorkspaceReceiveDragEvent = (
     } else if (e.dataTransfer) {
       const copyWorkspaceData = deepCopy(workspaceData);
       const target = e.target as Element;
-      const targetClosestDiv = target.closest('div');
 
-      if (targetClosestDiv) {
-        const uniqueId = targetClosestDiv.id ?? '';
-        const name = e.dataTransfer.getData('name');
-        const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, copyWorkspaceData);
+      const uniqueId = target.closest('div')?.id ?? '';
+      const name = e.dataTransfer.getData('name');
+      const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, copyWorkspaceData);
 
-        updateWorkspaceDataAll(newWorkspaceData);
-      }
+      updateWorkspaceDataAll(newWorkspaceData);
     }
   });
 };
@@ -306,11 +281,7 @@ const insertBlockAnotherBlock = (
   if (targetObj) {
     const newBlock = insertBlock ? insertBlock : createBlock(name, createUniqueId(), 0, 0);
 
-    if (Array.isArray(targetObj.data.value)) {
-      targetObj.data.value.push(newBlock);
-    } else if (typeof targetObj === 'object' && targetObj !== null) {
-      targetObj.data.value = newBlock;
-    }
+    targetObj.insert(newBlock);
   }
 
   return newWorkspaceData;

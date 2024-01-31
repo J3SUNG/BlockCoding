@@ -15,7 +15,7 @@ export class BlockComparison extends BlockCommon {
     return { childX: 50 * index, childY: 0 };
   }
 
-  paintBlock(
+  paint(
     id: string,
     x: number,
     y: number,
@@ -54,7 +54,7 @@ export class BlockComparison extends BlockCommon {
     return div;
   }
 
-  insertBlock(obj: BlockObject) {
+  insert(obj: BlockObject) {
     if (Object.keys(this.data.value).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
@@ -70,7 +70,7 @@ export class BlockComparison extends BlockCommon {
     return [this.data.value, this.data.secondValue!];
   }
 
-  runBlockLogic(operand1: string, operand2: string): boolean {
+  runLogic(operand1: string, operand2: string): boolean {
     switch (this.data.operator) {
       case '=':
         return operand1 === operand2;
@@ -86,6 +86,6 @@ export class BlockComparison extends BlockCommon {
         return Number(operand1) <= Number(operand2);
     }
 
-    throw new Error('blockComparison - runBlockLogic - 예상치 못한 연산자');
+    throw new Error('blockComparison - runLogic - 예상치 못한 연산자');
   }
 }
