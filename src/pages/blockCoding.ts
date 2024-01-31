@@ -14,23 +14,23 @@ export const blockCoding = () => {
   const [consoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
   const [workspaceData, setWorkspaceData] = useState<WorkspaceData>('workspaceData', []);
 
-  const updateProgramStateRun = (): void => {
+  const updateProgramStateRun = () => {
     setProgramState('run');
   };
 
-  const updateProgramStateStop = (): void => {
+  const updateProgramStateStop = () => {
     setProgramState('stop');
   };
 
-  const updateProgramStatePause = (): void => {
+  const updateProgramStatePause = () => {
     setProgramState('pause');
   };
 
-  const updateConsoleLog = (log: ConsoleLog): void => {
+  const updateConsoleLog = (log: ConsoleLog) => {
     setConsoleLog(log);
   };
 
-  const updateWorkspaceDataAll = (data: WorkspaceData): void => {
+  const updateWorkspaceDataAll = (data: WorkspaceData) => {
     setWorkspaceData(data);
   };
 
@@ -48,10 +48,12 @@ export const blockCoding = () => {
       } else if (Array.isArray(targetObj.data.value)) {
         targetObj.data.value.push(value as BlockObject);
       } else {
+        if (targetObj.data.value === value) {
+          return;
+        }
         targetObj.data.value = value;
       }
     }
-
     setWorkspaceData(newWorkspaceData);
   };
 
