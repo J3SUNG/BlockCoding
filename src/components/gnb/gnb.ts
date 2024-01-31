@@ -134,10 +134,9 @@ const updateLogData = async (
         const onKeyDown = (e: KeyboardEvent) => {
           if (e.key === 'Enter') {
             input.removeEventListener('keydown', onKeyDown);
-            const inputValue = input.value;
             input.value = '';
-            setChanageLog([...prevLog(), inputValue]);
-            resolve(inputValue);
+            setChanageLog([...prevLog(), input.value]);
+            resolve(input.value);
           }
         };
 
@@ -146,6 +145,7 @@ const updateLogData = async (
     };
 
     const userInput = await waitInput();
+
     return [userInput];
   }
 
