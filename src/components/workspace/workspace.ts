@@ -65,20 +65,18 @@ const paintWorkspace = (
         newY = childY;
       }
 
-      if (obj.paint) {
-        const div = obj.paint(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
-        parent.appendChild(div);
+      const { block, space } = obj.getElement(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
+      parent.appendChild(block);
 
-        obj.getInnerBlock().forEach((item, itemIndex) => {
-          paintWorkspace(
-            div,
-            item,
-            { x: newX, y: newY, index: itemIndex },
-            updateWorkspaceDataValue,
-            obj.setChildPosition,
-          );
-        });
-      }
+      obj.getInnerBlock().forEach((item, itemIndex) => {
+        paintWorkspace(
+          space[itemIndex],
+          item,
+          { x: newX, y: newY, index: itemIndex },
+          updateWorkspaceDataValue,
+          obj.setChildPosition,
+        );
+      });
     }
   }
 };
