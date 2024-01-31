@@ -144,12 +144,12 @@ const addWorkspaceMouseDragEvent = (
             child.data.id = target.id;
           }
 
-          removeTargetBlockOjbect(parent, target.id);
+          removeTargetBlockObject(parent, target.id);
           newWorkspaceData.push(child);
         } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
-          removeTargetBlockOjbect(parent, target.id);
+          removeTargetBlockObject(parent, target.id);
         } else if (anotherBlockClosestDiv) {
-          removeTargetBlockOjbect(parent, target.id);
+          removeTargetBlockObject(parent, target.id);
           insertBlockAnotherBlock(anotherBlockClosestDiv.id as string, child.name, newWorkspaceData, child);
         }
       }
@@ -199,13 +199,19 @@ const findTargetParentBlock = (
       return parent;
     }
 
-    return findTargetParentBlock(targetId, obj.data.value, obj);
+    const list = obj.getInnerBlock();
+    for (const item of list) {
+      const parent = findTargetParentBlock(targetId, item, obj);
+      if (parent) {
+        return parent;
+      }
+    }
   }
 
   return null;
 };
 
-const removeTargetBlockOjbect = (parent: BlockObject | BlockObject[], targetId: string) => {
+const removeTargetBlockObject = (parent: BlockObject | BlockObject[], targetId: string) => {
   if (Array.isArray(parent)) {
     const index = parent.findIndex((item) => item.data.id === targetId);
     parent.splice(index, 1);
