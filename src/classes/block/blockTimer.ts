@@ -6,6 +6,7 @@ export class BlockTimer extends BlockCommon {
   name = 'timer';
   type = 'general';
   defaultWidth = 100;
+  defaultHeight = 50;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
@@ -18,7 +19,7 @@ export class BlockTimer extends BlockCommon {
     const childWidth = this.calcWidth();
 
     space.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(space);
 

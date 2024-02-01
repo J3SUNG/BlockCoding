@@ -6,6 +6,7 @@ export class BlockVariable extends BlockCommon {
   name = 'variable';
   type = 'general';
   defaultWidth = 130;
+  defaultHeight = 50;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
@@ -21,7 +22,7 @@ export class BlockVariable extends BlockCommon {
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(space1);
     div.appendChild(space2);
