@@ -19,6 +19,8 @@ export class BlockVariable extends BlockCommon {
     const space2 = createElementCommon('span', { className: 'block__space' });
     const childWidth = this.calcWidth();
 
+    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
+    space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
     div.appendChild(p);
     div.appendChild(space1);

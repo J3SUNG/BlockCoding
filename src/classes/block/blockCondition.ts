@@ -21,6 +21,7 @@ export class BlockCondition extends BlockCommon {
     const space = createElementCommon('span', { className: 'block__space' });
     const childWidth = this.calcWidth();
 
+    space.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
     div.appendChild(p);
     div.appendChild(space);
