@@ -13,7 +13,13 @@ export const consoleSpace = ({ consoleLog }: ConsoleSpaceProps) => {
     outputDiv.appendChild(p);
   });
 
-  const input = createElementCommon('input', { type: 'text', name: 'input', placeholder: '입력해 주세요.' });
+  const input = createElementCommon('input', {
+    id: 'console__input',
+    type: 'text',
+    name: 'input',
+    placeholder: '입력해 주세요.',
+  });
+  input.focus();
 
   div.appendChild(h1);
   div.appendChild(outputDiv);
