@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockCommon } from './blockClassCommon';
 
@@ -12,7 +12,10 @@ export class BlockStart extends BlockCommon {
   }
 
   setChildPosition(index: number) {
-    return { childX: 0, childY: 50 * (index + 1) };
+    const { prefixSum } = this.calcHeight();
+    console.log(prefixSum);
+    if (prefixSum) return { childX: 0, childY: prefixSum[index] + 50 };
+    return { childX: 0, childY: 0 };
   }
 
   getElement(id: string, x: number, y: number) {
@@ -49,5 +52,25 @@ export class BlockStart extends BlockCommon {
 
   getChildBlock(): string[] {
     return ['value'];
+  }
+
+  calcHeight(): { childHeight: number; prefixSum?: number[] } {
+    let height = 0;
+    let prefixSum: number[] = [0];
+    this.getChildBlock().forEach((key) => {
+      const childList = this.data[key];
+
+      if (Array.isArray(childList)) {
+        childList.forEach((child) => {
+          if (child instanceof BlockCommon) {
+            const { childHeight } = child.calcHeight();
+            height += childHeight;
+            prefixSum.push(prefixSum[prefixSum.length - 1] + childHeight);
+          }
+        });
+      }
+    });
+
+    return { childHeight: 50, prefixSum };
   }
 }
