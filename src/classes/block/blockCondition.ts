@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockCommon } from './blockClassCommon';
 
