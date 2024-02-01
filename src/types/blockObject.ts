@@ -14,6 +14,7 @@ export interface BlockObject {
     condition?: BlockObject;
     operator?: string;
     secondValue?: BlockObject;
+    [key: string]: BlockObjectValue | string | number | undefined;
   };
   setChildPosition(x?: number, y?: number, index?: number): { childX: number; childY: number };
   getElement(
@@ -24,7 +25,8 @@ export interface BlockObject {
     onValueChange?: UpdateWorkspaceDataValue,
   ): { block: HTMLElement; space: HTMLElement[] };
   insert(obj: BlockObject): void;
-  getInnerBlock(): BlockObjectValue[];
+  getInnerBlock(): string[];
+  getChildBlock(): string[];
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
   calcWidth(): number;
 }
