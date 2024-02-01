@@ -5,7 +5,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockCondition extends BlockCommon {
   name = 'condition';
   type = 'control';
-  defaultWidth = 100;
+  defaultWidth = 150;
   defaultHeight = 150;
 
   constructor(id: string, x: number, y: number) {
@@ -14,7 +14,9 @@ export class BlockCondition extends BlockCommon {
   }
 
   setChildPosition(index: number) {
-    return { childX: 0, childY: 50 * index };
+    const { prefixSum } = this.calcHeight();
+    if (prefixSum) return { childX: 0, childY: prefixSum[index] };
+    return { childX: 0, childY: 0 };
   }
 
   getElement(id: string, x: number, y: number) {
@@ -23,11 +25,12 @@ export class BlockCondition extends BlockCommon {
     const space = createElementCommon('span', { className: 'block__space' });
     const childWidth = this.calcWidth();
     const childSpace = createElementCommon('span', { className: 'block__child' });
+    const { childHeight } = this.calcHeight();
 
     space.setAttribute('style', `width: ${this.spaceWidth[0]}px; margin-top: 5px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${childHeight}px;`);
     p.setAttribute('style', `padding-top: 12px`);
-    childSpace.setAttribute('style', `width: ${childWidth - 50}px; height: ${this.defaultHeight - 100}px;`);
+    childSpace.setAttribute('style', `width: ${childWidth - 50}px; height: ${childHeight - 100}px;`);
     div.appendChild(p);
     div.appendChild(space);
     div.appendChild(childSpace);
@@ -53,5 +56,25 @@ export class BlockCondition extends BlockCommon {
 
   getChildBlock(): string[] {
     return ['value'];
+  }
+
+  calcHeight(): { childHeight: number; prefixSum?: number[] } {
+    let height = 0;
+    let prefixSum: number[] = [0];
+    this.getChildBlock().forEach((key) => {
+      const childList = this.data[key];
+
+      if (Array.isArray(childList)) {
+        childList.forEach((child) => {
+          if (child instanceof BlockCommon) {
+            const { childHeight } = child.calcHeight();
+            height += childHeight;
+            prefixSum.push(prefixSum[prefixSum.length - 1] + childHeight);
+          }
+        });
+      }
+    });
+
+    return { childHeight: height + 100 > 150 ? height + 100 : 150, prefixSum };
   }
 }
