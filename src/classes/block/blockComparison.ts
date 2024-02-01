@@ -6,6 +6,7 @@ export class BlockComparison extends BlockCommon {
   name = 'comparison';
   type = 'expressionLogical';
   defaultWidth = 100;
+  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -27,6 +28,8 @@ export class BlockComparison extends BlockCommon {
     const space2 = createElementCommon('span', { className: 'block__space' });
     const operatorSelect = createElementCommon('select', { className: 'block__operator block__operator--logical' });
     const childWidth = this.calcWidth();
+    const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
+    const endTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
 
     operator.forEach((op) => {
       const option = createElementCommon('option', { value: op, textContent: op });
@@ -47,7 +50,21 @@ export class BlockComparison extends BlockCommon {
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
+    startTriangle.setAttribute(
+      'style',
+      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; left: -${this.defaultHeight}px; clip-path: polygon(40% 50%, 100% 0, 100% 100%);`,
+    );
+    endTriangle.setAttribute(
+      'style',
+      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(0 0, 0 100%, 60% 50%);`,
+    );
+
+    div.setAttribute(
+      'style',
+      `left: ${x + 20}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`,
+    );
+    div.appendChild(startTriangle);
+    div.appendChild(endTriangle);
     div.appendChild(space1);
     div.appendChild(operatorSelect);
     div.appendChild(space2);
