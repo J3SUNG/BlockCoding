@@ -65,10 +65,6 @@ export class BlockArithmetic extends BlockCommon {
     }
   }
 
-  getInnerBlock(): BlockObjectValue[] {
-    return [this.data.value, this.data.secondValue!];
-  }
-
   runLogic(operand1: string, operand2: string): string {
     const numberOperand1 = Number(operand1);
     const numberOperand2 = Number(operand2);
@@ -87,5 +83,9 @@ export class BlockArithmetic extends BlockCommon {
     }
 
     return '';
+  }
+
+  getInnerBlock(): string[] {
+    return ['value', 'secondValue'];
   }
 }

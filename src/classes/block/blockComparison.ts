@@ -65,10 +65,6 @@ export class BlockComparison extends BlockCommon {
     }
   }
 
-  getInnerBlock(): BlockObjectValue[] {
-    return [this.data.value, this.data.secondValue!];
-  }
-
   runLogic(operand1: string, operand2: string): boolean {
     switch (this.data.operator) {
       case '=':
@@ -86,5 +82,9 @@ export class BlockComparison extends BlockCommon {
     }
 
     throw new Error('blockComparison - runLogic - 예상치 못한 연산자');
+  }
+
+  getInnerBlock(): string[] {
+    return ['value', 'secondValue'];
   }
 }
