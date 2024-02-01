@@ -14,7 +14,6 @@ export class BlockCondition extends BlockCommon {
   }
 
   setChildPosition(index: number) {
-    console.log('setChildPosition', index);
     return { childX: 0, childY: 50 * index };
   }
 

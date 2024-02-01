@@ -14,17 +14,12 @@ export class BlockLoop extends BlockCommon {
   }
 
   setChildPosition(index: number) {
-    console.log(this);
-    console.log('this');
-    console.log(this.calcHeight());
-    console.log('this.calcHeight');
     const { prefixSum } = this.calcHeight();
     if (prefixSum) return { childX: 0, childY: prefixSum[index] };
     return { childX: 0, childY: 0 };
   }
 
   getElement(id: string, x: number, y: number) {
-    console.log('getElement', this);
     const div = createElementCommon('div', { id, className: `block block--control` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '반복문' });
     const space = createElementCommon('span', { className: 'block__space' });
