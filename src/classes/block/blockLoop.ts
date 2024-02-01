@@ -11,8 +11,9 @@ export class BlockLoop extends BlockCommon {
     super(id, x, y, []);
     this.data.condition = {} as BlockObject;
   }
+
   setChildPosition(x: number, y: number, index: number) {
-    return { childX: 50, childY: 50 * index };
+    return { childX: 0, childY: 50 * index };
   }
 
   getElement(id: string, x: number, y: number) {
