@@ -55,7 +55,6 @@ export class BlockString extends BlockCommon {
   }
 
   runLogic(operand1: string, operand2: string): string {
-    console.log(operand1, operand2);
     return operand1 + ' ' + operand2;
   }
 
