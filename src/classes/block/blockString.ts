@@ -44,7 +44,7 @@ export class BlockString extends BlockCommon {
           return true;
         }
       } else if (insertType === 'space2') {
-        if (Object.keys(this.data.value).length === 0) {
+        if (this.data.secondValue && Object.keys(this.data.secondValue).length === 0) {
           this.data.secondValue = obj;
           return true;
         }
