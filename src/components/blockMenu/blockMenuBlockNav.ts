@@ -18,7 +18,7 @@ export const blockMenuBlockNav = ({ selectedType }: BlockMenuBlockNavProps) => {
       const div = blockMenuBlockNavButton({
         name: block.name,
         type: block.type,
-        x: NAV_BLOCK_PADDING,
+        x: NAV_BLOCK_PADDING + (selectedType === 'expressionLogical' ? 20 : 0),
         y: height * index + NAV_BLOCK_PADDING,
       });
       blockNav.appendChild(div);
