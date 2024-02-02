@@ -132,6 +132,12 @@ const addWorkspaceMouseDragEvent = (
       let changeCheck = true;
 
       if (anotherBlock && parent && child) {
+        let newChild = null;
+        if (e.metaKey || e.ctrlKey) {
+          newChild = deepCopy(child);
+          changeUniqueIdObj(newChild);
+        }
+
         if (anotherBlock.id === 'workspace') {
           const rect = section.getBoundingClientRect();
           const relativeX = e.clientX - rect.left - xOffset;
@@ -143,19 +149,33 @@ const addWorkspaceMouseDragEvent = (
             child.data.id = target.id;
           }
 
-          removeTargetBlock(parentData);
-          newWorkspaceData.push(child);
+          if (!newChild) {
+            removeTargetBlock(parentData);
+            newWorkspaceData.push(child);
+          } else {
+            newWorkspaceData.push(newChild);
+          }
         } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
-          removeTargetBlock(parentData);
+          if (!newChild) removeTargetBlock(parentData);
         } else if (anotherBlockClosestDiv) {
-          removeTargetBlock(parentData);
-          changeCheck = insertBlockAnotherBlock(
-            anotherBlockClosestDiv.id as string,
-            child.name,
-            newWorkspaceData,
-            anotherBlock.id,
-            child,
-          );
+          if (!newChild) {
+            removeTargetBlock(parentData);
+            changeCheck = insertBlockAnotherBlock(
+              anotherBlockClosestDiv.id as string,
+              child.name,
+              newWorkspaceData,
+              anotherBlock.id,
+              child,
+            );
+          } else {
+            changeCheck = insertBlockAnotherBlock(
+              anotherBlockClosestDiv.id as string,
+              newChild.name,
+              newWorkspaceData,
+              anotherBlock.id,
+              newChild,
+            );
+          }
         }
       }
 
@@ -324,4 +344,28 @@ const insertBlockAnotherBlock = (
   }
 
   return false;
+};
+
+const changeUniqueIdObj = (obj: BlockObjectValue): void => {
+  if (!obj) {
+    return;
+  }
+
+  if (Array.isArray(obj)) {
+    for (const item of obj) {
+      changeUniqueIdObj(item);
+    }
+  } else if (typeof obj === 'object' && 'data' in obj && (obj.data.value || obj.data.value == '')) {
+    const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
+    const newUniqueId = createUniqueId();
+    obj.data.id = newUniqueId;
+
+    for (const item of blockProps) {
+      const blockObj = obj.data[item];
+
+      if (typeof blockObj === 'object') {
+        changeUniqueIdObj(blockObj);
+      }
+    }
+  }
 };
