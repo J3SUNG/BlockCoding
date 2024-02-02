@@ -15,12 +15,12 @@ export class BlockNegation extends BlockCommon {
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--expression-logical` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '논리 부정' });
-    const space = createElementCommon('span', { className: 'block__space' });
+    const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const childWidth = this.calcWidth();
     const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
     const endTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
 
-    space.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
+    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     startTriangle.setAttribute(
       'style',
       `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; left: -${this.defaultHeight}px; clip-path: polygon(40% 50%, 100% 0, 100% 100%);`,
@@ -34,18 +34,21 @@ export class BlockNegation extends BlockCommon {
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(p);
-    div.appendChild(space);
+    div.appendChild(space1);
 
-    return { block: div, space: [space] };
+    return { block: div, space: [space1] };
   }
 
-  insert(obj: BlockObject) {
-    if (Object.keys(this.data.value).length === 0) {
-      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
-        this.data.value = obj;
-        return true;
+  insert(obj: BlockObject, insertType?: string) {
+    if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
+      if (insertType === 'space1') {
+        if (Object.keys(this.data.value).length === 0) {
+          this.data.value = obj;
+          return true;
+        }
       }
     }
+
     return false;
   }
 

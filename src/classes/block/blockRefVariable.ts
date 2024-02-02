@@ -15,24 +15,27 @@ export class BlockRefVariable extends BlockCommon {
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '변수 참조' });
-    const space = createElementCommon('span', { className: 'block__space' });
+    const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const childWidth = this.calcWidth();
 
-    space.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
+    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
-    div.appendChild(space);
+    div.appendChild(space1);
 
-    return { block: div, space: [space] };
+    return { block: div, space: [space1] };
   }
 
-  insert(obj: BlockObject) {
-    if (Object.keys(this.data.value!).length === 0) {
-      if (obj.name === 'value') {
-        this.data.value = obj;
-        return true;
+  insert(obj: BlockObject, insertType?: string) {
+    if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
+      if (insertType === 'space1') {
+        if (Object.keys(this.data.value).length === 0) {
+          this.data.value = obj;
+          return true;
+        }
       }
     }
+
     return false;
   }
 }

@@ -24,8 +24,8 @@ export class BlockLogical extends BlockCommon {
     const operator = ['AND', 'OR'];
 
     const div = createElementCommon('div', { id, className: `block block--expression-logical` });
-    const space1 = createElementCommon('span', { className: 'block__space' });
-    const space2 = createElementCommon('span', { className: 'block__space' });
+    const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
+    const space2 = createElementCommon('span', { id: 'space2', className: 'block__space' });
     const operatorSelect = createElementCommon('select', { className: 'block__operator block__operator--logical' });
     const childWidth = this.calcWidth();
     const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
@@ -69,18 +69,21 @@ export class BlockLogical extends BlockCommon {
     return { block: div, space: [space1, space2] };
   }
 
-  insert(obj: BlockObject) {
-    if (Object.keys(this.data.value).length === 0) {
-      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
-        this.data.value = obj;
-        return true;
-      }
-    } else if (this.data.secondValue && Object.keys(this.data.secondValue).length === 0) {
-      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
-        this.data.secondValue = obj;
-        return true;
+  insert(obj: BlockObject, insertType?: string) {
+    if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
+      if (insertType === 'space1') {
+        if (Object.keys(this.data.value).length === 0) {
+          this.data.value = obj;
+          return true;
+        }
+      } else if (insertType === 'space2') {
+        if (this.data.secondValue && Object.keys(this.data.secondValue).length === 0) {
+          this.data.secondValue = obj;
+          return true;
+        }
       }
     }
+
     return false;
   }
 
