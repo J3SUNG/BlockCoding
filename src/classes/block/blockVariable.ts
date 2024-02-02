@@ -34,12 +34,15 @@ export class BlockVariable extends BlockCommon {
     if (this.data.varName && Object.keys(this.data.varName).length === 0) {
       if (obj.name === 'value') {
         this.data.varName = obj;
+        return true;
       }
     } else if (Object.keys(this.data.value).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
+        return true;
       }
     }
+    return false;
   }
 
   getInnerBlock(): string[] {

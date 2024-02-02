@@ -30,10 +30,7 @@ export class BlockNegation extends BlockCommon {
       `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(0 0, 0 100%, 60% 50%);`,
     );
 
-    div.setAttribute(
-      'style',
-      `left: ${x + 20}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`,
-    );
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(p);
@@ -46,8 +43,10 @@ export class BlockNegation extends BlockCommon {
     if (Object.keys(this.data.value).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
+        return true;
       }
     }
+    return false;
   }
 
   runLogic(operand1: string): boolean {

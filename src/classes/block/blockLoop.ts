@@ -42,12 +42,15 @@ export class BlockLoop extends BlockCommon {
     if (this.data.condition && Object.keys(this.data.condition).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.condition = obj;
+        return true;
       }
     } else if (Array.isArray(this.data.value)) {
       if (obj.type === 'general' || obj.type === 'control') {
         this.data.value.push(obj);
+        return true;
       }
     }
+    return false;
   }
 
   getInnerBlock(): string[] {

@@ -60,12 +60,15 @@ export class BlockArithmetic extends BlockCommon {
     if (Object.keys(this.data.value).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
+        return true;
       }
     } else if (this.data.secondValue && Object.keys(this.data.secondValue).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.secondValue = obj;
+        return true;
       }
     }
+    return false;
   }
 
   runLogic(operand1: string, operand2: string): string {

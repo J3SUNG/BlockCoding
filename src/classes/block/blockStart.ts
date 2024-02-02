@@ -5,7 +5,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockStart extends BlockCommon {
   name = 'start';
   type = 'declare';
-  BLOCK_START_MIN_WIDTH = 240;
+  BLOCK_START_MIN_WIDTH = 250;
   defaultHeight = 50;
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -38,12 +38,14 @@ export class BlockStart extends BlockCommon {
     return { block: div, space: [div] };
   }
 
-  insert(obj: BlockObject): void {
+  insert(obj: BlockObject) {
     if (obj.type === 'general' || obj.type === 'control') {
       if (Array.isArray(this.data.value)) {
         this.data.value.splice(this.data.value.length, 0, obj);
+        return true;
       }
     }
+    return false;
   }
 
   getInnerBlock(): string[] {
