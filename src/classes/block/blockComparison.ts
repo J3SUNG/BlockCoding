@@ -59,7 +59,10 @@ export class BlockComparison extends BlockCommon {
       `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute(
+      'style',
+      `left: ${x + 10}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`,
+    );
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(space1);

@@ -59,7 +59,10 @@ export class BlockLogical extends BlockCommon {
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute(
+      'style',
+      `left: ${x + 10}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`,
+    );
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(space1);
