@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockCommon } from './blockClassCommon';
 
@@ -23,14 +23,14 @@ export class BlockLoop extends BlockCommon {
     const div = createElementCommon('div', { id, className: `block block--control` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '반복문' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
-    const childWidth = this.calcWidth();
-    const childSpace = createElementCommon('span', { className: 'block__child' });
+    const childSpace = createElementCommon('span', { id: 'child', className: 'block__child' });
     const { childHeight } = this.calcHeight();
+    this.calcWidth();
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px; margin-top: 5px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${childHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${this.width}px; height: ${childHeight}px;`);
     p.setAttribute('style', `padding-top: 12px`);
-    childSpace.setAttribute('style', `width: ${childWidth - 50}px; height: ${childHeight - 100}px;`);
+    childSpace.setAttribute('style', `width: ${this.width - 48}px; height: ${childHeight - 100}px;`);
     div.appendChild(p);
     div.appendChild(space1);
     div.appendChild(childSpace);
