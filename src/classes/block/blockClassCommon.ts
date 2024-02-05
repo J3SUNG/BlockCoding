@@ -9,6 +9,7 @@ export class BlockCommon implements BlockObject {
   defaultSpaceWidth = 50;
   defaultHeight = 50;
   spaceWidth = [50, 50];
+  childWidth? = 100;
   data: BlockObject['data'];
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
@@ -25,13 +26,14 @@ export class BlockCommon implements BlockObject {
     y: number,
     value?: string,
     onValueChange?: (id: string, value: string, insertLocation?: string) => void,
+    changeBlockWdith?: () => void,
   ) {
-    const div = createElementCommon('div', { id, className: `block block--declare` });
+    const div = createElementCommon('div', { id, className: `block` });
     div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
 
-    // TODO: 현재는 값을 순차적으로 받아서 처리하고 있지만, 추후에는 객체로 받아서 처리해야 함
     return { block: div, space: [] as HTMLElement[] };
   }
+
   insert(obj: BlockObject, insertType?: string): boolean {
     return false;
   }
@@ -42,7 +44,6 @@ export class BlockCommon implements BlockObject {
 
   calcWidth() {
     let addWidth = 0;
-
     this.width = this.defaultWidth;
     this.getInnerBlock().forEach((innerProp, index) => {
       const block = this.data[innerProp];
@@ -56,6 +57,38 @@ export class BlockCommon implements BlockObject {
     });
 
     this.width = this.defaultWidth + addWidth;
+    this.childWidth = this.width - 48;
+
+    const div = document.getElementById(this.data.id);
+    if (div) {
+      div.style.width = `${this.width}px`;
+    }
+
+    for (let i = 0; i < this.getInnerBlock().length; i++) {
+      if (div) {
+        const space = div.querySelector(':scope > #space' + (i + 1));
+        if (space instanceof HTMLElement) {
+          space.style.width = `${this.spaceWidth[i]}px`;
+        }
+      }
+    }
+
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
+
+      if (Array.isArray(block)) {
+        block.forEach((childBlock) => {
+          childBlock.calcWidth();
+        });
+      }
+    });
+
+    if (this.getChildBlock().length > 0) {
+      const childSpace = div?.querySelector(':scope > .block__child');
+      if (childSpace instanceof HTMLElement) {
+        childSpace.style.width = `${this.childWidth}px`;
+      }
+    }
 
     return this.width;
   }
