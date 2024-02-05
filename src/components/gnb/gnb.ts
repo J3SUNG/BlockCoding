@@ -43,7 +43,9 @@ export const gnb = ({
   };
 
   playButton.addEventListener('click', () => {
-    runProgram(getWorkspaceData(), getConsoleLog, updateConsoleLog, updateProgramState);
+    if (getProgramState() === 'stop') {
+      runProgram(getWorkspaceData(), getConsoleLog, updateConsoleLog, updateProgramState);
+    }
   });
 
   saveButton.addEventListener('click', () => {
@@ -72,7 +74,7 @@ export const gnb = ({
           const content: string = e.target?.result as string;
           const jsonData: WorkspaceData = JSON.parse(content);
 
-          loadData(jsonData, updateWorkspaceDataAll);
+          loadData(jsonData, updateWorkspaceDataAll, updateConsoleLog);
 
           fileInput.value = '';
         };
@@ -250,7 +252,11 @@ const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon |
   }
 };
 
-const loadData = (loadWorkspaceData: WorkspaceData, updateWorkspaceDataAll: UpdateWorkspaceDataAll): void => {
+const loadData = (
+  loadWorkspaceData: WorkspaceData,
+  updateWorkspaceDataAll: UpdateWorkspaceDataAll,
+  updateConsoleLog: UpdateConsoleLog,
+): void => {
   const newWorkspaceData: BlockCommon[] = [];
   loadWorkspaceData.forEach((block: BlockObject) => {
     const resotreData = restoreWorkspaceData(block);
@@ -265,4 +271,5 @@ const loadData = (loadWorkspaceData: WorkspaceData, updateWorkspaceDataAll: Upda
   });
 
   updateWorkspaceDataAll(newWorkspaceData);
+  updateConsoleLog([]);
 };
