@@ -143,6 +143,30 @@ select {
   position: absolute;
   bottom: 2rem;
   right: 2rem;
+  z-index: 1000;
+}
+
+.trash-bin--highlight-drop {
+  animation: wiggle 0.5s infinite;
+  color: tomato;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 .material-symbols-outlined {

@@ -141,16 +141,17 @@ const addWorkspaceMouseDragEvent = (
         initialX = e.clientX;
         initialY = e.clientY;
 
-        target.style.zIndex = '1000';
+        target.style.zIndex = '999';
         active = true;
       }
     }
   });
 
   section.addEventListener('mouseup', function (e: MouseEvent) {
+    const MOVE_LIMIT = 3;
     e.preventDefault();
     if (active && target) {
-      if (Math.abs(currentX) > 3 || Math.abs(currentY) > 3) {
+      if (Math.abs(currentX) > MOVE_LIMIT || Math.abs(currentY) > MOVE_LIMIT) {
         target.style.display = 'none';
         const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
         const anotherBlockClosestDiv = anotherBlock.closest('div');
@@ -241,15 +242,20 @@ const addWorkspaceMouseDragEvent = (
 
         if (lastHighlighted && lastHighlighted !== elementBelow) {
           lastHighlighted.classList.remove('block--highlight-drop');
+          lastHighlighted.classList.remove('trash-bin--highlight-drop');
         }
 
         if (elementBelow) {
+          console.log(elementBelow.classList);
           if (elementBelow.classList.contains('block__space') || elementBelow.classList.contains('block__child')) {
             elementBelow.classList.add('block--highlight-drop');
             lastHighlighted = elementBelow;
           } else {
             const closestBlock = elementBelow.closest('div');
-            if (closestBlock?.classList.contains('block')) {
+            if (closestBlock?.id === 'trash-bin') {
+              closestBlock.classList.add('trash-bin--highlight-drop');
+              lastHighlighted = closestBlock;
+            } else if (closestBlock?.classList.contains('block')) {
               closestBlock.classList.add('block--highlight-drop');
               lastHighlighted = closestBlock;
             }
@@ -376,6 +382,7 @@ const addWorkspaceReceiveDragEvent = (
 
       if (lastHighlighted && lastHighlighted !== elementBelow) {
         lastHighlighted.classList.remove('block--highlight-drop');
+        lastHighlighted.classList.remove('trash-bin--highlight-drop');
       }
 
       if (elementBelow) {
@@ -384,6 +391,10 @@ const addWorkspaceReceiveDragEvent = (
           lastHighlighted = elementBelow;
         } else {
           const closestBlock = elementBelow.closest('div');
+          if (closestBlock?.id === 'trash-bin') {
+            closestBlock.classList.add('trash-bin--highlight-drop');
+            lastHighlighted = closestBlock;
+          }
           if (closestBlock?.classList.contains('block')) {
             closestBlock.classList.add('block--highlight-drop');
             lastHighlighted = closestBlock;
@@ -404,9 +415,12 @@ const addWorkspaceReceiveDragEvent = (
     } else if (e.dataTransfer) {
       const newWorkspaceData = deepCopy(workspaceData);
       const target = e.target as Element;
-
-      const uniqueId = target.closest('div')?.id ?? '';
+      const targetDiv = target.closest('div');
+      const uniqueId = targetDiv?.id ?? '';
       const name = e.dataTransfer.getData('name');
+
+      targetDiv?.classList.remove('trash-bin--highlight-drop');
+
       if (insertBlockAnotherBlock(uniqueId, name, newWorkspaceData, target.id)) {
         updateWorkspaceDataAll(newWorkspaceData);
       }
