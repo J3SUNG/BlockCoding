@@ -22,7 +22,12 @@ export const blockCoding = () => {
   };
 
   const gnbRender = () => {
-    render(gnb({ getWorkspaceData, getConsoleLog, updateConsoleLog, render: gnbRender }), root, 'gnb', GNB_INDEX);
+    render(
+      gnb({ getWorkspaceData, updateWorkspaceDataAll, getConsoleLog, updateConsoleLog, render: gnbRender }),
+      root,
+      'gnb',
+      GNB_INDEX,
+    );
   };
 
   const consoleRender = () => {
@@ -35,6 +40,7 @@ export const blockCoding = () => {
         workspaceData: getWorkspaceData(),
         updateWorkspaceDataAll,
         updateWorkspaceDataValue,
+        changeBlockWdith,
       }),
       mainComponent,
       'workspace',
@@ -71,8 +77,15 @@ export const blockCoding = () => {
     workspaceRender();
   };
 
+  const changeBlockWdith = () => {
+    getWorkspaceData().forEach((block) => {
+      block.calcWidth();
+    });
+  };
+
   const gnbComponent = gnb({
     getWorkspaceData,
+    updateWorkspaceDataAll,
     getConsoleLog,
     updateConsoleLog,
     render: gnbRender,
@@ -82,6 +95,7 @@ export const blockCoding = () => {
     workspaceData: getWorkspaceData(),
     updateWorkspaceDataAll,
     updateWorkspaceDataValue,
+    changeBlockWdith,
   });
   const consoleSpaceComponent = consoleSpace({ consoleLog: getConsoleLog() });
   const mainComponent = createElementCommon('div', { id: 'main' });
