@@ -11,11 +11,8 @@ export class BlockLogical extends BlockCommon {
     this.data.operator = 'AND';
     this.data.secondValue = {} as BlockObject;
   }
-  setChildPosition(x: number, y: number, index: number) {
-    return { childX: 50 * index, childY: 0 };
-  }
 
-  paint(
+  getElement(
     id: string,
     x: number,
     y: number,
@@ -51,7 +48,7 @@ export class BlockLogical extends BlockCommon {
     div.appendChild(operatorSelect);
     div.appendChild(space2);
 
-    return div;
+    return { block: div, space: [space1, space2] };
   }
 
   insert(obj: BlockObject) {

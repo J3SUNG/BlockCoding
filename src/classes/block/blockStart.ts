@@ -14,7 +14,7 @@ export class BlockStart extends BlockCommon {
     return { childX: 0, childY: 50 * (index + 1) };
   }
 
-  paint(id: string, x: number, y: number) {
+  getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '시작하기 버튼을 클릭했을 때' });
 
@@ -24,7 +24,7 @@ export class BlockStart extends BlockCommon {
     div.setAttribute('style', `left: ${x}px; top: ${y}px`);
     div.appendChild(p);
 
-    return div;
+    return { block: div, space: [div] };
   }
   insert(obj: BlockObject): void {
     if (obj.type === 'general' || obj.type === 'control') {

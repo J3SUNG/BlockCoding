@@ -14,7 +14,7 @@ export class BlockCondition extends BlockCommon {
     return { childX: 50, childY: 50 * index };
   }
 
-  paint(id: string, x: number, y: number) {
+  getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--control` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '조건문' });
     const space = createElementCommon('span', { className: 'block__space' });
@@ -23,7 +23,7 @@ export class BlockCondition extends BlockCommon {
     div.appendChild(p);
     div.appendChild(space);
 
-    return div;
+    return { block: div, space: [space, div] };
   }
 
   insert(obj: BlockObject) {
