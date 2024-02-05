@@ -20,28 +20,6 @@ export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspa
   addWorkspaceReceiveDragEvent(section, workspaceData, updateWorkspaceDataAll);
   addWorkspaceMouseDragEvent(section, workspaceData, updateWorkspaceDataAll);
 
-  section.addEventListener('drop', function (event: DragEvent) {
-    event.preventDefault();
-    if (event.target !== section && event.dataTransfer) {
-      const target = event.target as Element;
-      const targetClosestDiv = target.closest('div');
-
-      if (targetClosestDiv) {
-        const uniqueId = targetClosestDiv.id ?? '';
-        const name = event.dataTransfer.getData('name');
-
-        const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, workspaceData);
-        if (!newWorkspaceData) {
-          return;
-        }
-        updateWorkspaceDataAll(newWorkspaceData);
-      } else {
-        const newWorkspaceData = inserBlockWorkspace(section, event, workspaceData);
-        updateWorkspaceDataAll(newWorkspaceData);
-      }
-    }
-  });
-
   workspaceData.forEach((obj) => {
     paintWorkspace(section, obj, { x: obj.data.x, y: obj.data.y, index: 0 }, updateWorkspaceDataValue);
   });
@@ -87,8 +65,8 @@ const paintWorkspace = (
         newY = childY;
       }
 
-      if (obj.paintBlock) {
-        const div = obj.paintBlock(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
+      if (obj.paint) {
+        const div = obj.paint(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
         parent.appendChild(div);
 
         obj.getInnerBlock().forEach((item, itemIndex) => {
@@ -146,7 +124,7 @@ const addWorkspaceMouseDragEvent = (
 
   section.addEventListener('mouseup', function (e: MouseEvent) {
     e.preventDefault();
-    if (active && target) {
+    if (active && target && currentX && currentY) {
       target.style.display = 'none';
       const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
       const anotherBlockClosestDiv = anotherBlock.closest('div');
@@ -156,7 +134,6 @@ const addWorkspaceMouseDragEvent = (
       const parent = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
       const child = findTargetBlock(target.id, newWorkspaceData);
 
-      console.log('parent', parent, 'child', child);
       if (anotherBlock && parent && child) {
         if (anotherBlock.id === 'workspace') {
           const rect = section.getBoundingClientRect();
@@ -169,24 +146,24 @@ const addWorkspaceMouseDragEvent = (
             child.data.id = target.id;
           }
 
-          newWorkspaceData.push(child);
           removeTargetBlockOjbect(parent, target.id);
+          newWorkspaceData.push(child);
         } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
           removeTargetBlockOjbect(parent, target.id);
         } else if (anotherBlockClosestDiv) {
-          insertBlockAnotherBlock(anotherBlockClosestDiv.id as string, child.name, newWorkspaceData, child);
           removeTargetBlockOjbect(parent, target.id);
+          insertBlockAnotherBlock(anotherBlockClosestDiv.id as string, child.name, newWorkspaceData, child);
         }
       }
 
       initialX = currentX;
       initialY = currentY;
 
-      target = null;
-      active = false;
-
       updateWorkspaceDataAll(newWorkspaceData);
     }
+
+    target = null;
+    active = false;
   });
 
   section.addEventListener('mousemove', function (e: MouseEvent) {
@@ -231,7 +208,6 @@ const findTargetParentBlock = (
 };
 
 const removeTargetBlockOjbect = (parent: BlockObject | BlockObject[], targetId: string) => {
-  console.log(parent, targetId);
   if (Array.isArray(parent)) {
     const index = parent.findIndex((item) => item.data.id === targetId);
     parent.splice(index, 1);
@@ -266,15 +242,12 @@ const addWorkspaceReceiveDragEvent = (
     } else if (e.dataTransfer) {
       const copyWorkspaceData = deepCopy(workspaceData);
       const target = e.target as Element;
-      const targetClosestDiv = target.closest('div');
 
-      if (targetClosestDiv) {
-        const uniqueId = targetClosestDiv.id ?? '';
-        const name = e.dataTransfer.getData('name');
-        const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, copyWorkspaceData);
+      const uniqueId = target.closest('div')?.id ?? '';
+      const name = e.dataTransfer.getData('name');
+      const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, copyWorkspaceData);
 
-        updateWorkspaceDataAll(newWorkspaceData);
-      }
+      updateWorkspaceDataAll(newWorkspaceData);
     }
   });
 };
@@ -301,21 +274,14 @@ const insertBlockAnotherBlock = (
   targetUniqueId: string,
   name: string,
   newWorkspaceData: BlockObject[],
-  insertBlock?: BlockObject,
+  insert?: BlockObject,
 ): BlockObject[] => {
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
-  if (!targetObj) {
-    throw new Error('targetObj 에러 - 해당 id를 가진 블럭이 없습니다.');
-  }
 
   if (targetObj) {
-    const newBlock = insertBlock ? insertBlock : createBlock(name, createUniqueId(), 0, 0);
+    const newBlock = insert ? insert : createBlock(name, createUniqueId(), 0, 0);
 
-    if (Array.isArray(targetObj.data.value)) {
-      targetObj.data.value.push(newBlock);
-    } else if (typeof targetObj === 'object' && targetObj !== null) {
-      targetObj.data.value = newBlock;
-    }
+    targetObj.insert(newBlock);
   }
 
   return newWorkspaceData;
