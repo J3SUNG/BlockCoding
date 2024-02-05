@@ -17,6 +17,15 @@ button {
   border-radius: 2px;
 }
 
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  border: 0px;
+  width: 100%;
+}
+
 /* root */
 #root {
   display: flex;
@@ -198,8 +207,9 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 100px;
+  min-width: 50px;
   max-width: 280px;
+  position: absolute;
   width: auto;
   height: 50px;
   cursor: pointer;
@@ -210,7 +220,6 @@ button {
 .block--declare {
   height: 50px;
   background-color: #89d466;
-  position: absolute;
 }
 
 .block--declare::after {
@@ -226,44 +235,20 @@ button {
 .block--general {
   height: 50px;
   background-color: #ed8b55;
-  position: absolute;
 }
 
 .block--control {
-  height: 60px;
-  background-color: #14b7d8;
-  position: relative;
-}
-
-.block--control::before {
-  content: '';
-  position: inherit;
-  left: 0px;
-  top: 0px;
-  width: 250px;
-  height: 20px;
-  background-color: #14b7d8;
-}
-
-.block--control::after {
-  content: '';
-  position: inherit;
-  left: 0px;
-  bottom: 0px;
-  width: 250px;
-  height: 20px;
+  height: 50px;
   background-color: #14b7d8;
 }
 
 .block--expression-value {
-  position: relative;
   height: 40px;
   background-color: #f9dc6d;
   border-radius: 20px;
 }
 
 .block--expression-logical {
-  position: relative;
   height: 40px;
   background-color: #1c3c9a;
   margin-left: 20px;
@@ -299,12 +284,45 @@ button {
 
 .block__input {
   width: 50px;
-  height: 100%;
+  height: 40px;
   font-size: 18px;
   font-weight: bold;
-  background-color: #f9dc6d;
-  color: white;
+  background-color: #f0f0f0;
+  color: black;
   text-align: start;
   border: none;
+  border-radius: 20px;
   position: relative;
+  padding: 0 10px;
+}
+
+.block__space {
+  width: 50px;
+  height: 40px;
+  margin: 0 5px;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  position: relative;
+}
+
+.block__operator {
+  width: 50px;
+  height: 40px;
+  margin: 0 5px;
+  border-radius: 20px;
+  position: relative;
+  font-size: 18px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.block__operator--value {
+  background-color: #ffbc7d;
+}
+
+.block__operator--logical {
+  background-color: #c8d5ff;
 }

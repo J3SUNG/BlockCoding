@@ -5,7 +5,7 @@ export type UpdateSelectedType = (selectedType: SelectedType) => void;
 
 export type WorkspaceData = BlockObject[];
 export type UpdateWorkspaceDataAll = (workspaceData: WorkspaceData) => void;
-export type UpdateWorkspaceDataValue = (targetId: string, value: BlockObjectValue) => void;
+export type UpdateWorkspaceDataValue = (targetId: string, value: BlockObjectValue, insertLocation?: string) => void;
 
 export type ConsoleLog = string[];
 export type UpdateConsoleLog = (consoleLog: ConsoleLog) => void;

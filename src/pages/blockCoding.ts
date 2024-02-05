@@ -22,7 +22,7 @@ export const blockCoding = () => {
   };
 
   const gnbRender = () => {
-    render(gnb({ getWorkspaceData, updateConsoleLog, render: gnbRender }), root, GNB_INDEX);
+    render(gnb({ getWorkspaceData, getConsoleLog, updateConsoleLog, render: gnbRender }), root, GNB_INDEX);
   };
 
   const consoleRender = () => {
@@ -47,22 +47,26 @@ export const blockCoding = () => {
     workspaceRender();
   };
 
-  const updateWorkspaceDataValue = (targetId: string, value: BlockObjectValue) => {
+  const updateWorkspaceDataValue = (targetId: string, value: BlockObjectValue, insertLocation?: string): void => {
     const newWorkspaceData = deepCopy(getWorkspaceData());
     const targetObj = findTargetBlock(targetId, newWorkspaceData);
     if (targetObj) {
-      if (Array.isArray(targetObj.data.value)) {
+      if (insertLocation === 'operator') {
+        targetObj.data.operator = value as string;
+      } else if (Array.isArray(targetObj.data.value)) {
         targetObj.data.value.push(value as BlockObject);
       } else {
+        if (targetObj.data.value === value) {
+          return;
+        }
         targetObj.data.value = value;
       }
     }
-
     setWorkspaceData(newWorkspaceData);
     workspaceRender();
   };
 
-  const gnbComponent = gnb({ getWorkspaceData, updateConsoleLog, render: gnbRender });
+  const gnbComponent = gnb({ getWorkspaceData, getConsoleLog, updateConsoleLog, render: gnbRender });
   const blockMenuComponent = blockMenu({ render: blockMenuRender });
   const workspaceComponent = workspace({
     workspaceData: getWorkspaceData(),

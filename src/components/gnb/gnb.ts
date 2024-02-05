@@ -5,11 +5,12 @@ import { useState } from '../../core/core';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
+  getConsoleLog: () => ConsoleLog;
   updateConsoleLog: UpdateConsoleLog;
   render: () => void;
 }
 
-export const gnb = ({ getWorkspaceData, updateConsoleLog, render }: GnbProps) => {
+export const gnb = ({ getWorkspaceData, getConsoleLog, updateConsoleLog, render }: GnbProps) => {
   const [getProgramState, setProgramState] = useState<ProgramState>('prgramState', 'stop');
   const header = createElementCommon('header', { id: 'gnb' });
   const h1 = createElementCommon('h1', { id: 'title', textContent: 'Block Coding' });
@@ -25,7 +26,7 @@ export const gnb = ({ getWorkspaceData, updateConsoleLog, render }: GnbProps) =>
   };
 
   playButton.addEventListener('click', () => {
-    runProgram(getWorkspaceData(), updateConsoleLog, updateProgramState);
+    runProgram(getWorkspaceData(), getConsoleLog, updateConsoleLog, updateProgramState);
   });
 
   nav.appendChild(saveButton);
@@ -39,8 +40,9 @@ export const gnb = ({ getWorkspaceData, updateConsoleLog, render }: GnbProps) =>
   return header;
 };
 
-const runProgram = (
+const runProgram = async (
   workspaceData: WorkspaceData,
+  getConsoleLog: () => ConsoleLog,
   updateConsoleLog: UpdateConsoleLog,
   updateProgramState: UpdateProgramState,
 ) => {
@@ -48,27 +50,82 @@ const runProgram = (
   const startBlock = workspaceData.filter((block) => {
     return block.name === 'start' && block.data;
   });
-  const logList: string[] = [];
 
-  startBlock.forEach((block) => {
-    const log = getLogData(block.data.value as BlockObject);
-    logList.push(...log);
-  });
+  updateConsoleLog(['프로그램을 실행합니다.']);
+  for (const block of startBlock) {
+    const map = new Map<string, string>();
+    await updateLogData(block.data.value as BlockObject, map, getConsoleLog, updateConsoleLog);
+  }
+  updateConsoleLog([...getConsoleLog(), '프로그램이 종료되었습니다.']);
 
-  updateConsoleLog(logList);
   updateProgramState('stop');
 };
 
-const getLogData = (obj: BlockObject): string[] => {
+const updateLogData = async (
+  obj: BlockObject,
+  map: Map<string, string>,
+  prevLog: () => string[],
+  setChanageLog: (log: string[]) => void,
+): Promise<string[]> => {
   if (Array.isArray(obj)) {
-    return obj.reduce((acc, item) => acc.concat(getLogData(item)), []);
+    const results: string[] = [];
+    for (const item of obj) {
+      const result = await updateLogData(item, map, prevLog, setChanageLog);
+      results.push(...result);
+    }
+    return results;
   } else if (obj.name === 'start') {
     return [];
+  } else if (obj.name === 'variable') {
+    const varName = (await updateLogData(obj.data.varName as BlockObject, map, prevLog, setChanageLog))[0];
+    const varValue = (await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog))[0];
+    map.set(varName, varValue);
+    return [];
   } else if (obj.name === 'output') {
-    return getLogData(obj.data.value as BlockObject);
+    const outputData = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    setChanageLog([...prevLog(), ...outputData]);
+    return outputData;
   } else if (obj.name === 'value') {
     return [obj.data.value as string];
-  } else {
+  } else if (obj.name === 'refVariable') {
+    const varName: string = (await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog))[0];
+    const varValue = map.get(varName);
+    return varValue ? [varValue] : [];
+  } else if (obj.name === 'arithmetic') {
+    const operand1 = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    const operand2 = await updateLogData(obj.data.secondValue as BlockObject, map, prevLog, setChanageLog);
+    return [(await obj.runBlockLogic(operand1[0], operand2[0])) as string];
+  } else if (obj.name === 'condition') {
+    const condition = await updateLogData(obj.data.condition as BlockObject, map, prevLog, setChanageLog);
+    if (condition[0] === 'true') {
+      return await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    } else {
+      return [];
+    }
+  } else if (obj.name === 'loop') {
+    let result: string[] = [];
+    let count = 0;
+    let condition = await updateLogData(obj.data.condition as BlockObject, map, prevLog, setChanageLog);
+
+    while (condition[0] === 'true' && count < 20) {
+      const resultArray = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+      result = result.concat(resultArray);
+      count++;
+      condition = await updateLogData(obj.data.condition as BlockObject, map, prevLog, setChanageLog);
+    }
+    return result;
+  } else if (obj.name === 'comparison' || obj.name === 'logical') {
+    const operand1 = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    const operand2 = await updateLogData(obj.data.secondValue as BlockObject, map, prevLog, setChanageLog);
+    return [obj.runBlockLogic(operand1[0], operand2[0]) + ''];
+  } else if (obj.name === 'negation') {
+    const operand = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    return [obj.runBlockLogic(operand[0]) + ''];
+  } else if (obj.name === 'timer') {
+    const time = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    await new Promise((resolve) => setTimeout(resolve, Number(time[0]) * 1000));
     return [];
   }
+
+  return [];
 };
