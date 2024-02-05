@@ -64,7 +64,6 @@ export class BlockValue extends BlockCommon {
         changeBlockWidth();
       }
     }
-    input.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(input);

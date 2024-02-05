@@ -17,7 +17,6 @@ export class BlockTimer extends BlockCommon {
     const p = createElementCommon('p', { className: 'block__text', textContent: '타이머' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(space1);

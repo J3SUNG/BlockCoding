@@ -27,10 +27,10 @@ export class BlockCondition extends BlockCommon {
     const childSpace = createElementCommon('span', { id: 'child', className: 'block__child' });
     const { childHeight } = this.calcHeight();
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px; margin-top: 5px;`);
+    space1.setAttribute('style', `margin-top: 5px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${childHeight}px;`);
     p.setAttribute('style', `padding-top: 12px`);
-    childSpace.setAttribute('style', `width: ${this.width - 48}px; height: ${childHeight - 100}px;`);
+    childSpace.setAttribute('style', `height: ${childHeight - 100}px;`);
     div.appendChild(p);
     div.appendChild(space1);
     div.appendChild(childSpace);

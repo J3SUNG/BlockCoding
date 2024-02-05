@@ -10,6 +10,7 @@ export class BlockCommon implements BlockObject {
   defaultHeight = 50;
   spaceWidth = [50, 50];
   childWidth? = 100;
+  fold = false;
   data: BlockObject['data'];
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
