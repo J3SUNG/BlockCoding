@@ -40,12 +40,16 @@ export const blockCoding = () => {
         workspaceData: getWorkspaceData(),
         updateWorkspaceDataAll,
         updateWorkspaceDataValue,
-        changeBlockWdith,
+        changeBlockWidth,
       }),
       mainComponent,
       'workspace',
       WORKSPACE_INDEX,
     );
+
+    requestAnimationFrame(() => {
+      changeBlockWidth();
+    });
   };
 
   const updateConsoleLog = (log: ConsoleLog) => {
@@ -77,7 +81,7 @@ export const blockCoding = () => {
     workspaceRender();
   };
 
-  const changeBlockWdith = () => {
+  const changeBlockWidth = () => {
     getWorkspaceData().forEach((block) => {
       block.calcWidth();
     });
@@ -95,7 +99,7 @@ export const blockCoding = () => {
     workspaceData: getWorkspaceData(),
     updateWorkspaceDataAll,
     updateWorkspaceDataValue,
-    changeBlockWdith,
+    changeBlockWidth,
   });
   const consoleSpaceComponent = consoleSpace({ consoleLog: getConsoleLog() });
   const mainComponent = createElementCommon('div', { id: 'main' });
