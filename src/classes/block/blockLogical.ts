@@ -65,10 +65,6 @@ export class BlockLogical extends BlockCommon {
     }
   }
 
-  getInnerBlock(): BlockObjectValue[] {
-    return [this.data.value, this.data.secondValue!];
-  }
-
   runLogic(operand1: string, operand2: string): boolean {
     const booleanOperand1 = operand1 === 'true' ? true : false;
     const booleanOperand2 = operand2 === 'true' ? true : false;
@@ -80,5 +76,9 @@ export class BlockLogical extends BlockCommon {
       default:
         throw new Error('blockLogical - runLogic - 예상치 못한 연산자');
     }
+  }
+
+  getInnerBlock(): string[] {
+    return ['value', 'secondValue'];
   }
 }

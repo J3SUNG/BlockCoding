@@ -5,7 +5,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockLoop extends BlockCommon {
   name = 'loop';
   type = 'control';
-  defaultWidth = 50;
+  defaultWidth = 100;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -40,7 +40,11 @@ export class BlockLoop extends BlockCommon {
     }
   }
 
-  getInnerBlock(): BlockObjectValue[] {
-    return [this.data.condition!, this.data.value];
+  getInnerBlock(): string[] {
+    return ['condition'];
+  }
+
+  getChildBlock(): string[] {
+    return ['value'];
   }
 }
