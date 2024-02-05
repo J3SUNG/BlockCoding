@@ -6,7 +6,8 @@ export class BlockCommon implements BlockObject {
   type = '';
   defaultWidth = 100;
   width = 100;
-  spaceWidth = 50;
+  defaultSpaceWidth = 50;
+  spaceWidth = [50, 50];
   data: BlockObject['data'];
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
@@ -39,21 +40,21 @@ export class BlockCommon implements BlockObject {
   }
 
   calcWidth() {
-    let count = 0;
     let addWidth = 0;
 
-    this.getInnerBlock().forEach((innerProp) => {
+    this.width = this.defaultWidth;
+    this.getInnerBlock().forEach((innerProp, index) => {
       const block = this.data[innerProp];
       if (typeof block === 'object' && Object.keys(block).length === 0) {
-        ++count;
-      } else {
-        if (block instanceof BlockCommon) {
-          addWidth += block.calcWidth();
-        }
+        this.spaceWidth[index] = this.defaultSpaceWidth;
+        addWidth += this.defaultSpaceWidth;
+      } else if (block instanceof BlockCommon) {
+        this.spaceWidth[index] = block.calcWidth();
+        addWidth += this.spaceWidth[index];
       }
     });
 
-    this.width = this.defaultWidth + this.spaceWidth * count + addWidth;
+    this.width = this.defaultWidth + addWidth;
 
     return this.width;
   }

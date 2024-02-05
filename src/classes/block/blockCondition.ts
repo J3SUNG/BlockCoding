@@ -11,8 +11,9 @@ export class BlockCondition extends BlockCommon {
     super(id, x, y, []);
     this.data.condition = {} as BlockObject;
   }
+
   setChildPosition(x: number, y: number, index: number) {
-    return { childX: 50, childY: 50 * index };
+    return { childX: 0, childY: 50 * index };
   }
 
   getElement(id: string, x: number, y: number) {
@@ -21,6 +22,7 @@ export class BlockCondition extends BlockCommon {
     const space = createElementCommon('span', { className: 'block__space' });
     const childWidth = this.calcWidth();
 
+    space.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
     div.appendChild(p);
     div.appendChild(space);

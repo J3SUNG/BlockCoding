@@ -10,9 +10,6 @@ export class BlockInput extends BlockCommon {
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
   }
-  setChildPosition(x: number, y: number, index: number) {
-    return { childX: 0, childY: 50 * (index + 1) };
-  }
 
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });

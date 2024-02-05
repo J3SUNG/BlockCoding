@@ -4,7 +4,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockValue extends BlockCommon {
   name = 'value';
   type = 'expressionValue';
-  defaultWidth = 120;
+  defaultWidth = 150;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, '');
