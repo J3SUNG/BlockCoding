@@ -8,12 +8,12 @@ interface BlockMenuBlockNavButtonProps {
 }
 
 export const blockMenuBlockNavButton = ({ name, type, x, y }: BlockMenuBlockNavButtonProps) => {
-  const block = createBlock(name, '', x, y);
+  const newBlock = createBlock(name, '', x, y);
 
-  const div = block.paint(block.data.id, block.data.x, block.data.y);
+  const { block } = newBlock.getElement(newBlock.data.id, newBlock.data.x, newBlock.data.y);
 
-  div.draggable = true;
-  div.addEventListener('dragstart', function (event: DragEvent) {
+  block.draggable = true;
+  block.addEventListener('dragstart', function (event: DragEvent) {
     if (event.dataTransfer) {
       event.dataTransfer.setData('name', name);
       event.dataTransfer.setData('type', type);
@@ -22,5 +22,5 @@ export const blockMenuBlockNavButton = ({ name, type, x, y }: BlockMenuBlockNavB
     }
   });
 
-  return div;
+  return block;
 };

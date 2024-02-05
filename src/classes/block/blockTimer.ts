@@ -9,11 +9,8 @@ export class BlockTimer extends BlockCommon {
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
   }
-  setChildPosition(x: number, y: number) {
-    return { childX: 50, childY: 0 };
-  }
 
-  paint(id: string, x: number, y: number) {
+  getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--general` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '타이머' });
     const space = createElementCommon('span', { className: 'block__space' });
@@ -22,7 +19,7 @@ export class BlockTimer extends BlockCommon {
     div.appendChild(p);
     div.appendChild(space);
 
-    return div;
+    return { block: div, space: [space] };
   }
 
   insert(obj: BlockObject) {

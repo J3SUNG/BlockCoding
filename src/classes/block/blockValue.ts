@@ -9,7 +9,7 @@ export class BlockValue extends BlockCommon {
     super(id, x, y, '');
   }
 
-  paint(
+  getElement(
     id: string,
     x: number,
     y: number,
@@ -44,6 +44,6 @@ export class BlockValue extends BlockCommon {
     div.appendChild(p);
     div.appendChild(input);
 
-    return div;
+    return { block: div, space: [] };
   }
 }

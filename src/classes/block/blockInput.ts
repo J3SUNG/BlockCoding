@@ -13,13 +13,13 @@ export class BlockInput extends BlockCommon {
     return { childX: 0, childY: 50 * (index + 1) };
   }
 
-  paint(id: string, x: number, y: number) {
+  getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '입력 받기' });
 
     div.setAttribute('style', `left: ${x}px; top: ${y}px`);
     div.appendChild(p);
 
-    return div;
+    return { block: div, space: [] };
   }
 }

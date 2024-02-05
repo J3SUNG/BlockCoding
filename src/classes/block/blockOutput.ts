@@ -10,11 +10,7 @@ export class BlockOutput extends BlockCommon {
     super(id, x, y, {} as BlockObject);
   }
 
-  setChildPosition(x: number, y: number, index: number) {
-    return { childX: x, childY: 5 };
-  }
-
-  paint(id: string, x: number, y: number) {
+  getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--general` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '출력' });
     const space = createElementCommon('span', { className: 'block__space' });
@@ -23,7 +19,7 @@ export class BlockOutput extends BlockCommon {
     div.appendChild(p);
     div.appendChild(space);
 
-    return div;
+    return { block: div, space: [space] };
   }
 
   insert(obj: BlockObject) {
