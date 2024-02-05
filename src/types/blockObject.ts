@@ -23,7 +23,7 @@ export interface BlockObject {
     y: number,
     value?: BlockObjectValue,
     onValueChange?: UpdateWorkspaceDataValue,
-    changeBlockWdith?: () => void,
+    changeBlockWidth?: () => void,
   ): { block: HTMLElement; space: HTMLElement[] };
   insert(obj: BlockObject, insertType?: string): boolean;
   getInnerBlock(): string[];
