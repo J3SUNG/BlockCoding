@@ -1,5 +1,4 @@
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
-import { UpdateWorkspaceDataValue } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 
 export class BlockCommon implements BlockObject {
@@ -19,16 +18,15 @@ export class BlockCommon implements BlockObject {
     id: string,
     x: number,
     y: number,
-    value?: BlockObjectValue | undefined,
-    onValueChange?: UpdateWorkspaceDataValue | undefined,
-  ): HTMLElement {
-    throw new Error('Method not implemented.');
-  }
+    value?: string,
+    onValueChange?: (id: string, value: string, insertLocation?: string) => void,
+  ) {
+    const div = createElementCommon('div', { id, className: `block block--declare` });
+    div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
 
     // TODO: 현재는 값을 순차적으로 받아서 처리하고 있지만, 추후에는 객체로 받아서 처리해야 함
     return { block: div, space: [] as HTMLElement[] };
   }
-
   insert(obj: BlockObject) {
     return;
   }
