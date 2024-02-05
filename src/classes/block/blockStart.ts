@@ -73,6 +73,11 @@ export class BlockStart extends BlockCommon {
   }
 
   calcWidth(): number {
+    const div = document.getElementById(this.data.id);
+    if (div) {
+      div.style.width = `${this.width}px`;
+    }
+
     if (Array.isArray(this.data.value)) {
       this.data.value.forEach((block) => {
         if (block instanceof BlockCommon) {
