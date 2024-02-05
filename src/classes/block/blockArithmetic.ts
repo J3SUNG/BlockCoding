@@ -15,7 +15,7 @@ export class BlockArithmetic extends BlockCommon {
     return { childX: 50 * index, childY: 0 };
   }
 
-  paint(
+  paintBlock(
     id: string,
     x: number,
     y: number,
@@ -54,7 +54,7 @@ export class BlockArithmetic extends BlockCommon {
     return div;
   }
 
-  insert(obj: BlockObject) {
+  insertBlock(obj: BlockObject) {
     if (Object.keys(this.data.value).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
@@ -70,7 +70,7 @@ export class BlockArithmetic extends BlockCommon {
     return [this.data.value, this.data.secondValue!];
   }
 
-  runLogic(operand1: string, operand2: string): string {
+  runBlockLogic(operand1: string, operand2: string): string {
     const numberOperand1 = Number(operand1);
     const numberOperand2 = Number(operand2);
 

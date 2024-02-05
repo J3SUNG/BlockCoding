@@ -15,7 +15,7 @@ export class BlockCommon implements BlockObject {
     return { childX: x, childY: y };
   }
 
-  paint(
+  paintBlock(
     id: string,
     x: number,
     y: number,
@@ -27,7 +27,8 @@ export class BlockCommon implements BlockObject {
 
     return div;
   }
-  insert(obj: BlockObject) {
+  
+  insertBlock(obj: BlockObject) {
     return;
   }
 
