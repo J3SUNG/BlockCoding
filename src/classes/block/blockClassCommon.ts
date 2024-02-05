@@ -1,4 +1,5 @@
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { UpdateWorkspaceDataValue } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 
 export class BlockCommon implements BlockObject {
@@ -9,25 +10,22 @@ export class BlockCommon implements BlockObject {
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
     this.data = { id, x, y, value };
   }
+  paint(
+    id: string,
+    x: number,
+    y: number,
+    value?: BlockObjectValue | undefined,
+    onValueChange?: UpdateWorkspaceDataValue | undefined,
+  ): HTMLElement {
+    throw new Error('Method not implemented.');
+  }
 
   // TODO : 추후 구현 예정
   setChildPosition(x: number, y: number, index?: number) {
     return { childX: x, childY: y };
   }
 
-  paintBlock(
-    id: string,
-    x: number,
-    y: number,
-    value?: string,
-    onValueChange?: (id: string, value: string, insertLocation?: string) => void,
-  ) {
-    const div = createElementCommon('div', { id, className: `block block--declare` });
-    div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
-
-    return div;
-  }
-  insertBlock(obj: BlockObject) {
+  insert(obj: BlockObject) {
     return;
   }
 
@@ -35,7 +33,7 @@ export class BlockCommon implements BlockObject {
     return [this.data.value];
   }
 
-  runBlockLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
+  runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
     return '';
   }
 }

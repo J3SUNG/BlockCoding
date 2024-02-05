@@ -16,14 +16,14 @@ export interface BlockObject {
     secondValue?: BlockObject;
   };
   setChildPosition(x?: number, y?: number, index?: number): { childX: number; childY: number };
-  paintBlock(
+  paint(
     id: string,
     x: number,
     y: number,
     value?: BlockObjectValue,
     onValueChange?: UpdateWorkspaceDataValue,
   ): HTMLElement;
-  insertBlock(obj: BlockObject): void;
+  insert(obj: BlockObject): void;
   getInnerBlock(): BlockObjectValue[];
-  runBlockLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
+  runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
 }
