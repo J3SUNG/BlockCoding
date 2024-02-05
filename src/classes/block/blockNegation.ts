@@ -32,7 +32,7 @@ export class BlockNegation extends BlockCommon {
     }
   }
 
-  runLogic(operand1: string, operand2: string): boolean {
+  runLogic(operand1: string): boolean {
     const booleanOperand = operand1 === 'true' ? true : false;
     return !booleanOperand;
   }

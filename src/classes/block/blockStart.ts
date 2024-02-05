@@ -1,11 +1,11 @@
-import { BlockObject } from '../../types/blockObject';
+import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockStart extends BlockCommon {
   name = 'start';
   type = 'declare';
-  BLOCK_START_MIN_WIDTH = 260;
+  BLOCK_START_MIN_WIDTH = 240;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -37,5 +37,13 @@ export class BlockStart extends BlockCommon {
         this.data.value.splice(this.data.value.length, 0, obj);
       }
     }
+  }
+
+  getInnerBlock(): string[] {
+    return [];
+  }
+
+  getChildBlock(): string[] {
+    return ['value'];
   }
 }

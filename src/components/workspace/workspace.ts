@@ -68,14 +68,18 @@ const paintWorkspace = (
       const { block, space } = obj.getElement(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
       parent.appendChild(block);
 
-      obj.getInnerBlock().forEach((item, itemIndex) => {
-        paintWorkspace(
-          space[itemIndex],
-          item,
-          { x: newX, y: newY, index: itemIndex },
-          updateWorkspaceDataValue,
-          obj.setChildPosition,
-        );
+      const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
+      blockProps.forEach((item, itemIndex) => {
+        const blockProps = obj.data[item];
+        if (typeof blockProps === 'object') {
+          paintWorkspace(
+            space[itemIndex],
+            blockProps,
+            { x: newX, y: newY, index: itemIndex },
+            updateWorkspaceDataValue,
+            obj.setChildPosition,
+          );
+        }
       });
     }
   }
@@ -129,7 +133,7 @@ const addWorkspaceMouseDragEvent = (
       target.style.display = 'flex';
 
       const newWorkspaceData = deepCopy(workspaceData);
-      const parent = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
+      const parentData = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
       const child = findTargetBlock(target.id, newWorkspaceData);
 
       if (anotherBlock && parent && child) {
@@ -144,12 +148,12 @@ const addWorkspaceMouseDragEvent = (
             child.data.id = target.id;
           }
 
-          removeTargetBlockObject(parent, target.id);
+          removeTargetBlock(parentData);
           newWorkspaceData.push(child);
         } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
-          removeTargetBlockObject(parent, target.id);
+          removeTargetBlock(parentData);
         } else if (anotherBlockClosestDiv) {
-          removeTargetBlockObject(parent, target.id);
+          removeTargetBlock(parentData);
           insertBlockAnotherBlock(anotherBlockClosestDiv.id as string, child.name, newWorkspaceData, child);
         }
       }
@@ -182,28 +186,42 @@ const findTargetParentBlock = (
   targetId: string,
   obj: BlockObjectValue,
   parent: BlockObject | BlockObject[],
-): BlockObject | BlockObject[] | null => {
+): { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null => {
   if (!obj) {
     return null;
   }
 
   if (Array.isArray(obj)) {
-    for (const item of obj) {
-      const parent = findTargetParentBlock(targetId, item, obj);
-      if (parent) {
-        return parent;
+    for (let index = 0; index < obj.length; ++index) {
+      const item = obj[index];
+      const result = findTargetParentBlock(targetId, item, obj);
+      if (result) {
+        if (result.index || result.prop || result.index === 0) {
+          return result;
+        } else {
+          return { parent: obj, index };
+        }
       }
     }
   } else if (typeof obj === 'object' && 'data' in obj) {
     if (obj.data.id === targetId) {
-      return parent;
+      return { parent };
     }
 
-    const list = obj.getInnerBlock();
-    for (const item of list) {
-      const parent = findTargetParentBlock(targetId, item, obj);
-      if (parent) {
-        return parent;
+    const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
+    for (const prop of blockProps) {
+      if (prop in obj.data) {
+        const blockObj = obj.data[prop];
+        if (typeof blockObj === 'object') {
+          const result = findTargetParentBlock(targetId, blockObj, obj);
+          if (result) {
+            if (result.index || result.prop || result.index === 0) {
+              return result;
+            } else {
+              return { parent: obj, prop };
+            }
+          }
+        }
       }
     }
   }
@@ -211,16 +229,23 @@ const findTargetParentBlock = (
   return null;
 };
 
-const removeTargetBlockObject = (parent: BlockObject | BlockObject[], targetId: string) => {
+const removeTargetBlock = (result: { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null) => {
+  if (!result) {
+    return;
+  }
+
+  const { parent, prop, index } = result;
+
   if (Array.isArray(parent)) {
-    const index = parent.findIndex((item) => item.data.id === targetId);
-    parent.splice(index, 1);
-  } else if (typeof parent === 'object') {
-    if (typeof parent.data.value === 'object') {
-      parent.data.value = {} as BlockObject;
-    } else if (typeof parent.data.value === 'string') {
-      parent.data.value = '';
+    if (typeof index === 'number') {
+      if (parent.length === 1) {
+        parent.length = 0;
+      } else {
+        parent.splice(index, 1);
+      }
     }
+  } else if (prop && 'data' in parent && parent.data) {
+    parent.data[prop] = {} as BlockObject;
   }
 };
 

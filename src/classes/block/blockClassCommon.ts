@@ -34,10 +34,6 @@ export class BlockCommon implements BlockObject {
     return;
   }
 
-  getInnerBlock(): BlockObjectValue[] {
-    return [this.data.value];
-  }
-
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
     return '';
   }
@@ -46,8 +42,9 @@ export class BlockCommon implements BlockObject {
     let count = 0;
     let addWidth = 0;
 
-    this.getInnerBlock().forEach((block) => {
-      if (Object.keys(block).length === 0 || (Array.isArray(block) && block.length === 0)) {
+    this.getInnerBlock().forEach((innerProp) => {
+      const block = this.data[innerProp];
+      if (typeof block === 'object' && Object.keys(block).length === 0) {
         ++count;
       } else {
         if (block instanceof BlockCommon) {
@@ -59,5 +56,13 @@ export class BlockCommon implements BlockObject {
     this.width = this.defaultWidth + this.spaceWidth * count + addWidth;
 
     return this.width;
+  }
+
+  getInnerBlock(): string[] {
+    return ['value'];
+  }
+
+  getChildBlock(): string[] {
+    return [];
   }
 }

@@ -39,8 +39,7 @@ export class BlockVariable extends BlockCommon {
     }
   }
 
-  getInnerBlock(): BlockObjectValue[] {
-    if (this.data.varName) return [this.data.varName, this.data.value];
-    return [];
+  getInnerBlock(): string[] {
+    return ['varName', 'value'];
   }
 }

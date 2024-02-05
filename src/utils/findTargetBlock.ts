@@ -17,11 +17,15 @@ export const findTargetBlock = (targetId: string, obj: BlockObjectValue): BlockO
       return obj;
     }
 
-    const innerBlocks = obj.getInnerBlock();
-    for (const item of innerBlocks) {
-      const targetObj = findTargetBlock(targetId, item);
-      if (targetObj) {
-        return targetObj;
+    const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
+    for (const item of blockProps) {
+      const blockObj = obj.data[item];
+
+      if (typeof blockObj === 'object') {
+        const targetObj = findTargetBlock(targetId, blockObj);
+        if (targetObj) {
+          return targetObj;
+        }
       }
     }
   }
