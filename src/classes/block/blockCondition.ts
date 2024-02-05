@@ -5,6 +5,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockCondition extends BlockCommon {
   name = 'condition';
   type = 'control';
+  defaultWidth = 50;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -18,8 +19,9 @@ export class BlockCondition extends BlockCommon {
     const div = createElementCommon('div', { id, className: `block block--control` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '조건문' });
     const space = createElementCommon('span', { className: 'block__space' });
+    const childWidth = this.calcWidth();
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
     div.appendChild(p);
     div.appendChild(space);
 

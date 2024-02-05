@@ -4,6 +4,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockValue extends BlockCommon {
   name = 'value';
   type = 'expressionValue';
+  defaultWidth = 120;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, '');
@@ -40,7 +41,7 @@ export class BlockValue extends BlockCommon {
       }
     });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${this.defaultWidth}px`);
     div.appendChild(p);
     div.appendChild(input);
 

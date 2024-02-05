@@ -4,6 +4,9 @@ import { createElementCommon } from '../../utils/createElementCommon';
 export class BlockCommon implements BlockObject {
   name = '';
   type = '';
+  defaultWidth = 100;
+  width = 100;
+  spaceWidth = 50;
   data: BlockObject['data'];
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
@@ -37,5 +40,24 @@ export class BlockCommon implements BlockObject {
 
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
     return '';
+  }
+
+  calcWidth() {
+    let count = 0;
+    let addWidth = 0;
+
+    this.getInnerBlock().forEach((block) => {
+      if (Object.keys(block).length === 0 || (Array.isArray(block) && block.length === 0)) {
+        ++count;
+      } else {
+        if (block instanceof BlockCommon) {
+          addWidth += block.calcWidth();
+        }
+      }
+    });
+
+    this.width = this.defaultWidth + this.spaceWidth * count + addWidth;
+
+    return this.width;
   }
 }

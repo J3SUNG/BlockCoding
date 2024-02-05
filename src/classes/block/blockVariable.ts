@@ -5,6 +5,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockVariable extends BlockCommon {
   name = 'variable';
   type = 'general';
+  defaultWidth = 130;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
@@ -16,8 +17,9 @@ export class BlockVariable extends BlockCommon {
     const p = createElementCommon('p', { className: 'block__text', textContent: '변수 할당' });
     const space1 = createElementCommon('span', { className: 'block__space' });
     const space2 = createElementCommon('span', { className: 'block__space' });
+    const childWidth = this.calcWidth();
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
     div.appendChild(p);
     div.appendChild(space1);
     div.appendChild(space2);
@@ -38,6 +40,7 @@ export class BlockVariable extends BlockCommon {
   }
 
   getInnerBlock(): BlockObjectValue[] {
-    return [this.data.varName!, this.data.value];
+    if (this.data.varName) return [this.data.varName, this.data.value];
+    return [];
   }
 }

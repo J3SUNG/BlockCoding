@@ -5,6 +5,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockLogical extends BlockCommon {
   name = 'logical';
   type = 'expressionLogical';
+  defaultWidth = 100;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -25,6 +26,7 @@ export class BlockLogical extends BlockCommon {
     const space1 = createElementCommon('span', { className: 'block__space' });
     const space2 = createElementCommon('span', { className: 'block__space' });
     const operatorSelect = createElementCommon('select', { className: 'block__operator block__operator--logical' });
+    const childWidth = this.calcWidth();
 
     operator.forEach((op) => {
       const option = createElementCommon('option', { value: op, textContent: op });
@@ -43,7 +45,7 @@ export class BlockLogical extends BlockCommon {
       }
     });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
     div.appendChild(space1);
     div.appendChild(operatorSelect);
     div.appendChild(space2);
