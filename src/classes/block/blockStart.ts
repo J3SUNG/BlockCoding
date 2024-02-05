@@ -20,7 +20,7 @@ export class BlockStart extends BlockCommon {
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '시작하기 버튼을 클릭했을 때' });
-    this.calcWidth();
+
     const triangle = createElementCommon('span', { className: 'block__triangle block--declare' });
 
     triangle.setAttribute(

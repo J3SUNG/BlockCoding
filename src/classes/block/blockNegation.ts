@@ -18,7 +18,6 @@ export class BlockNegation extends BlockCommon {
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
     const endTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
-    this.calcWidth();
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     startTriangle.setAttribute(
@@ -30,10 +29,7 @@ export class BlockNegation extends BlockCommon {
       `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
 
-    div.setAttribute(
-      'style',
-      `left: ${x + 10}px; top: ${y}px; width: ${this.width}px; height: ${this.defaultHeight}px;`,
-    );
+    div.setAttribute('style', `left: ${x + 10}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(p);
