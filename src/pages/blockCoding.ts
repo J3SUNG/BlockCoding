@@ -18,21 +18,31 @@ export const blockCoding = () => {
   const GNB_INDEX = 0;
 
   const blockMenuRender = () => {
-    render(blockMenu({ render: blockMenuRender }), mainComponent, BLOCK_MENU_INDEX);
+    render(blockMenu({ render: blockMenuRender }), mainComponent, 'blockMenu', BLOCK_MENU_INDEX);
   };
 
   const gnbRender = () => {
-    render(gnb({ getWorkspaceData, getConsoleLog, updateConsoleLog, render: gnbRender }), root, GNB_INDEX);
+    render(
+      gnb({ getWorkspaceData, updateWorkspaceDataAll, getConsoleLog, updateConsoleLog, render: gnbRender }),
+      root,
+      'gnb',
+      GNB_INDEX,
+    );
   };
 
   const consoleRender = () => {
-    render(consoleSpace({ consoleLog: getConsoleLog() }), mainComponent, CONSOLE_SPACE_INDEX);
+    render(consoleSpace({ consoleLog: getConsoleLog() }), mainComponent, 'consoleSpace', CONSOLE_SPACE_INDEX);
   };
 
   const workspaceRender = () => {
     render(
-      workspace({ workspaceData: getWorkspaceData(), updateWorkspaceDataAll, updateWorkspaceDataValue }),
+      workspace({
+        workspaceData: getWorkspaceData(),
+        updateWorkspaceDataAll,
+        updateWorkspaceDataValue,
+      }),
       mainComponent,
+      'workspace',
       WORKSPACE_INDEX,
     );
   };
@@ -66,7 +76,13 @@ export const blockCoding = () => {
     workspaceRender();
   };
 
-  const gnbComponent = gnb({ getWorkspaceData, getConsoleLog, updateConsoleLog, render: gnbRender });
+  const gnbComponent = gnb({
+    getWorkspaceData,
+    updateWorkspaceDataAll,
+    getConsoleLog,
+    updateConsoleLog,
+    render: gnbRender,
+  });
   const blockMenuComponent = blockMenu({ render: blockMenuRender });
   const workspaceComponent = workspace({
     workspaceData: getWorkspaceData(),
