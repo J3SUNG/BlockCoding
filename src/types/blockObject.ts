@@ -23,7 +23,7 @@ export interface BlockObject {
     value?: BlockObjectValue,
     onValueChange?: UpdateWorkspaceDataValue,
   ): HTMLElement;
-  insertBlock(obj: BlockObject): void;
+  insert(obj: BlockObject): void;
   getInnerBlock(): BlockObjectValue[];
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
 }

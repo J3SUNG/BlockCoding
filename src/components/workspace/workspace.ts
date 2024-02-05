@@ -274,12 +274,12 @@ const insertBlockAnotherBlock = (
   targetUniqueId: string,
   name: string,
   newWorkspaceData: BlockObject[],
-  insertBlock?: BlockObject,
+  insert?: BlockObject,
 ): BlockObject[] => {
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
 
   if (targetObj) {
-    const newBlock = insertBlock ? insertBlock : createBlock(name, createUniqueId(), 0, 0);
+    const newBlock = insert ? insert : createBlock(name, createUniqueId(), 0, 0);
 
     targetObj.insert(newBlock);
   }

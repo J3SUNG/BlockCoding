@@ -15,7 +15,7 @@ export class BlockLogical extends BlockCommon {
     return { childX: 50 * index, childY: 0 };
   }
 
-  paintBlock(
+  paint(
     id: string,
     x: number,
     y: number,
@@ -54,7 +54,7 @@ export class BlockLogical extends BlockCommon {
     return div;
   }
 
-  insertBlock(obj: BlockObject) {
+  insert(obj: BlockObject) {
     if (Object.keys(this.data.value).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
@@ -70,7 +70,7 @@ export class BlockLogical extends BlockCommon {
     return [this.data.value, this.data.secondValue!];
   }
 
-  runBlockLogic(operand1: string, operand2: string): boolean {
+  runLogic(operand1: string, operand2: string): boolean {
     const booleanOperand1 = operand1 === 'true' ? true : false;
     const booleanOperand2 = operand2 === 'true' ? true : false;
     switch (this.data.operator) {
@@ -79,7 +79,7 @@ export class BlockLogical extends BlockCommon {
       case 'OR':
         return booleanOperand1 || booleanOperand2;
       default:
-        throw new Error('blockLogical - runBlockLogic - 예상치 못한 연산자');
+        throw new Error('blockLogical - runLogic - 예상치 못한 연산자');
     }
   }
 }
