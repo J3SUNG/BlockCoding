@@ -6,6 +6,7 @@ export class BlockArithmetic extends BlockCommon {
   name = 'arithmetic';
   type = 'expressionValue';
   defaultWidth = 100;
+  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -47,7 +48,7 @@ export class BlockArithmetic extends BlockCommon {
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
     div.appendChild(space1);
     div.appendChild(operatorSelect);
     div.appendChild(space2);

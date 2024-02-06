@@ -22,7 +22,7 @@ export const blockCoding = () => {
   };
 
   const gnbRender = () => {
-    render(gnb({ getWorkspaceData, updateConsoleLog, render: gnbRender }), root, GNB_INDEX);
+    render(gnb({ getWorkspaceData, getConsoleLog, updateConsoleLog, render: gnbRender }), root, GNB_INDEX);
   };
 
   const consoleRender = () => {
@@ -66,7 +66,7 @@ export const blockCoding = () => {
     workspaceRender();
   };
 
-  const gnbComponent = gnb({ getWorkspaceData, updateConsoleLog, render: gnbRender });
+  const gnbComponent = gnb({ getWorkspaceData, getConsoleLog, updateConsoleLog, render: gnbRender });
   const blockMenuComponent = blockMenu({ render: blockMenuRender });
   const workspaceComponent = workspace({
     workspaceData: getWorkspaceData(),

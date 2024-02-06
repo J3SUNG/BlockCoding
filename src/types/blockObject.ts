@@ -16,7 +16,7 @@ export interface BlockObject {
     secondValue?: BlockObject;
     [key: string]: BlockObjectValue | string | number | undefined;
   };
-  setChildPosition(x?: number, y?: number, index?: number): { childX: number; childY: number };
+  setChildPosition(index?: number): { childX: number; childY: number };
   getElement(
     id: string,
     x: number,
@@ -29,4 +29,5 @@ export interface BlockObject {
   getChildBlock(): string[];
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
   calcWidth(): number;
+  calcHeight(): { childHeight: number; prefixSum?: number[] };
 }

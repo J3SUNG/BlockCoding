@@ -5,6 +5,7 @@ export class BlockValue extends BlockCommon {
   name = 'value';
   type = 'expressionValue';
   defaultWidth = 150;
+  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, '');
@@ -41,7 +42,10 @@ export class BlockValue extends BlockCommon {
       }
     });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${this.defaultWidth}px`);
+    div.setAttribute(
+      'style',
+      `left: ${x}px; top: ${y}px; width: ${this.defaultWidth}px; height: ${this.defaultHeight}px;`,
+    );
     div.appendChild(p);
     div.appendChild(input);
 
