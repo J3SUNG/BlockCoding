@@ -19,7 +19,7 @@ export class BlockArithmetic extends BlockCommon {
     x: number,
     y: number,
     value?: string,
-    onValueChange?: (id: string, value: string, insertLocation: string) => void,
+    onChange?: (id: string, value: string, insertLocation: string) => void,
   ) {
     const operator = ['+', '-', 'x', '/', '%'];
 
@@ -40,8 +40,8 @@ export class BlockArithmetic extends BlockCommon {
       const target = e.target as HTMLSelectElement;
       const selectedValue: string = target.value;
 
-      if (onValueChange) {
-        onValueChange(id, selectedValue, 'operator');
+      if (onChange) {
+        onChange(id, selectedValue, 'operator');
       }
     });
 
