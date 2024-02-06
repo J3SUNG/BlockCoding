@@ -142,6 +142,7 @@ const addWorkspaceMouseDragEvent = (
         initialY = e.clientY;
 
         target.style.zIndex = '999';
+        target.style.opacity = '0.8';
         active = true;
       }
     }
@@ -221,6 +222,7 @@ const addWorkspaceMouseDragEvent = (
       }
 
       target.style.zIndex = '0';
+      target.style.opacity = '1';
       target.style.transform = 'translate(0px, 0px)';
     }
     target = null;
