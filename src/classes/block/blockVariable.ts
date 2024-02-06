@@ -30,7 +30,7 @@ export class BlockVariable extends BlockCommon {
   insert(obj: BlockObject, insertType?: string) {
     if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
       if (insertType === 'space1') {
-        if (Object.keys(this.data.value).length === 0) {
+        if (this.data.varName && Object.keys(this.data.varName).length === 0) {
           this.data.varName = obj;
           return true;
         }
