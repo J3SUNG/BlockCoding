@@ -5,6 +5,7 @@ export type BlockObjectValue = BlockObject | BlockObject[] | string;
 export interface BlockObject {
   name: string;
   type: string;
+  fold?: boolean;
   data: {
     id: string;
     x: number;
@@ -22,7 +23,7 @@ export interface BlockObject {
     x: number,
     y: number,
     value?: BlockObjectValue,
-    onValueChange?: UpdateWorkspaceDataValue,
+    onChange?: UpdateWorkspaceDataValue,
     changeBlockWidth?: () => void,
   ): { block: HTMLElement; space: HTMLElement[] };
   insert(obj: BlockObject, insertType?: string): boolean;

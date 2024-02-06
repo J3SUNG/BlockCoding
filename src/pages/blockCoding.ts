@@ -68,6 +68,8 @@ export const blockCoding = () => {
     if (targetObj) {
       if (insertLocation === 'operator') {
         targetObj.data.operator = value as string;
+      } else if (insertLocation === 'fold') {
+        targetObj.fold = value === 'true' ? true : false;
       } else if (Array.isArray(targetObj.data.value)) {
         targetObj.data.value.push(value as BlockObject);
       } else {
