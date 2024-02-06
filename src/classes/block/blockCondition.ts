@@ -20,17 +20,43 @@ export class BlockCondition extends BlockCommon {
     return { childX: 0, childY: 0 };
   }
 
-  getElement(id: string, x: number, y: number) {
+  getElement(
+    id: string,
+    x: number,
+    y: number,
+    value?: string,
+    onChange?: (id: string, value: string, insertLocation?: string) => void,
+  ) {
     const div = createElementCommon('div', { id, className: `block block--control` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '조건문' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const childSpace = createElementCommon('span', { id: 'child', className: 'block__child' });
     const { childHeight } = this.calcHeight();
+    const toggle = createElementCommon('button', {
+      className: 'block__toggle',
+      textContent: `${this.fold ? '▶' : '▼'}`,
+    });
+
+    toggle.addEventListener('click', () => {
+      this.fold = !this.fold;
+      if (onChange) {
+        if (this.fold) {
+          onChange(id, 'true', 'fold');
+        } else {
+          onChange(id, 'false', 'fold');
+        }
+      }
+
+      const { childHeight } = this.calcHeight();
+      div.style.height = childHeight + 'px';
+      childSpace.style.height = childHeight - 100 + 'px';
+    });
 
     space1.setAttribute('style', `margin-top: 5px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${childHeight}px;`);
     p.setAttribute('style', `padding-top: 12px`);
-    childSpace.setAttribute('style', `height: ${childHeight - 100}px;`);
+    childSpace.setAttribute('style', `height: ${childHeight - 100}px; ${this.fold ? 'display: none' : ''}`);
+    div.appendChild(toggle);
     div.appendChild(p);
     div.appendChild(space1);
     div.appendChild(childSpace);
@@ -62,25 +88,5 @@ export class BlockCondition extends BlockCommon {
 
   getChildBlock(): string[] {
     return ['value'];
-  }
-
-  calcHeight(): { childHeight: number; prefixSum?: number[] } {
-    let height = 0;
-    let prefixSum: number[] = [0];
-    this.getChildBlock().forEach((key) => {
-      const childList = this.data[key];
-
-      if (Array.isArray(childList)) {
-        childList.forEach((child) => {
-          if (child instanceof BlockCommon) {
-            const { childHeight } = child.calcHeight();
-            height += childHeight;
-            prefixSum.push(prefixSum[prefixSum.length - 1] + childHeight);
-          }
-        });
-      }
-    });
-
-    return { childHeight: height + 100 > 150 ? height + 100 : 150, prefixSum };
   }
 }
