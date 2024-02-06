@@ -13,6 +13,7 @@ export class BlockStart extends BlockCommon {
 
   setChildPosition(index: number) {
     const { prefixSum } = this.calcHeight();
+    
     return { childX: 0, childY: prefixSum?.[index] ? prefixSum[index] + 50 : 0 };
   }
 
