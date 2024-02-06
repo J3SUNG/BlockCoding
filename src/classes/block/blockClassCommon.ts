@@ -7,6 +7,7 @@ export class BlockCommon implements BlockObject {
   defaultWidth = 100;
   width = 100;
   defaultSpaceWidth = 50;
+  defaultHeight = 50;
   spaceWidth = [50, 50];
   data: BlockObject['data'];
 
@@ -14,7 +15,7 @@ export class BlockCommon implements BlockObject {
     this.data = { id, x, y, value };
   }
 
-  setChildPosition(x?: number, y?: number, index?: number) {
+  setChildPosition(index?: number) {
     return { childX: 0, childY: 0 };
   }
 
@@ -57,6 +58,10 @@ export class BlockCommon implements BlockObject {
     this.width = this.defaultWidth + addWidth;
 
     return this.width;
+  }
+
+  calcHeight(): { childHeight: number; prefixSum?: number[] } {
+    return { childHeight: this.defaultHeight };
   }
 
   getInnerBlock(): string[] {

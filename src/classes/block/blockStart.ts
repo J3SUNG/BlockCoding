@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockCommon } from './blockClassCommon';
 
@@ -6,25 +6,30 @@ export class BlockStart extends BlockCommon {
   name = 'start';
   type = 'declare';
   BLOCK_START_MIN_WIDTH = 240;
-
+  defaultHeight = 50;
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
   }
 
-  setChildPosition(x: number, y: number, index: number) {
-    return { childX: 0, childY: 50 * (index + 1) };
+  setChildPosition(index: number) {
+    const { prefixSum } = this.calcHeight();
+    return { childX: 0, childY: prefixSum?.[index] ? prefixSum[index] + 50 : 0 };
   }
 
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '시작하기 버튼을 클릭했을 때' });
     const childWidth = this.calcWidth();
-    const triangle = createElementCommon('div', { className: 'block--declare-triangle' });
+    const triangle = createElementCommon('span', { className: 'block__triangle block--declare' });
 
+    triangle.setAttribute(
+      'style',
+      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(0 0, 0 100%, 60% 50%);`,
+    );
     div.appendChild(triangle);
     div.setAttribute(
       'style',
-      `left: ${x}px; top: ${y}px; width: ${this.BLOCK_START_MIN_WIDTH > childWidth ? this.BLOCK_START_MIN_WIDTH : childWidth}px;`,
+      `left: ${x}px; top: ${y}px; width: ${this.BLOCK_START_MIN_WIDTH > childWidth ? this.BLOCK_START_MIN_WIDTH : childWidth}px; height: ${this.defaultHeight}px;`,
     );
     div.appendChild(p);
 
@@ -45,5 +50,25 @@ export class BlockStart extends BlockCommon {
 
   getChildBlock(): string[] {
     return ['value'];
+  }
+
+  calcHeight(): { childHeight: number; prefixSum?: number[] } {
+    let height = 0;
+    let prefixSum: number[] = [0];
+    this.getChildBlock().forEach((key) => {
+      const childList = this.data[key];
+
+      if (Array.isArray(childList)) {
+        childList.forEach((child) => {
+          if (child instanceof BlockCommon) {
+            const { childHeight } = child.calcHeight();
+            height += childHeight;
+            prefixSum.push(prefixSum[prefixSum.length - 1] + childHeight);
+          }
+        });
+      }
+    });
+
+    return { childHeight: 50, prefixSum };
   }
 }

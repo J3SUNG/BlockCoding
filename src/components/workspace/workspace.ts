@@ -39,7 +39,7 @@ const paintWorkspace = (
     index?: number;
   },
   updateWorkspaceDataValue: UpdateWorkspaceDataValue,
-  setPosition?: (x: number, y: number, index: number) => { childX: number; childY: number },
+  parentObj?: BlockObjectValue,
 ) => {
   if (!obj) {
     return;
@@ -47,20 +47,14 @@ const paintWorkspace = (
 
   if (Array.isArray(obj)) {
     obj.forEach((item, itemIndex) => {
-      paintWorkspace(
-        parent,
-        item,
-        { x: data.x, y: data.y, index: itemIndex + (data.index ?? 0) },
-        updateWorkspaceDataValue,
-        setPosition,
-      );
+      paintWorkspace(parent, item, { x: data.x, y: data.y, index: itemIndex }, updateWorkspaceDataValue, parentObj);
     });
   } else {
     if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
       let newX = data.x;
       let newY = data.y;
-      if (setPosition) {
-        const { childX, childY } = setPosition(data.x, data.y, data.index!);
+      if (parentObj && typeof parentObj === 'object' && !Array.isArray(parentObj)) {
+        const { childX, childY } = parentObj.setChildPosition(data.index!);
         newX = childX;
         newY = childY;
       }
@@ -77,7 +71,7 @@ const paintWorkspace = (
             blockProps,
             { x: newX, y: newY, index: itemIndex },
             updateWorkspaceDataValue,
-            obj.setChildPosition,
+            obj,
           );
         }
       });

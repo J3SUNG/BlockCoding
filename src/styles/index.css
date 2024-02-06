@@ -217,60 +217,25 @@ select {
 }
 
 .block--declare {
-  height: 50px;
   background-color: #89d466;
 }
 
-.block--declare::after {
-  content: '';
-  position: absolute;
-  right: -25px;
-  border-left: 25px solid #89d466;
-  border-top: 25px solid transparent;
-  border-bottom: 25px solid transparent;
-  background-color: transparent;
-}
-
 .block--general {
-  height: 50px;
   background-color: #ed8b55;
 }
 
 .block--control {
-  height: 50px;
+  align-items: start;
   background-color: #14b7d8;
 }
 
 .block--expression-value {
-  height: 40px;
   background-color: #f9dc6d;
   border-radius: 20px;
 }
 
 .block--expression-logical {
-  height: 40px;
   background-color: #1c3c9a;
-  margin-left: 20px;
-}
-
-.block--expression-logical::after {
-  content: '';
-  position: absolute;
-  right: -20px;
-  border-left: 20px solid #1c3c9a;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-  background-color: transparent;
-}
-
-.block--expression-logical::before {
-  content: '';
-  position: absolute;
-  left: -20px;
-  border-right: 20px solid #1c3c9a;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-  background-color: transparent;
 }
 
 .block__text {
@@ -324,4 +289,14 @@ select {
 
 .block__operator--logical {
   background-color: #c8d5ff;
+}
+
+.block__child {
+  position: absolute;
+  left: 50px;
+  top: 50px;
+  width: 100px;
+  height: 50px;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc1JyBoZWlnaHQ9JzUnPgo8cmVjdCB3aWR0aD0nNScgaGVpZ2h0PSc1JyBmaWxsPScjZmZmJy8+CjxyZWN0IHdpZHRoPScxJyBoZWlnaHQ9JzEnIGZpbGw9JyNjY2MnLz4KPC9zdmc+');
+  background-repeat: repeat;
 }
