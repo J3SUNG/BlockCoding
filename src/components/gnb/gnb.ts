@@ -107,7 +107,7 @@ const updateLogData = async (
     let count = 0;
     let condition = await updateLogData(obj.data.condition as BlockObject, map, prevLog, setChanageLog);
 
-    while (condition[0] === 'true' && count < 20) {
+    while (condition[0] === 'true' && count < 123) {
       const resultArray = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
       result = result.concat(resultArray);
       count++;
@@ -134,8 +134,7 @@ const updateLogData = async (
         const onKeyDown = (e: KeyboardEvent) => {
           if (e.key === 'Enter') {
             input.removeEventListener('keydown', onKeyDown);
-            input.value = '';
-            setChanageLog([...prevLog(), input.value]);
+            setChanageLog([...prevLog(), '[입력] ' + input.value]);
             resolve(input.value);
           }
         };
@@ -145,8 +144,16 @@ const updateLogData = async (
     };
 
     const userInput = await waitInput();
-
     return [userInput];
+  } else if (obj.name === 'string') {
+    const operand1 = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    const operand2 = await updateLogData(obj.data.secondValue as BlockObject, map, prevLog, setChanageLog);
+    const string = obj.runLogic(operand1[0], operand2[0]);
+    if (typeof string === 'string') return [string];
+  } else if (obj.name === 'randomNumber') {
+    const operand = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    const num = obj.runLogic(operand[0]);
+    if (num) return [num.toString()];
   }
 
   return [];

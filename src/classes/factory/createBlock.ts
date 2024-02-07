@@ -7,8 +7,10 @@ import { BlockLogical } from '../block/blockLogical';
 import { BlockLoop } from '../block/blockLoop';
 import { BlockNegation } from '../block/blockNegation';
 import { BlockOutput } from '../block/blockOutput';
+import { BlockRandomNumber } from '../block/blockRandomNumber';
 import { BlockRefVariable } from '../block/blockRefVariable';
 import { BlockStart } from '../block/blockStart';
+import { BlockString } from '../block/blockString';
 import { BlockTimer } from '../block/blockTimer';
 import { BlockValue } from '../block/blockValue';
 import { BlockVariable } from '../block/blockVariable';
@@ -31,6 +33,8 @@ const blockTypes: BlockTypeMap = {
   comparison: BlockComparison,
   negation: BlockNegation,
   logical: BlockLogical,
+  string: BlockString,
+  randomNumber: BlockRandomNumber,
 };
 
 export const createBlock = (name: string, id: string, x: number, y: number): BlockObject => {

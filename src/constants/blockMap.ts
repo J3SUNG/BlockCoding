@@ -13,7 +13,9 @@ interface ConstantBlockMap {
       | 'arithmetic'
       | 'comparison'
       | 'negation'
-      | 'logical';
+      | 'logical'
+      | 'string'
+      | 'randomNumber';
     type: 'declare' | 'general' | 'control' | 'expressionValue' | 'expressionLogical';
   };
 }
@@ -57,6 +59,14 @@ export const BLOCK_MAP: ConstantBlockMap = {
   },
   arithmetic: {
     name: 'arithmetic',
+    type: 'expressionValue',
+  },
+  string: {
+    name: 'string',
+    type: 'expressionValue',
+  },
+  randomNumber: {
+    name: 'randomNumber',
     type: 'expressionValue',
   },
   comparison: {
