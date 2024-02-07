@@ -24,7 +24,7 @@ export interface BlockObject {
     value?: BlockObjectValue,
     onValueChange?: UpdateWorkspaceDataValue,
   ): { block: HTMLElement; space: HTMLElement[] };
-  insert(obj: BlockObject): boolean;
+  insert(obj: BlockObject, insertType?: string): boolean;
   getInnerBlock(): string[];
   getChildBlock(): string[];
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
