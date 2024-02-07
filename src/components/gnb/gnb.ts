@@ -63,23 +63,17 @@ export const gnb = ({
     fileInput.click();
   });
 
-  fileInput.addEventListener('change', function (e) {
+  fileInput.addEventListener('change', async (e) => {
     if (fileInput instanceof HTMLInputElement) {
-      const file: File | undefined = fileInput.files?.[0];
+      const file = fileInput.files?.[0];
 
       if (file) {
-        const reader: FileReader = new FileReader();
+        const text = await file.text();
+        const loadWorkspaceData = JSON.parse(text);
 
-        reader.onload = function (e: ProgressEvent<FileReader>) {
-          const content: string = e.target?.result as string;
-          const jsonData: WorkspaceData = JSON.parse(content);
+        loadData(loadWorkspaceData, updateWorkspaceDataAll, updateConsoleLog);
 
-          loadData(jsonData, updateWorkspaceDataAll, updateConsoleLog);
-
-          fileInput.value = '';
-        };
-
-        reader.readAsText(file);
+        fileInput.value = '';
       }
     }
   });
