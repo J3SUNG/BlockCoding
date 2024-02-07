@@ -97,6 +97,10 @@ export class BlockCondition extends BlockCommon {
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
   ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
     const condition = obj.data.condition;
     const value = obj.data.value;
 

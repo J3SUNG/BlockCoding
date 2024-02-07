@@ -88,4 +88,37 @@ export class BlockLoop extends BlockCommon {
   getChildBlock(): string[] {
     return ['value'];
   }
+
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const condition = obj.data.condition;
+    const value = obj.data.value;
+    let result: string = '';
+
+    if (condition instanceof BlockCommon) {
+      let count = 0;
+      let operand =
+        (await condition.runLogic(condition, map, prevLog, setChanageLog, getProgramState)) === 'true' ? true : false;
+
+      while (operand && count++ < 123) {
+        if (Array.isArray(value)) {
+          for (const child of value) {
+            if (child instanceof BlockCommon) {
+              result = await child.runLogic(child, map, prevLog, setChanageLog, getProgramState);
+            }
+          }
+        }
+
+        operand =
+          (await condition.runLogic(condition, map, prevLog, setChanageLog, getProgramState)) === 'true' ? true : false;
+      }
+    }
+
+    return result;
+  }
 }

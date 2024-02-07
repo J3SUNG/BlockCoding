@@ -56,6 +56,10 @@ export class BlockVariable extends BlockCommon {
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
   ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
     const varName = obj.data.varName;
     const value = obj.data.value;
 

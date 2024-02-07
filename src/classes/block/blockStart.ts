@@ -104,6 +104,10 @@ export class BlockStart extends BlockCommon {
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
   ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
     const value = obj.data.value;
 
     if (Array.isArray(value)) {
