@@ -92,7 +92,6 @@ select {
   align-items: center;
   justify-content: center;
   height: 4rem;
-  border-radius: 0.25rem;
   border: 1px solid #e1e1e1;
   cursor: pointer;
   margin-bottom: 20px;

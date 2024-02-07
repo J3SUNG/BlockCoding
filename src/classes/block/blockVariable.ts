@@ -16,8 +16,8 @@ export class BlockVariable extends BlockCommon {
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--general` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '변수 할당' });
-    const space1 = createElementCommon('span', { className: 'block__space' });
-    const space2 = createElementCommon('span', { className: 'block__space' });
+    const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
+    const space2 = createElementCommon('span', { id: 'space2', className: 'block__space' });
     const childWidth = this.calcWidth();
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
@@ -30,18 +30,21 @@ export class BlockVariable extends BlockCommon {
     return { block: div, space: [space1, space2] };
   }
 
-  insert(obj: BlockObject) {
-    if (this.data.varName && Object.keys(this.data.varName).length === 0) {
-      if (obj.name === 'value') {
-        this.data.varName = obj;
-        return true;
-      }
-    } else if (Object.keys(this.data.value).length === 0) {
-      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
-        this.data.value = obj;
-        return true;
+  insert(obj: BlockObject, insertType?: string) {
+    if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
+      if (insertType === 'space1') {
+        if (Object.keys(this.data.value).length === 0) {
+          this.data.varName = obj;
+          return true;
+        }
+      } else if (insertType === 'space2') {
+        if (Object.keys(this.data.value).length === 0) {
+          this.data.value = obj;
+          return true;
+        }
       }
     }
+
     return false;
   }
 

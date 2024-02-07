@@ -24,8 +24,8 @@ export class BlockLogical extends BlockCommon {
     const operator = ['AND', 'OR'];
 
     const div = createElementCommon('div', { id, className: `block block--expression-logical` });
-    const space1 = createElementCommon('span', { className: 'block__space' });
-    const space2 = createElementCommon('span', { className: 'block__space' });
+    const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
+    const space2 = createElementCommon('span', { id: 'space2', className: 'block__space' });
     const operatorSelect = createElementCommon('select', { className: 'block__operator block__operator--logical' });
     const childWidth = this.calcWidth();
     const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
@@ -50,16 +50,19 @@ export class BlockLogical extends BlockCommon {
 
     startTriangle.setAttribute(
       'style',
-      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; left: -${this.defaultHeight}px; clip-path: polygon(40% 50%, 100% 0, 100% 100%);`,
+      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; left: -${this.defaultHeight}px; clip-path: polygon(40% 50%, 101% -5%, 101% 105%);`,
     );
     endTriangle.setAttribute(
       'style',
-      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(0 0, 0 100%, 60% 50%);`,
+      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute(
+      'style',
+      `left: ${x + 10}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`,
+    );
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(space1);
@@ -69,18 +72,21 @@ export class BlockLogical extends BlockCommon {
     return { block: div, space: [space1, space2] };
   }
 
-  insert(obj: BlockObject) {
-    if (Object.keys(this.data.value).length === 0) {
-      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
-        this.data.value = obj;
-        return true;
-      }
-    } else if (this.data.secondValue && Object.keys(this.data.secondValue).length === 0) {
-      if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
-        this.data.secondValue = obj;
-        return true;
+  insert(obj: BlockObject, insertType?: string) {
+    if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
+      if (insertType === 'space1') {
+        if (Object.keys(this.data.value).length === 0) {
+          this.data.value = obj;
+          return true;
+        }
+      } else if (insertType === 'space2') {
+        if (this.data.secondValue && Object.keys(this.data.secondValue).length === 0) {
+          this.data.secondValue = obj;
+          return true;
+        }
       }
     }
+
     return false;
   }
 

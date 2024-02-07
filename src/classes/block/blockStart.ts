@@ -25,7 +25,7 @@ export class BlockStart extends BlockCommon {
 
     triangle.setAttribute(
       'style',
-      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(0 0, 0 100%, 60% 50%);`,
+      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
     div.appendChild(triangle);
     div.setAttribute(

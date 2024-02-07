@@ -153,6 +153,7 @@ const addWorkspaceMouseDragEvent = (
             anotherBlockClosestDiv.id as string,
             child.name,
             newWorkspaceData,
+            anotherBlock.id,
             child,
           );
         }
@@ -278,7 +279,7 @@ const addWorkspaceReceiveDragEvent = (
 
       const uniqueId = target.closest('div')?.id ?? '';
       const name = e.dataTransfer.getData('name');
-      if (insertBlockAnotherBlock(uniqueId, name, newWorkspaceData)) {
+      if (insertBlockAnotherBlock(uniqueId, name, newWorkspaceData, target.id)) {
         updateWorkspaceDataAll(newWorkspaceData);
       }
     }
@@ -307,14 +308,19 @@ const insertBlockAnotherBlock = (
   targetUniqueId: string,
   name: string,
   newWorkspaceData: BlockObject[],
-  insert?: BlockObject,
+  spaceId?: string,
+  insertBlock?: BlockObject,
 ): boolean => {
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
 
   if (targetObj) {
-    const newBlock = insert ? insert : createBlock(name, createUniqueId(), 0, 0);
+    const newBlock = insertBlock ? insertBlock : createBlock(name, createUniqueId(), 0, 0);
 
-    return targetObj.insert(newBlock);
+    if (spaceId === 'space1' || spaceId === 'space2') {
+      return targetObj.insert(newBlock, spaceId);
+    } else {
+      return targetObj.insert(newBlock);
+    }
   }
 
   return false;
