@@ -38,8 +38,8 @@ export class BlockRandomNumber extends BlockCommon {
   }
 
   async runLogic(
-    obj: BlockCommon,
-    map: Map<string, string>,
+    blockObject: BlockCommon,
+    variableMap: Map<string, string>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -48,11 +48,11 @@ export class BlockRandomNumber extends BlockCommon {
       return '';
     }
 
-    const value = obj.data.value;
+    const value = blockObject.data.value;
     let result: number = 0;
 
     if (value instanceof BlockCommon) {
-      const operand = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
+      const operand = await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState);
       result = Math.floor(Math.random() * Number(operand)) + 1;
     }
 

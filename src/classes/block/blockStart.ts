@@ -98,8 +98,8 @@ export class BlockStart extends BlockCommon {
   }
 
   async runLogic(
-    obj: BlockCommon,
-    map: Map<string, string>,
+    blockObject: BlockCommon,
+    variableMap: Map<string, string>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -108,12 +108,12 @@ export class BlockStart extends BlockCommon {
       return '';
     }
 
-    const value = obj.data.value;
+    const value = blockObject.data.value;
 
     if (Array.isArray(value)) {
       for (const child of value) {
         if (child instanceof BlockCommon) {
-          await child.runLogic(child, map, prevLog, setChanageLog, getProgramState);
+          await child.runLogic(child, variableMap, prevLog, setChanageLog, getProgramState);
         }
       }
     }

@@ -38,8 +38,8 @@ export class BlockRefVariable extends BlockCommon {
   }
 
   async runLogic(
-    obj: BlockCommon,
-    map: Map<string, string>,
+    blockObject: BlockCommon,
+    variableMap: Map<string, string>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -48,12 +48,12 @@ export class BlockRefVariable extends BlockCommon {
       return '';
     }
 
-    const value = obj.data.value;
+    const value = blockObject.data.value;
     let result: string = '';
 
     if (value instanceof BlockCommon) {
-      const operand = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
-      result = map.get(operand) || '';
+      const operand = await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState);
+      result = variableMap.get(operand) || '';
     }
 
     return result;
