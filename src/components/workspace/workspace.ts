@@ -215,7 +215,6 @@ const addWorkspaceMouseDragEvent = (
 
         if (changeCheck) {
           updateWorkspaceDataAll(newWorkspaceData);
-        } else {
         }
       }
 
