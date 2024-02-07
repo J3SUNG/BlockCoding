@@ -36,4 +36,39 @@ export class BlockTimer extends BlockCommon {
 
     return false;
   }
+
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
+    const value = obj.data.value;
+
+    if (value instanceof BlockCommon) {
+      const time = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
+
+      await new Promise((resolve) => {
+        const timeoutId = setTimeout(resolve, Number(time) * 1000);
+
+        const onProgramStateChange = (e: Event) => {
+          const customEvent = e as CustomEvent;
+          if (customEvent.detail === 'stop') {
+            clearTimeout(timeoutId);
+            document.removeEventListener('ProgramStateChange', onProgramStateChange);
+            resolve('');
+          }
+        };
+
+        document.addEventListener('ProgramStateChange', onProgramStateChange);
+      });
+    }
+
+    return '';
+  }
 }

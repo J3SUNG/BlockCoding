@@ -40,11 +40,20 @@ export const gnb = ({
   const updateProgramState = (state: ProgramState) => {
     setProgramState(state);
     render();
+
+    const event = new CustomEvent('ProgramStateChange', { detail: state });
+    document.dispatchEvent(event);
   };
 
   playButton.addEventListener('click', () => {
     if (getProgramState() === 'stop') {
       runProgram(getWorkspaceData(), getConsoleLog, updateConsoleLog, updateProgramState, getProgramState);
+    }
+  });
+
+  stopButton.addEventListener('click', () => {
+    if (getProgramState() !== 'stop') {
+      updateProgramState('stop');
     }
   });
 
