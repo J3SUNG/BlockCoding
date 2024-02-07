@@ -30,7 +30,9 @@ export class BlockRefVariable extends BlockCommon {
     if (Object.keys(this.data.value!).length === 0) {
       if (obj.name === 'value') {
         this.data.value = obj;
+        return true;
       }
     }
+    return false;
   }
 }
