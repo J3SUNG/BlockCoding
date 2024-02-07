@@ -67,7 +67,6 @@ export class BlockTimer extends BlockCommon {
           } else if (customEvent.detail === 'pause') {
             const endTime = new Date().getTime();
             remainingTime = remainingTime - (endTime - startTime);
-            console.log(remainingTime);
             clearTimeout(timeoutId);
           } else if (customEvent.detail === 'run') {
             startTime = new Date().getTime();
