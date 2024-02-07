@@ -59,10 +59,7 @@ export class BlockLogical extends BlockCommon {
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
-    div.setAttribute(
-      'style',
-      `left: ${x + 20}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`,
-    );
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(space1);
@@ -76,12 +73,15 @@ export class BlockLogical extends BlockCommon {
     if (Object.keys(this.data.value).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.value = obj;
+        return true;
       }
     } else if (this.data.secondValue && Object.keys(this.data.secondValue).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.secondValue = obj;
+        return true;
       }
     }
+    return false;
   }
 
   runLogic(operand1: string, operand2: string): boolean {

@@ -32,8 +32,8 @@ export class BlockCommon implements BlockObject {
     // TODO: 현재는 값을 순차적으로 받아서 처리하고 있지만, 추후에는 객체로 받아서 처리해야 함
     return { block: div, space: [] as HTMLElement[] };
   }
-  insert(obj: BlockObject) {
-    return;
+  insert(obj: BlockObject): boolean {
+    return false;
   }
 
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {

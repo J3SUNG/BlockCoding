@@ -129,6 +129,7 @@ const addWorkspaceMouseDragEvent = (
       const newWorkspaceData = deepCopy(workspaceData);
       const parentData = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
       const child = findTargetBlock(target.id, newWorkspaceData);
+      let changeCheck = true;
 
       if (anotherBlock && parent && child) {
         if (anotherBlock.id === 'workspace') {
@@ -148,14 +149,23 @@ const addWorkspaceMouseDragEvent = (
           removeTargetBlock(parentData);
         } else if (anotherBlockClosestDiv) {
           removeTargetBlock(parentData);
-          insertBlockAnotherBlock(anotherBlockClosestDiv.id as string, child.name, newWorkspaceData, child);
+          changeCheck = insertBlockAnotherBlock(
+            anotherBlockClosestDiv.id as string,
+            child.name,
+            newWorkspaceData,
+            child,
+          );
         }
       }
 
       initialX = currentX;
       initialY = currentY;
 
-      updateWorkspaceDataAll(newWorkspaceData);
+      if (changeCheck) {
+        updateWorkspaceDataAll(newWorkspaceData);
+      } else {
+        target.style.transform = 'translate(0px, 0px)';
+      }
     }
 
     target = null;
@@ -263,14 +273,14 @@ const addWorkspaceReceiveDragEvent = (
       const newWorkspaceData = inserBlockWorkspace(section, e, workspaceData);
       updateWorkspaceDataAll(newWorkspaceData);
     } else if (e.dataTransfer) {
-      const copyWorkspaceData = deepCopy(workspaceData);
+      const newWorkspaceData = deepCopy(workspaceData);
       const target = e.target as Element;
 
       const uniqueId = target.closest('div')?.id ?? '';
       const name = e.dataTransfer.getData('name');
-      const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, copyWorkspaceData);
-
-      updateWorkspaceDataAll(newWorkspaceData);
+      if (insertBlockAnotherBlock(uniqueId, name, newWorkspaceData)) {
+        updateWorkspaceDataAll(newWorkspaceData);
+      }
     }
   });
 };
@@ -298,14 +308,14 @@ const insertBlockAnotherBlock = (
   name: string,
   newWorkspaceData: BlockObject[],
   insert?: BlockObject,
-): BlockObject[] => {
+): boolean => {
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
 
   if (targetObj) {
     const newBlock = insert ? insert : createBlock(name, createUniqueId(), 0, 0);
 
-    targetObj.insert(newBlock);
+    return targetObj.insert(newBlock);
   }
 
-  return newWorkspaceData;
+  return false;
 };

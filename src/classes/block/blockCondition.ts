@@ -23,6 +23,7 @@ export class BlockCondition extends BlockCommon {
     const div = createElementCommon('div', { id, className: `block block--control` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '조건문' });
     const space = createElementCommon('span', { className: 'block__space' });
+
     const childWidth = this.calcWidth();
     const childSpace = createElementCommon('span', { className: 'block__child' });
     const { childHeight } = this.calcHeight();
@@ -42,12 +43,15 @@ export class BlockCondition extends BlockCommon {
     if (this.data.condition && Object.keys(this.data.condition).length === 0) {
       if (obj.type === 'expressionValue' || obj.type === 'expressionLogical') {
         this.data.condition = obj;
+        return true;
       }
     } else if (Array.isArray(this.data.value)) {
       if (obj.type === 'general' || obj.type === 'control') {
         this.data.value.push(obj);
+        return true;
       }
     }
+    return false;
   }
 
   getInnerBlock(): string[] {
