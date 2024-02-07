@@ -89,4 +89,30 @@ export class BlockCondition extends BlockCommon {
   getChildBlock(): string[] {
     return ['value'];
   }
+
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const condition = obj.data.condition;
+    const value = obj.data.value;
+
+    if (condition instanceof BlockCommon) {
+      const operand1 = await condition.runLogic(condition, map, prevLog, setChanageLog, getProgramState);
+      if (operand1 === 'true') {
+        if (Array.isArray(value)) {
+          for (const child of value) {
+            if (child instanceof BlockCommon) {
+              await child.runLogic(child, map, prevLog, setChanageLog, getProgramState);
+            }
+          }
+        }
+      }
+    }
+
+    return '';
+  }
 }

@@ -84,17 +84,36 @@ export class BlockLogical extends BlockCommon {
     return false;
   }
 
-  runLogic(operand1: string, operand2: string): boolean {
-    const booleanOperand1 = operand1 === 'true' ? true : false;
-    const booleanOperand2 = operand2 === 'true' ? true : false;
-    switch (this.data.operator) {
-      case 'AND':
-        return booleanOperand1 && booleanOperand2;
-      case 'OR':
-        return booleanOperand1 || booleanOperand2;
-      default:
-        throw new Error('blockLogical - runLogic - 예상치 못한 연산자');
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const value = obj.data.value;
+    const secondValue = obj.data.secondValue;
+    let result: boolean = false;
+
+    if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
+      const operand1 =
+        (await value.runLogic(value, map, prevLog, setChanageLog, getProgramState)) === 'true' ? true : false;
+      const operand2 =
+        (await secondValue.runLogic(secondValue, map, prevLog, setChanageLog, getProgramState)) === 'true'
+          ? true
+          : false;
+
+      switch (this.data.operator) {
+        case 'AND':
+          result = operand1 && operand2;
+          break;
+        case 'OR':
+          result = operand1 || operand2;
+          break;
+      }
     }
+
+    return result + '';
   }
 
   getInnerBlock(): string[] {

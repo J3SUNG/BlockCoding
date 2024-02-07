@@ -39,7 +39,13 @@ export class BlockCommon implements BlockObject {
     return false;
   }
 
-  runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
     return '';
   }
 

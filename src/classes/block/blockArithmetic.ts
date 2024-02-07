@@ -71,24 +71,43 @@ export class BlockArithmetic extends BlockCommon {
     return false;
   }
 
-  runLogic(operand1: string, operand2: string): string {
-    const numberOperand1 = Number(operand1);
-    const numberOperand2 = Number(operand2);
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const value = obj.data.value;
+    const secondValue = obj.data.secondValue;
+    let result: number = 0;
 
-    switch (this.data.operator) {
-      case '+':
-        return numberOperand1 + numberOperand2 + '';
-      case '-':
-        return numberOperand1 - numberOperand2 + '';
-      case 'x':
-        return numberOperand1 * numberOperand2 + '';
-      case '/':
-        return numberOperand1 / numberOperand2 + '';
-      case '%':
-        return (numberOperand1 % numberOperand2) + '';
+    if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
+      const operand1 = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
+      const operand2 = await secondValue?.runLogic(secondValue, map, prevLog, setChanageLog, getProgramState);
+
+      if (operand1 && operand2) {
+        switch (this.data.operator) {
+          case '+':
+            result = Number(operand1) + Number(operand2);
+            break;
+          case '-':
+            result = Number(operand1) - Number(operand2);
+            break;
+          case 'x':
+            result = Number(operand1) * Number(operand2);
+            break;
+          case '/':
+            result = Number(operand1) / Number(operand2);
+            break;
+          case '%':
+            result = Number(operand1) % Number(operand2);
+            break;
+        }
+      }
     }
 
-    return '';
+    return result + '';
   }
 
   getInnerBlock(): string[] {

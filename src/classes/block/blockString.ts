@@ -51,8 +51,24 @@ export class BlockString extends BlockCommon {
     return false;
   }
 
-  runLogic(operand1: string, operand2: string): string {
-    return operand1 + ' ' + operand2;
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const value = obj.data.value;
+    const secondValue = obj.data.secondValue;
+    let result: string = '';
+
+    if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
+      const operand1 = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
+      const operand2 = await secondValue?.runLogic(secondValue, map, prevLog, setChanageLog, getProgramState);
+
+      result = operand1 + ' ' + operand2;
+    }
+    return result;
   }
 
   getInnerBlock(): string[] {

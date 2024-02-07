@@ -37,8 +37,21 @@ export class BlockRandomNumber extends BlockCommon {
     return false;
   }
 
-  runLogic(operand1: string): string {
-    const num = Math.floor(Math.random() * Number(operand1)) + 1;
-    return num.toString();
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const value = obj.data.value;
+    let result: number = 0;
+
+    if (value instanceof BlockCommon) {
+      const operand = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
+      result = Math.floor(Math.random() * Number(operand)) + 1;
+    }
+
+    return result.toString();
   }
 }

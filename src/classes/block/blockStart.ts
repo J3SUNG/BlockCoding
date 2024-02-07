@@ -96,4 +96,24 @@ export class BlockStart extends BlockCommon {
     }
     return this.width;
   }
+
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const value = obj.data.value;
+
+    if (Array.isArray(value)) {
+      for (const child of value) {
+        if (child instanceof BlockCommon) {
+          await child.runLogic(child, map, prevLog, setChanageLog, getProgramState);
+        }
+      }
+    }
+
+    return '';
+  }
 }

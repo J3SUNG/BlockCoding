@@ -104,4 +104,18 @@ export class BlockValue extends BlockCommon {
       this.width = this.spaceWidth[0] + this.defaultWidth;
     }
   }
+
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    if (typeof obj.data.value === 'string') {
+      return obj.data.value;
+    } else {
+      return '';
+    }
+  }
 }
