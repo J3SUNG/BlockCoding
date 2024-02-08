@@ -1,5 +1,6 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { infinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockTimer extends BlockCommon {
@@ -43,6 +44,7 @@ export class BlockTimer extends BlockCommon {
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: infinityLoop,
   ): Promise<string> {
     if (getProgramState() === 'stop') {
       return '';
@@ -50,8 +52,9 @@ export class BlockTimer extends BlockCommon {
 
     const value = blockObject.data.value;
 
+    timeManager.stopTimer();
     if (value instanceof BlockCommon) {
-      const time = await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState);
+      const time = await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState, timeManager);
 
       await new Promise((resolve) => {
         let timeoutId = setTimeout(resolve, Number(time) * 1000);
@@ -77,6 +80,7 @@ export class BlockTimer extends BlockCommon {
         document.addEventListener('ProgramStateChange', onProgramStateChange);
       });
     }
+    timeManager.startTimer();
 
     return '';
   }

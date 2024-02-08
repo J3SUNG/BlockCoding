@@ -1,5 +1,6 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { infinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockRandomNumber extends BlockCommon {
@@ -43,6 +44,7 @@ export class BlockRandomNumber extends BlockCommon {
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: infinityLoop,
   ): Promise<string> {
     if (getProgramState() === 'stop') {
       return '';
@@ -52,7 +54,7 @@ export class BlockRandomNumber extends BlockCommon {
     let result: number = 0;
 
     if (value instanceof BlockCommon) {
-      const operand = await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState);
+      const operand = await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState, timeManager);
       result = Math.floor(Math.random() * Number(operand)) + 1;
     }
 

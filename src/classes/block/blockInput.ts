@@ -1,5 +1,6 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { infinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockInput extends BlockCommon {
@@ -28,6 +29,7 @@ export class BlockInput extends BlockCommon {
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: infinityLoop,
   ): Promise<string> {
     if (getProgramState() === 'stop') {
       return '';
@@ -35,6 +37,7 @@ export class BlockInput extends BlockCommon {
 
     setChanageLog([...prevLog(), '[입력 해주세요.]']);
 
+    timeManager.stopTimer();
     const waitInput = () => {
       return new Promise<string>((resolve) => {
         const onKeyDown = (e: KeyboardEvent) => {
@@ -70,6 +73,9 @@ export class BlockInput extends BlockCommon {
       });
     };
 
-    return await waitInput();
+    const result = await waitInput();
+    timeManager.startTimer();
+
+    return result;
   }
 }
