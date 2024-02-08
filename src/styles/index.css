@@ -288,7 +288,7 @@ select {
 .block__space {
   min-width: 50px;
   height: 40px;
-  margin: 0 5px;
+  margin: 5px;
   background-color: #f0f0f0;
   border-radius: 20px;
   position: relative;
@@ -337,4 +337,41 @@ select {
   align-items: center;
   cursor: pointer;
   font-size: 18px;
+}
+
+.block__param {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 50px;
+  cursor: pointer;
+  margin: 5px 0px;
+}
+
+.block__param-button {
+  width: 20px;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.block__param-button--add {
+  background-color: #34c759;
+}
+
+.block__param-button--add:hover {
+  background-color: #30b750;
+}
+
+.block__param-button--remove {
+  background-color: #ff3b30;
+}
+
+.block__param-button--remove:hover {
+  background-color: #d93025;
 }
