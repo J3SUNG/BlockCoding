@@ -1,4 +1,5 @@
 import { BlockCommon } from '../classes/block/blockClassCommon';
+import { infinityLoop } from '../classes/infinityLoop/infinityLoop';
 import { UpdateWorkspaceDataValue } from './stateType';
 
 export type BlockObjectValue = BlockObject | BlockObject[] | string;
@@ -36,6 +37,7 @@ export interface BlockObject {
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: infinityLoop,
   ): Promise<string>;
   calcWidth(): number;
   calcHeight(): { childHeight: number; prefixSum?: number[] };
