@@ -1,4 +1,4 @@
-export class infinityLoop {
+export class InfinityLoop {
   startTime: Date | null = null;
   useTime: number = 0;
 

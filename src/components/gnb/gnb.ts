@@ -11,7 +11,7 @@ import { BlockObject } from '../../types/blockObject';
 import { useState } from '../../core/core';
 import { BlockCommon } from '../../classes/block/blockClassCommon';
 import { createBlock } from '../../classes/blockFactory/createBlock';
-import { infinityLoop } from '../../classes/infinityLoop/infinityLoop';
+import { InfinityLoop } from '../../classes/infinityLoop/infinityLoop';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
@@ -133,7 +133,7 @@ const runProgram = async (
     const variableMap = new Map<string, string>();
 
     if (block instanceof BlockCommon) {
-      const timeManager = new infinityLoop();
+      const timeManager = new InfinityLoop();
       await block.runLogic(block, variableMap, getConsoleLog, updateConsoleLog, getProgramState, timeManager);
     }
   }

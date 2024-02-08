@@ -1,6 +1,6 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { infinityLoop } from '../infinityLoop/infinityLoop';
+import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockRefVariable extends BlockCommon {
@@ -44,7 +44,7 @@ export class BlockRefVariable extends BlockCommon {
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
-    timeManager: infinityLoop,
+    timeManager: InfinityLoop,
   ): Promise<string> {
     if (getProgramState() === 'stop') {
       return '';
