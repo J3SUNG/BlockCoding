@@ -52,7 +52,6 @@ export class BlockLoop extends BlockCommon {
       childSpace.style.height = childHeight - 100 + 'px';
     });
 
-    space1.setAttribute('style', `margin-top: 5px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${childHeight}px;`);
     p.setAttribute('style', `padding-top: 12px`);
     childSpace.setAttribute('style', `height: ${childHeight - 100}px; ${this.fold ? 'display: none' : ''}`);
