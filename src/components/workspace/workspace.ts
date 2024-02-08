@@ -4,7 +4,7 @@ import { deepCopy } from '../../utils/deepCopy';
 import { createUniqueId } from '../../utils/createUniqueId';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock } from '../../utils/findTargetBlock';
-import { createBlock } from '../../classes/factory/createBlock';
+import { createBlock } from '../../classes/blockFactory/createBlock';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
