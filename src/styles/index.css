@@ -375,3 +375,17 @@ select {
 .block__param-button--remove:hover {
   background-color: #d93025;
 }
+
+.block__return-text {
+  position: absolute;
+  bottom: 12px;
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  left: 20px;
+}
+.block__return-space {
+  position: absolute;
+  bottom: 0px;
+  left: 80px;
+}
