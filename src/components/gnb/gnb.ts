@@ -214,19 +214,12 @@ const updateLogData = async (
   return [];
 };
 
-const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] | null => {
+const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] => {
   if (Array.isArray(block)) {
-    const array: BlockCommon[] = [];
-    block.forEach((item) => {
-      if (!Array.isArray(item)) {
-        const newBlock = restoreWorkspaceData(item);
-        if (newBlock && newBlock instanceof BlockCommon) {
-          array.push(newBlock);
-        }
-      }
+    return block.flatMap((item) => {
+      const newBlock = restoreWorkspaceData(item);
+      return newBlock instanceof BlockCommon ? [newBlock] : [];
     });
-
-    return array;
   } else {
     const newBlock = createBlock(block.name, block.data.id, block.data.x, block.data.y);
     Object.assign(newBlock, block);
