@@ -70,6 +70,13 @@ export const blockCoding = () => {
         targetObj.data.operator = value as string;
       } else if (insertLocation === 'fold') {
         targetObj.fold = value === 'true' ? true : false;
+      } else if (insertLocation === 'param') {
+        targetObj.paramSize = Number(value);
+        for (let i = 1; i <= 4; i++) {
+          if (targetObj.paramSize < i) {
+            targetObj.data[`param${i}`] = {} as BlockObject;
+          }
+        }
       } else if (Array.isArray(targetObj.data.value)) {
         targetObj.data.value.push(value as BlockObject);
       } else {
