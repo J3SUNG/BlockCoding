@@ -1,5 +1,7 @@
 const core = () => {
   const states = {} as { [key: string]: any };
+  let prevName: string | null = null;
+  let animationFrameId: number | null = null;
 
   const useState = <T>(id: string, initState: T): [() => T, (newState: T) => void] => {
     if (!states[id]) states[id] = initState;
@@ -10,18 +12,27 @@ const core = () => {
     return [getState, setState];
   };
 
-  const render = (child: HTMLElement, root: HTMLElement, index?: number) => {
+  const render = (child: HTMLElement, root: HTMLElement, name: string, index?: number) => {
     if (!root || !child) {
       return;
     }
 
-    if (index !== undefined) {
-      root.replaceChild(child, root.childNodes[index]);
-    } else {
-      root.innerHTML = '';
-      root.appendChild(child);
+    if (animationFrameId !== null && prevName === name) {
+      cancelAnimationFrame(animationFrameId);
     }
+
+    animationFrameId = requestAnimationFrame(() => {
+      if (index !== undefined && root.childNodes[index]) {
+        root.replaceChild(child, root.childNodes[index]);
+      } else {
+        root.innerHTML = '';
+        root.appendChild(child);
+      }
+    });
+
+    prevName = name;
   };
+
   return { useState, render };
 };
 
