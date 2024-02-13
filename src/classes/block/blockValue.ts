@@ -36,12 +36,8 @@ export class BlockValue extends BlockCommon {
     input.addEventListener('change', (e: Event) => {
       const target = e.target;
 
-      if (target instanceof HTMLInputElement) {
-        const targetClosestDiv = target.closest('div');
-
-        if (onChange && value !== target.value) {
-          onChange(targetClosestDiv?.id ?? '', target.value);
-        }
+      if (onChange && target instanceof HTMLInputElement) {
+        onChange(id, target.value);
       }
     });
 

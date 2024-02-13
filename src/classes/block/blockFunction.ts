@@ -178,8 +178,6 @@ export class BlockFunction extends BlockCommon {
   ): Promise<string> {
     let result: string = '';
 
-    console.log(this.data.param1);
-
     if (timeManager.isInfinityLoop()) {
       return '';
     }
