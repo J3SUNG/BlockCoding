@@ -39,7 +39,7 @@ const paintWorkspace = (
     index?: number;
   },
   updateWorkspaceDataValue: UpdateWorkspaceDataValue,
-  setPosition?: (x: number, y: number, index: number) => { childX: number; childY: number },
+  parentObj?: BlockObjectValue,
 ) => {
   if (!obj) {
     return;
@@ -47,38 +47,34 @@ const paintWorkspace = (
 
   if (Array.isArray(obj)) {
     obj.forEach((item, itemIndex) => {
-      paintWorkspace(
-        parent,
-        item,
-        { x: data.x, y: data.y, index: itemIndex + (data.index ?? 0) },
-        updateWorkspaceDataValue,
-        setPosition,
-      );
+      paintWorkspace(parent, item, { x: data.x, y: data.y, index: itemIndex }, updateWorkspaceDataValue, parentObj);
     });
   } else {
     if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
       let newX = data.x;
       let newY = data.y;
-      if (setPosition) {
-        const { childX, childY } = setPosition(data.x, data.y, data.index!);
+      if (parentObj && typeof parentObj === 'object' && !Array.isArray(parentObj)) {
+        const { childX, childY } = parentObj.setChildPosition(data.index!);
         newX = childX;
         newY = childY;
       }
 
-      if (obj.paint) {
-        const div = obj.paint(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
-        parent.appendChild(div);
+      const { block, space } = obj.getElement(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
+      parent.appendChild(block);
 
-        obj.getInnerBlock().forEach((item, itemIndex) => {
+      const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
+      blockProps.forEach((item, itemIndex) => {
+        const blockProps = obj.data[item];
+        if (typeof blockProps === 'object') {
           paintWorkspace(
-            div,
-            item,
+            space[itemIndex],
+            blockProps,
             { x: newX, y: newY, index: itemIndex },
             updateWorkspaceDataValue,
-            obj.setChildPosition,
+            obj,
           );
-        });
-      }
+        }
+      });
     }
   }
 };
@@ -131,35 +127,67 @@ const addWorkspaceMouseDragEvent = (
       target.style.display = 'flex';
 
       const newWorkspaceData = deepCopy(workspaceData);
-      const parent = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
+      const parentData = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
       const child = findTargetBlock(target.id, newWorkspaceData);
+      let changeCheck = true;
 
       if (anotherBlock && parent && child) {
+        let newChild = null;
+        if (e.metaKey || e.ctrlKey) {
+          newChild = deepCopy(child);
+          newChild.changeUniqueId();
+        }
+
         if (anotherBlock.id === 'workspace') {
           const rect = section.getBoundingClientRect();
           const relativeX = e.clientX - rect.left - xOffset;
           const relativeY = e.clientY - rect.top - yOffset;
 
           if (child) {
-            child.data.x = relativeX;
-            child.data.y = relativeY;
-            child.data.id = target.id;
+            if (!newChild) {
+              child.data.x = relativeX;
+              child.data.y = relativeY;
+              child.data.id = target.id;
+              removeTargetBlock(parentData);
+              newWorkspaceData.push(child);
+            } else {
+              newChild.data.x = relativeX;
+              newChild.data.y = relativeY;
+              newWorkspaceData.push(newChild);
+            }
           }
-
-          removeTargetBlockOjbect(parent, target.id);
-          newWorkspaceData.push(child);
         } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
-          removeTargetBlockOjbect(parent, target.id);
+          if (!newChild) removeTargetBlock(parentData);
         } else if (anotherBlockClosestDiv) {
-          removeTargetBlockOjbect(parent, target.id);
-          insertBlockAnotherBlock(anotherBlockClosestDiv.id as string, child.name, newWorkspaceData, child);
+          if (!newChild) {
+            removeTargetBlock(parentData);
+            changeCheck = insertBlockAnotherBlock(
+              anotherBlockClosestDiv.id as string,
+              child.name,
+              newWorkspaceData,
+              anotherBlock.id,
+              child,
+            );
+          } else {
+            changeCheck = insertBlockAnotherBlock(
+              anotherBlockClosestDiv.id as string,
+              newChild.name,
+              newWorkspaceData,
+              anotherBlock.id,
+              newChild,
+            );
+          }
         }
       }
 
       initialX = currentX;
       initialY = currentY;
 
-      updateWorkspaceDataAll(newWorkspaceData);
+      if (changeCheck) {
+        updateWorkspaceDataAll(newWorkspaceData);
+      } else {
+        target.style.transform = 'translate(0px, 0px)';
+      }
     }
 
     target = null;
@@ -184,39 +212,66 @@ const findTargetParentBlock = (
   targetId: string,
   obj: BlockObjectValue,
   parent: BlockObject | BlockObject[],
-): BlockObject | BlockObject[] | null => {
+): { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null => {
   if (!obj) {
     return null;
   }
 
   if (Array.isArray(obj)) {
-    for (const item of obj) {
-      const parent = findTargetParentBlock(targetId, item, obj);
-      if (parent) {
-        return parent;
+    for (let index = 0; index < obj.length; ++index) {
+      const item = obj[index];
+      const result = findTargetParentBlock(targetId, item, obj);
+      if (result) {
+        if (result.index || result.prop || result.index === 0) {
+          return result;
+        } else {
+          return { parent: obj, index };
+        }
       }
     }
   } else if (typeof obj === 'object' && 'data' in obj) {
     if (obj.data.id === targetId) {
-      return parent;
+      return { parent };
     }
 
-    return findTargetParentBlock(targetId, obj.data.value, obj);
+    const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
+    for (const prop of blockProps) {
+      if (prop in obj.data) {
+        const blockObj = obj.data[prop];
+        if (typeof blockObj === 'object') {
+          const result = findTargetParentBlock(targetId, blockObj, obj);
+          if (result) {
+            if (result.index || result.prop || result.index === 0) {
+              return result;
+            } else {
+              return { parent: obj, prop };
+            }
+          }
+        }
+      }
+    }
   }
 
   return null;
 };
 
-const removeTargetBlockOjbect = (parent: BlockObject | BlockObject[], targetId: string) => {
+const removeTargetBlock = (result: { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null) => {
+  if (!result) {
+    return;
+  }
+
+  const { parent, prop, index } = result;
+
   if (Array.isArray(parent)) {
-    const index = parent.findIndex((item) => item.data.id === targetId);
-    parent.splice(index, 1);
-  } else if (typeof parent === 'object') {
-    if (typeof parent.data.value === 'object') {
-      parent.data.value = {} as BlockObject;
-    } else if (typeof parent.data.value === 'string') {
-      parent.data.value = '';
+    if (typeof index === 'number') {
+      if (parent.length === 1) {
+        parent.length = 0;
+      } else {
+        parent.splice(index, 1);
+      }
     }
+  } else if (prop && 'data' in parent && parent.data) {
+    parent.data[prop] = {} as BlockObject;
   }
 };
 
@@ -240,14 +295,14 @@ const addWorkspaceReceiveDragEvent = (
       const newWorkspaceData = inserBlockWorkspace(section, e, workspaceData);
       updateWorkspaceDataAll(newWorkspaceData);
     } else if (e.dataTransfer) {
-      const copyWorkspaceData = deepCopy(workspaceData);
+      const newWorkspaceData = deepCopy(workspaceData);
       const target = e.target as Element;
 
       const uniqueId = target.closest('div')?.id ?? '';
       const name = e.dataTransfer.getData('name');
-      const newWorkspaceData = insertBlockAnotherBlock(uniqueId, name, copyWorkspaceData);
-
-      updateWorkspaceDataAll(newWorkspaceData);
+      if (insertBlockAnotherBlock(uniqueId, name, newWorkspaceData, target.id)) {
+        updateWorkspaceDataAll(newWorkspaceData);
+      }
     }
   });
 };
@@ -274,15 +329,20 @@ const insertBlockAnotherBlock = (
   targetUniqueId: string,
   name: string,
   newWorkspaceData: BlockObject[],
-  insert?: BlockObject,
-): BlockObject[] => {
+  spaceId?: string,
+  insertBlock?: BlockObject,
+): boolean => {
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
 
   if (targetObj) {
     const newBlock = insert ? insert : createBlock(name, createUniqueId(), 0, 0);
 
-    targetObj.insert(newBlock);
+    if (spaceId === 'space1' || spaceId === 'space2') {
+      return targetObj.insert(newBlock, spaceId);
+    } else {
+      return targetObj.insert(newBlock);
+    }
   }
 
-  return newWorkspaceData;
+  return false;
 };

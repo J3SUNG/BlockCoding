@@ -1,39 +1,95 @@
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { UpdateWorkspaceDataValue } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { createUniqueId } from '../../utils/createUniqueId';
 
 export class BlockCommon implements BlockObject {
-  name = ''; // 기본값 제공
-  type = ''; // 기본값 제공
+  name = '';
+  type = '';
+  defaultWidth = 100;
+  width = 100;
+  defaultSpaceWidth = 50;
+  defaultHeight = 50;
+  spaceWidth = [50, 50];
   data: BlockObject['data'];
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
     this.data = { id, x, y, value };
   }
-  paint(
+
+  setChildPosition(index?: number) {
+    return { childX: 0, childY: 0 };
+  }
+
+  getElement(
     id: string,
     x: number,
     y: number,
     value?: BlockObjectValue | undefined,
     onValueChange?: UpdateWorkspaceDataValue | undefined,
   ): HTMLElement {
-    throw new Error('Method not implemented.');
+    // TODO: 현재는 값을 순차적으로 받아서 처리하고 있지만, 추후에는 객체로 받아서 처리해야 함
+    return { block: div, space: [] as HTMLElement[] };
   }
-
-  // TODO : 추후 구현 예정
-  setChildPosition(x: number, y: number, index?: number) {
-    return { childX: x, childY: y };
-  }
-
-  insert(obj: BlockObject) {
-    return;
-  }
-
-  getInnerBlock(): BlockObjectValue[] {
-    return [this.data.value];
+  
+  insert(obj: BlockObject, insertType?: string): boolean {
+    return false;
   }
 
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void> {
     return '';
+  }
+
+  calcWidth() {
+    let addWidth = 0;
+
+    this.width = this.defaultWidth;
+    this.getInnerBlock().forEach((innerProp, index) => {
+      const block = this.data[innerProp];
+      if (typeof block === 'object' && Object.keys(block).length === 0) {
+        this.spaceWidth[index] = this.defaultSpaceWidth;
+        addWidth += this.defaultSpaceWidth;
+      } else if (block instanceof BlockCommon) {
+        this.spaceWidth[index] = block.calcWidth();
+        addWidth += this.spaceWidth[index];
+      }
+    });
+
+    this.width = this.defaultWidth + addWidth;
+
+    return this.width;
+  }
+
+  calcHeight(): { childHeight: number; prefixSum?: number[] } {
+    return { childHeight: this.defaultHeight };
+  }
+
+  getInnerBlock(): string[] {
+    return ['value'];
+  }
+
+  getChildBlock(): string[] {
+    return [];
+  }
+
+  changeUniqueId() {
+    const newUniqueId = createUniqueId();
+    this.data.id = newUniqueId;
+
+    this.getInnerBlock().forEach((innerProp) => {
+      const block = this.data[innerProp];
+      if (block instanceof BlockCommon) {
+        block.changeUniqueId();
+      }
+    });
+
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
+      if (Array.isArray(block)) {
+        block.forEach((child) => {
+          child.changeUniqueId();
+        });
+      }
+    });
   }
 }

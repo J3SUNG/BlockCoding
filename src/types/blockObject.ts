@@ -14,16 +14,21 @@ export interface BlockObject {
     condition?: BlockObject;
     operator?: string;
     secondValue?: BlockObject;
+    [key: string]: BlockObjectValue | string | number | undefined;
   };
-  setChildPosition(x?: number, y?: number, index?: number): { childX: number; childY: number };
-  paint(
+  setChildPosition(index?: number): { childX: number; childY: number };
+  getElement(
     id: string,
     x: number,
     y: number,
     value?: BlockObjectValue,
     onValueChange?: UpdateWorkspaceDataValue,
-  ): HTMLElement;
-  insert(obj: BlockObject): void;
-  getInnerBlock(): BlockObjectValue[];
+  ): { block: HTMLElement; space: HTMLElement[] };
+  insert(obj: BlockObject, insertType?: string): boolean;
+  getInnerBlock(): string[];
+  getChildBlock(): string[];
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
+  calcWidth(): number;
+  calcHeight(): { childHeight: number; prefixSum?: number[] };
+  changeUniqueId(): void;
 }

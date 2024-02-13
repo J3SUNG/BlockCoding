@@ -51,13 +51,14 @@ const runProgram = async (
     return block.name === 'start' && block.data;
   });
 
-  updateConsoleLog(['프로그램을 실행합니다.']);
+  updateConsoleLog(['[프로그램을 실행합니다.]', 'ㅤ']);
+
   for (const block of startBlock) {
     const map = new Map<string, string>();
     await updateLogData(block.data.value as BlockObject, map, getConsoleLog, updateConsoleLog);
   }
-  updateConsoleLog([...getConsoleLog(), '프로그램이 종료되었습니다.']);
-
+  
+  updateConsoleLog([...getConsoleLog(), 'ㅤ', '[프로그램이 종료되었습니다.]']);
   updateProgramState('stop');
 };
 
@@ -107,7 +108,7 @@ const updateLogData = async (
     let count = 0;
     let condition = await updateLogData(obj.data.condition as BlockObject, map, prevLog, setChanageLog);
 
-    while (condition[0] === 'true' && count < 20) {
+    while (condition[0] === 'true') {
       const resultArray = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
       result = result.concat(resultArray);
       count++;
@@ -125,6 +126,35 @@ const updateLogData = async (
     const time = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
     await new Promise((resolve) => setTimeout(resolve, Number(time[0]) * 1000));
     return [];
+  } else if (obj.name === 'input') {
+    setChanageLog([...prevLog(), '[입력 해주세요.]']);
+    const input = document.querySelector('#console__input') as HTMLInputElement;
+
+    const waitInput = () => {
+      return new Promise<string>((resolve) => {
+        const onKeyDown = (e: KeyboardEvent) => {
+          if (e.key === 'Enter') {
+            input.removeEventListener('keydown', onKeyDown);
+            setChanageLog([...prevLog(), '[입력] ' + input.value]);
+            resolve(input.value);
+          }
+        };
+
+        input.addEventListener('keydown', onKeyDown);
+      });
+    };
+
+    const userInput = await waitInput();
+    return [userInput];
+  } else if (obj.name === 'string') {
+    const operand1 = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    const operand2 = await updateLogData(obj.data.secondValue as BlockObject, map, prevLog, setChanageLog);
+    const string = obj.runLogic(operand1[0], operand2[0]);
+    if (typeof string === 'string') return [string];
+  } else if (obj.name === 'randomNumber') {
+    const operand = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
+    const num = obj.runLogic(operand[0]);
+    if (num) return [num.toString()];
   }
 
   return [];

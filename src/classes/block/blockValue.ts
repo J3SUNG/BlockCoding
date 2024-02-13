@@ -4,12 +4,14 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockValue extends BlockCommon {
   name = 'value';
   type = 'expressionValue';
+  defaultWidth = 120;
+  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, '');
   }
 
-  paint(
+  getElement(
     id: string,
     x: number,
     y: number,
@@ -40,10 +42,13 @@ export class BlockValue extends BlockCommon {
       }
     });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
+    div.setAttribute(
+      'style',
+      `left: ${x}px; top: ${y}px; width: ${this.defaultWidth}px; height: ${this.defaultHeight}px;`,
+    );
     div.appendChild(p);
     div.appendChild(input);
 
-    return div;
+    return { block: div, space: [] };
   }
 }
