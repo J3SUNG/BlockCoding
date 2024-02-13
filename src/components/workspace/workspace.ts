@@ -5,6 +5,7 @@ import { createUniqueId } from '../../utils/createUniqueId';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock } from '../../utils/findTargetBlock';
 import { createBlock } from '../../classes/factory/createBlock';
+import { changeUniqueIdObject } from '../../utils/changeUniqueIdObject';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
@@ -135,7 +136,7 @@ const addWorkspaceMouseDragEvent = (
         let newChild = null;
         if (e.metaKey || e.ctrlKey) {
           newChild = deepCopy(child);
-          changeUniqueIdObj(newChild);
+          changeUniqueIdObject(newChild);
         }
 
         if (anotherBlock.id === 'workspace') {
@@ -344,28 +345,4 @@ const insertBlockAnotherBlock = (
   }
 
   return false;
-};
-
-const changeUniqueIdObj = (obj: BlockObjectValue): void => {
-  if (!obj) {
-    return;
-  }
-
-  if (Array.isArray(obj)) {
-    for (const item of obj) {
-      changeUniqueIdObj(item);
-    }
-  } else if (typeof obj === 'object' && 'data' in obj && (obj.data.value || obj.data.value == '')) {
-    const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
-    const newUniqueId = createUniqueId();
-    obj.data.id = newUniqueId;
-
-    for (const item of blockProps) {
-      const blockObj = obj.data[item];
-
-      if (typeof blockObj === 'object') {
-        changeUniqueIdObj(blockObj);
-      }
-    }
-  }
 };
