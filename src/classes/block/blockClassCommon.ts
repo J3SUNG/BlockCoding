@@ -1,5 +1,7 @@
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { UpdateWorkspaceDataValue } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { createUniqueId } from '../../utils/createUniqueId';
 
 export class BlockCommon implements BlockObject {
   name = '';
@@ -103,5 +105,26 @@ export class BlockCommon implements BlockObject {
 
   getChildBlock(): string[] {
     return [];
+  }
+
+  changeUniqueId() {
+    const newUniqueId = createUniqueId();
+    this.data.id = newUniqueId;
+
+    this.getInnerBlock().forEach((innerProp) => {
+      const block = this.data[innerProp];
+      if (block instanceof BlockCommon) {
+        block.changeUniqueId();
+      }
+    });
+
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
+      if (Array.isArray(block)) {
+        block.forEach((child) => {
+          child.changeUniqueId();
+        });
+      }
+    });
   }
 }

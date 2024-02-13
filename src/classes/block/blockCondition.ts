@@ -16,8 +16,8 @@ export class BlockCondition extends BlockCommon {
 
   setChildPosition(index: number) {
     const { prefixSum } = this.calcHeight();
-    if (prefixSum) return { childX: 0, childY: prefixSum[index] };
-    return { childX: 0, childY: 0 };
+
+    return { childX: 0, childY: prefixSum?.[index] ?? 0 };
   }
 
   getElement(id: string, x: number, y: number) {
