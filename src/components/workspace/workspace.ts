@@ -10,9 +10,15 @@ interface WorkspaceProps {
   workspaceData: WorkspaceData;
   updateWorkspaceDataAll: UpdateWorkspaceDataAll;
   updateWorkspaceDataValue: UpdateWorkspaceDataValue;
+  changeBlockWdith: () => void;
 }
 
-export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspaceDataValue }: WorkspaceProps) => {
+export const workspace = ({
+  workspaceData,
+  updateWorkspaceDataAll,
+  updateWorkspaceDataValue,
+  changeBlockWdith,
+}: WorkspaceProps) => {
   const section = createElementCommon('div', { id: 'workspace' });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
   const trashIcon = createElementCommon('span', { className: 'material-symbols-outlined', textContent: 'delete' });
@@ -21,8 +27,15 @@ export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspa
   addWorkspaceMouseDragEvent(section, workspaceData, updateWorkspaceDataAll);
 
   workspaceData.forEach((obj) => {
-    paintWorkspace(section, obj, { x: obj.data.x, y: obj.data.y, index: 0 }, updateWorkspaceDataValue);
+    paintWorkspace(
+      section,
+      obj,
+      { x: obj.data.x, y: obj.data.y, index: 0 },
+      updateWorkspaceDataValue,
+      changeBlockWdith,
+    );
   });
+  changeBlockWdith();
 
   section.appendChild(trashBin);
   trashBin.appendChild(trashIcon);
@@ -39,6 +52,7 @@ const paintWorkspace = (
     index?: number;
   },
   updateWorkspaceDataValue: UpdateWorkspaceDataValue,
+  changeBlockWdith: () => void,
   parentObj?: BlockObjectValue,
 ) => {
   if (!obj) {
@@ -47,7 +61,14 @@ const paintWorkspace = (
 
   if (Array.isArray(obj)) {
     obj.forEach((item, itemIndex) => {
-      paintWorkspace(parent, item, { x: data.x, y: data.y, index: itemIndex }, updateWorkspaceDataValue, parentObj);
+      paintWorkspace(
+        parent,
+        item,
+        { x: data.x, y: data.y, index: itemIndex },
+        updateWorkspaceDataValue,
+        changeBlockWdith,
+        parentObj,
+      );
     });
   } else {
     if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
@@ -59,7 +80,14 @@ const paintWorkspace = (
         newY = childY;
       }
 
-      const { block, space } = obj.getElement(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
+      const { block, space } = obj.getElement(
+        obj.data.id,
+        newX,
+        newY,
+        obj.data.value,
+        updateWorkspaceDataValue,
+        changeBlockWdith,
+      );
       parent.appendChild(block);
 
       const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
@@ -71,6 +99,7 @@ const paintWorkspace = (
             blockProps,
             { x: newX, y: newY, index: itemIndex },
             updateWorkspaceDataValue,
+            changeBlockWdith,
             obj,
           );
         }
@@ -113,6 +142,7 @@ const addWorkspaceMouseDragEvent = (
         initialX = e.clientX;
         initialY = e.clientY;
 
+        target.style.zIndex = '1000';
         active = true;
       }
     }
@@ -120,80 +150,88 @@ const addWorkspaceMouseDragEvent = (
 
   section.addEventListener('mouseup', function (e: MouseEvent) {
     e.preventDefault();
-    if (active && target && currentX && currentY) {
-      target.style.display = 'none';
-      const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
-      const anotherBlockClosestDiv = anotherBlock.closest('div');
-      target.style.display = 'flex';
+    if (active && target) {
+      if (Math.abs(currentX) > 3 || Math.abs(currentY) > 3) {
+        target.style.display = 'none';
+        const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+        const anotherBlockClosestDiv = anotherBlock.closest('div');
+        target.style.display = 'flex';
 
-      const newWorkspaceData = deepCopy(workspaceData);
-      const parentData = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
-      const child = findTargetBlock(target.id, newWorkspaceData);
-      let changeCheck = true;
+        const newWorkspaceData = deepCopy(workspaceData);
+        const parentData = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
+        const child = findTargetBlock(target.id, newWorkspaceData);
+        let changeCheck = true;
 
-      if (anotherBlock && parent && child) {
-        let newChild = null;
-        if (e.metaKey || e.ctrlKey) {
-          newChild = deepCopy(child);
-          newChild.changeUniqueId();
-        }
+        if (anotherBlock && parent && child) {
+          let newChild = null;
+          if (e.metaKey || e.ctrlKey) {
+            newChild = deepCopy(child);
+            changeUniqueIdObj(newChild);
+          }
 
-        if (anotherBlock.id === 'workspace') {
-          const rect = section.getBoundingClientRect();
-          const relativeX = e.clientX - rect.left - xOffset;
-          const relativeY = e.clientY - rect.top - yOffset;
+          if (anotherBlock.id === 'workspace') {
+            const rect = section.getBoundingClientRect();
+            const relativeX = e.clientX - rect.left - xOffset;
+            const relativeY = e.clientY - rect.top - yOffset;
 
-          if (child) {
-            if (!newChild) {
+            if (child) {
               child.data.x = relativeX;
               child.data.y = relativeY;
               child.data.id = target.id;
+            }
+
+            if (newChild) {
+              newChild.data.x = relativeX;
+              newChild.data.y = relativeY;
+            }
+
+            if (!newChild) {
               removeTargetBlock(parentData);
               newWorkspaceData.push(child);
             } else {
-              newChild.data.x = relativeX;
-              newChild.data.y = relativeY;
               newWorkspaceData.push(newChild);
             }
+          } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
+            if (!newChild) removeTargetBlock(parentData);
+          } else if (anotherBlockClosestDiv) {
+            if (!newChild) {
+              removeTargetBlock(parentData);
+              changeCheck = insertBlockAnotherBlock(
+                anotherBlockClosestDiv.id as string,
+                child.name,
+                newWorkspaceData,
+                anotherBlock.id,
+                child,
+              );
+            } else {
+              changeCheck = insertBlockAnotherBlock(
+                anotherBlockClosestDiv.id as string,
+                newChild.name,
+                newWorkspaceData,
+                anotherBlock.id,
+                newChild,
+              );
+            }
           }
-        } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
-          if (!newChild) removeTargetBlock(parentData);
-        } else if (anotherBlockClosestDiv) {
-          if (!newChild) {
-            removeTargetBlock(parentData);
-            changeCheck = insertBlockAnotherBlock(
-              anotherBlockClosestDiv.id as string,
-              child.name,
-              newWorkspaceData,
-              anotherBlock.id,
-              child,
-            );
-          } else {
-            changeCheck = insertBlockAnotherBlock(
-              anotherBlockClosestDiv.id as string,
-              newChild.name,
-              newWorkspaceData,
-              anotherBlock.id,
-              newChild,
-            );
-          }
+        }
+
+        initialX = currentX;
+        initialY = currentY;
+
+        if (changeCheck) {
+          updateWorkspaceDataAll(newWorkspaceData);
+        } else {
         }
       }
 
-      initialX = currentX;
-      initialY = currentY;
-
-      if (changeCheck) {
-        updateWorkspaceDataAll(newWorkspaceData);
-      } else {
-        target.style.transform = 'translate(0px, 0px)';
-      }
+      target.style.zIndex = '0';
+      target.style.transform = 'translate(0px, 0px)';
     }
-
     target = null;
     active = false;
   });
 
+  let lastHighlighted: Element | null = null;
   section.addEventListener('mousemove', function (e: MouseEvent) {
     if (active) {
       e.preventDefault();
@@ -202,8 +240,60 @@ const addWorkspaceMouseDragEvent = (
       currentY = e.clientY - initialY;
 
       if (target) {
-        target.style.transform = 'translate(' + currentX + 'px, ' + currentY + 'px)';
+        target.style.visibility = 'hidden';
+        const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+        target.style.visibility = 'visible';
+
+        if (lastHighlighted && lastHighlighted !== elementBelow) {
+          lastHighlighted.classList.remove('block--highlight-drop');
+        }
+
+        if (elementBelow) {
+          if (elementBelow.classList.contains('block__space') || elementBelow.classList.contains('block__child')) {
+            elementBelow.classList.add('block--highlight-drop');
+            lastHighlighted = elementBelow;
+          } else {
+            const closestBlock = elementBelow.closest('div');
+            if (closestBlock?.classList.contains('block')) {
+              closestBlock.classList.add('block--highlight-drop');
+              lastHighlighted = closestBlock;
+            }
+          }
+        }
       }
+
+      if (target) {
+        if (Math.abs(currentX) > 3 || Math.abs(currentY) > 3) {
+          target.style.transform = 'translate(' + currentX + 'px, ' + currentY + 'px)';
+        } else {
+          target.style.transform = 'translate(0px, 0px)';
+        }
+      }
+    }
+  });
+
+  section.addEventListener('mouseover', function (e: Event) {
+    const target: HTMLElement = (e.target as HTMLElement).closest('div') as HTMLElement;
+
+    if (
+      (target && target.classList.contains('block')) ||
+      target.classList.contains('block__space') ||
+      target.classList.contains('block__child')
+    ) {
+      target.classList.add('block--highlight-select');
+    }
+  });
+
+  section.addEventListener('mouseout', function (e: Event) {
+    const target: HTMLElement = (e.target as HTMLElement).closest('div') as HTMLElement;
+
+    if (
+      (target && target.classList.contains('block')) ||
+      target.classList.contains('block__space') ||
+      target.classList.contains('block__child') ||
+      target.classList.contains('block__operator')
+    ) {
+      target.classList.remove('block--highlight-select');
     }
   });
 };
@@ -283,7 +373,29 @@ const addWorkspaceReceiveDragEvent = (
   const trashBin = document.getElementById('trash-bin') as HTMLElement;
   const trashIcon = document.querySelector('#trash-bin > span') as HTMLElement;
 
+  let lastHighlighted: Element | null = null;
   section.addEventListener('dragover', function (e: DragEvent) {
+    const target = e.target as HTMLElement;
+    if (target) {
+      const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+
+      if (lastHighlighted && lastHighlighted !== elementBelow) {
+        lastHighlighted.classList.remove('block--highlight-drop');
+      }
+
+      if (elementBelow) {
+        if (elementBelow.classList.contains('block__space') || elementBelow.classList.contains('block__child')) {
+          elementBelow.classList.add('block--highlight-drop');
+          lastHighlighted = elementBelow;
+        } else {
+          const closestBlock = elementBelow.closest('div');
+          if (closestBlock?.classList.contains('block')) {
+            closestBlock.classList.add('block--highlight-drop');
+            lastHighlighted = closestBlock;
+          }
+        }
+      }
+    }
     e.preventDefault();
   });
 
@@ -329,16 +441,15 @@ const insertBlockAnotherBlock = (
   targetUniqueId: string,
   name: string,
   newWorkspaceData: BlockObject[],
-  spaceId?: string,
+  location: string,
   insertBlock?: BlockObject,
 ): boolean => {
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
 
   if (targetObj) {
-    const newBlock = insert ? insert : createBlock(name, createUniqueId(), 0, 0);
-
-    if (spaceId === 'space1' || spaceId === 'space2') {
-      return targetObj.insert(newBlock, spaceId);
+    const newBlock = insertBlock ? insertBlock : createBlock(name, createUniqueId(), 0, 0);
+    if (location === 'space1' || location === 'space2') {
+      return targetObj.insert(newBlock, location);
     } else {
       return targetObj.insert(newBlock);
     }

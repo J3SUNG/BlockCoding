@@ -208,12 +208,25 @@ select {
   justify-content: start;
   min-width: 50px;
   position: absolute;
+  min-width: 100px;
   width: auto;
   height: 50px;
   cursor: pointer;
   padding: 0px 10px;
   transform: translate(0, 0);
   box-shadow: 0px 0px 0px 2px #828282;
+}
+
+.block--highlight-select {
+  box-shadow: 0px 0px 0px 3px #ffcd00;
+}
+
+.block--highlight-drop {
+  box-shadow: 0px 0px 0px 3px #34c759;
+}
+
+.block--highlight-remove {
+  box-shadow: 0px 0px 0px 3px #ff3b30;
 }
 
 .block--declare {
@@ -227,7 +240,6 @@ select {
 .block--control {
   align-items: start;
   background-color: #14b7d8;
-  box-shadow: -1px 0px 0px 1px #828282;
 }
 
 .block--expression-value {
@@ -248,7 +260,7 @@ select {
 }
 
 .block__input {
-  width: 60px;
+  min-width: 50px;
   height: 40px;
   font-size: 18px;
   font-weight: bold;
@@ -300,5 +312,4 @@ select {
   height: 50px;
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc1JyBoZWlnaHQ9JzUnPgo8cmVjdCB3aWR0aD0nNScgaGVpZ2h0PSc1JyBmaWxsPScjZmZmJy8+CjxyZWN0IHdpZHRoPScxJyBoZWlnaHQ9JzEnIGZpbGw9JyNjY2MnLz4KPC9zdmc+');
   background-repeat: repeat;
-  box-shadow: -1px 0px 0px 1px #828282;
 }

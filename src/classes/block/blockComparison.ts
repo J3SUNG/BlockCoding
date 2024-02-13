@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockCommon } from './blockClassCommon';
 
@@ -27,9 +27,9 @@ export class BlockComparison extends BlockCommon {
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const space2 = createElementCommon('span', { id: 'space2', className: 'block__space' });
     const operatorSelect = createElementCommon('select', { className: 'block__operator block__operator--logical' });
-    const childWidth = this.calcWidth();
     const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
     const endTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
+    this.calcWidth();
 
     operator.forEach((op) => {
       const option = createElementCommon('option', { value: op, textContent: op });
@@ -61,7 +61,7 @@ export class BlockComparison extends BlockCommon {
 
     div.setAttribute(
       'style',
-      `left: ${x + 10}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`,
+      `left: ${x + 10}px; top: ${y}px; width: ${this.width}px; height: ${this.defaultHeight}px;`,
     );
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);

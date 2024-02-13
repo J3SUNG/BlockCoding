@@ -35,6 +35,7 @@ export const blockCoding = () => {
         workspaceData: getWorkspaceData(),
         updateWorkspaceDataAll,
         updateWorkspaceDataValue,
+        changeBlockWdith,
       }),
       mainComponent,
       'workspace',
@@ -71,6 +72,12 @@ export const blockCoding = () => {
     workspaceRender();
   };
 
+  const changeBlockWdith = () => {
+    getWorkspaceData().forEach((block) => {
+      block.calcWidth();
+    });
+  };
+
   const gnbComponent = gnb({
     getWorkspaceData,
     getConsoleLog,
@@ -82,6 +89,7 @@ export const blockCoding = () => {
     workspaceData: getWorkspaceData(),
     updateWorkspaceDataAll,
     updateWorkspaceDataValue,
+    changeBlockWdith,
   });
   const consoleSpaceComponent = consoleSpace({ consoleLog: getConsoleLog() });
   const mainComponent = createElementCommon('div', { id: 'main' });

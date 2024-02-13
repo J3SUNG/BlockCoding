@@ -20,7 +20,7 @@ export class BlockStart extends BlockCommon {
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '시작하기 버튼을 클릭했을 때' });
-    const childWidth = this.calcWidth();
+    this.calcWidth();
     const triangle = createElementCommon('span', { className: 'block__triangle block--declare' });
 
     triangle.setAttribute(
@@ -30,14 +30,14 @@ export class BlockStart extends BlockCommon {
     div.appendChild(triangle);
     div.setAttribute(
       'style',
-      `left: ${x}px; top: ${y}px; width: ${this.BLOCK_START_MIN_WIDTH > childWidth ? this.BLOCK_START_MIN_WIDTH : childWidth}px; height: ${this.defaultHeight}px;`,
+      `left: ${x}px; top: ${y}px; width: ${this.BLOCK_START_MIN_WIDTH > this.width ? this.BLOCK_START_MIN_WIDTH : this.width}px; height: ${this.defaultHeight}px;`,
     );
     div.appendChild(p);
 
     return { block: div, space: [div] };
   }
 
-  insert(obj: BlockObject) {
+  insert(obj: BlockObject, insertType?: string) {
     if (obj.type === 'general' || obj.type === 'control') {
       if (Array.isArray(this.data.value)) {
         this.data.value.splice(this.data.value.length, 0, obj);
@@ -73,5 +73,16 @@ export class BlockStart extends BlockCommon {
     });
 
     return { childHeight: 50, prefixSum };
+  }
+
+  calcWidth(): number {
+    if (Array.isArray(this.data.value)) {
+      this.data.value.forEach((block) => {
+        if (block instanceof BlockCommon) {
+          block.calcWidth();
+        }
+      });
+    }
+    return this.BLOCK_START_MIN_WIDTH;
   }
 }

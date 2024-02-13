@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockCommon } from './blockClassCommon';
 
@@ -16,10 +16,10 @@ export class BlockOutput extends BlockCommon {
     const div = createElementCommon('div', { id, className: `block block--general` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '출력' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
-    const childWidth = this.calcWidth();
+    this.calcWidth();
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${this.width}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(space1);
 

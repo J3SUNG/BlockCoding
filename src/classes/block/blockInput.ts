@@ -15,9 +15,9 @@ export class BlockInput extends BlockCommon {
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '입력 받기' });
-    const childWidth = this.calcWidth();
+    this.calcWidth();
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${this.width}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
 
     return { block: div, space: [] };

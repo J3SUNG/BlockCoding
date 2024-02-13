@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockCommon } from './blockClassCommon';
 
@@ -16,9 +16,9 @@ export class BlockNegation extends BlockCommon {
     const div = createElementCommon('div', { id, className: `block block--expression-logical` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '논리 부정' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
-    const childWidth = this.calcWidth();
     const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
     const endTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
+    this.calcWidth();
 
     space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     startTriangle.setAttribute(
@@ -32,7 +32,7 @@ export class BlockNegation extends BlockCommon {
 
     div.setAttribute(
       'style',
-      `left: ${x + 10}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`,
+      `left: ${x + 10}px; top: ${y}px; width: ${this.width}px; height: ${this.defaultHeight}px;`,
     );
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
