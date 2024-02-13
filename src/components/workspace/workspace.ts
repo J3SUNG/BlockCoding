@@ -5,7 +5,6 @@ import { createUniqueId } from '../../utils/createUniqueId';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock } from '../../utils/findTargetBlock';
 import { createBlock } from '../../classes/factory/createBlock';
-import { changeUniqueIdObject } from '../../utils/changeUniqueIdObject';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
@@ -136,7 +135,7 @@ const addWorkspaceMouseDragEvent = (
         let newChild = null;
         if (e.metaKey || e.ctrlKey) {
           newChild = deepCopy(child);
-          changeUniqueIdObject(newChild);
+          newChild.changeUniqueId();
         }
 
         if (anotherBlock.id === 'workspace') {
