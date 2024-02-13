@@ -2,6 +2,9 @@ interface ConstantBlockMap {
   [key: string]: {
     name:
       | 'start'
+      | 'function'
+      | 'functionCall'
+      | 'functionReturn'
       | 'variable'
       | 'output'
       | 'timer'
@@ -25,6 +28,10 @@ export const BLOCK_MAP: ConstantBlockMap = {
     name: 'start',
     type: 'declare',
   },
+  function: {
+    name: 'function',
+    type: 'declare',
+  },
   variable: {
     name: 'variable',
     type: 'general',
@@ -35,6 +42,10 @@ export const BLOCK_MAP: ConstantBlockMap = {
   },
   timer: {
     name: 'timer',
+    type: 'general',
+  },
+  functionCall: {
+    name: 'functionCall',
     type: 'general',
   },
   condition: {
@@ -67,6 +78,10 @@ export const BLOCK_MAP: ConstantBlockMap = {
   },
   randomNumber: {
     name: 'randomNumber',
+    type: 'expressionValue',
+  },
+  functionReturn: {
+    name: 'functionReturn',
     type: 'expressionValue',
   },
   comparison: {
