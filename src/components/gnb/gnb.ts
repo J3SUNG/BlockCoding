@@ -216,7 +216,7 @@ const updateLogData = async (
 
 const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] | null => {
   if (Array.isArray(block)) {
-    let array: BlockCommon[] = [];
+    const array: BlockCommon[] = [];
     block.forEach((item) => {
       if (!Array.isArray(item)) {
         const newBlock = restoreWorkspaceData(item);
