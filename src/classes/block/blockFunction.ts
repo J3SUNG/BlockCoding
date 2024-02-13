@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockFunction extends BlockCommon {
   name = 'function';
   type = 'declare';
-  defaultWidth = 130;
-  defaultHeight = 150;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);

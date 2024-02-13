@@ -1,3 +1,4 @@
+import { BLOCK_DEFAULT_HEIGHT, BLOCK_DEFAULT_WIDTH, BLOCK_SPACE_DEFAULT_WIDTH } from '../../constants/blockDefaultMap';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
@@ -5,9 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockValue extends BlockCommon {
   name = 'value';
   type = 'expressionValue';
-  defaultWidth = 60;
-  defaultHeight = 40;
-  defaultSpaceWidth = 50;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, '');
@@ -62,7 +60,7 @@ export class BlockValue extends BlockCommon {
       }
     }
     input.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
     div.appendChild(p);
     div.appendChild(input);
 
@@ -81,7 +79,7 @@ export class BlockValue extends BlockCommon {
         div.style.width = this.width.toString() + 'px';
       }
     } else {
-      this.width = this.defaultWidth + this.defaultSpaceWidth;
+      this.width = BLOCK_DEFAULT_WIDTH[this.name] + BLOCK_SPACE_DEFAULT_WIDTH;
     }
 
     return this.width;
@@ -97,8 +95,8 @@ export class BlockValue extends BlockCommon {
       const width = parseInt(getComputedStyle(span).width, 10);
       span.style.display = 'none';
 
-      this.spaceWidth[0] = width + 20 > this.defaultSpaceWidth ? width + 20 : this.defaultSpaceWidth;
-      this.width = this.spaceWidth[0] + this.defaultWidth;
+      this.spaceWidth[0] = width + 20 > BLOCK_SPACE_DEFAULT_WIDTH ? width + 20 : BLOCK_SPACE_DEFAULT_WIDTH;
+      this.width = this.spaceWidth[0] + BLOCK_DEFAULT_HEIGHT[this.name];
     }
   }
 

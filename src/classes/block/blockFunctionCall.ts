@@ -1,3 +1,4 @@
+import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
@@ -6,8 +7,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockFunctionCall extends BlockCommon {
   name = 'functionCall';
   type = 'general';
-  defaultWidth = 140;
-  defaultHeight = 50;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
@@ -51,7 +50,7 @@ export class BlockFunctionCall extends BlockCommon {
       }
     });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
     paramSpan.setAttribute('style', `justify-content: center;`);
     div.appendChild(p);
     div.appendChild(space1);

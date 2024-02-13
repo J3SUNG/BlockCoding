@@ -1,3 +1,4 @@
+import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
@@ -6,8 +7,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockRefVariable extends BlockCommon {
   name = 'refVariable';
   type = 'expressionValue';
-  defaultWidth = 120;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
@@ -18,7 +17,7 @@ export class BlockRefVariable extends BlockCommon {
     const p = createElementCommon('p', { className: 'block__text', textContent: '변수 참조' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
     div.appendChild(p);
     div.appendChild(space1);
 

@@ -1,3 +1,4 @@
+import { BLOCK_DEFAULT_HEIGHT, BLOCK_DEFAULT_WIDTH } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
@@ -6,8 +7,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockStart extends BlockCommon {
   name = 'start';
   type = 'declare';
-  defaultHeight = 50;
-  defaultWidth = 280;
+
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
   }
@@ -49,13 +49,13 @@ export class BlockStart extends BlockCommon {
 
     triangle.setAttribute(
       'style',
-      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
+      `width: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; position: absolute; right: -${BLOCK_DEFAULT_HEIGHT[this.name]}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
     div.appendChild(toggle);
     div.appendChild(triangle);
     div.setAttribute(
       'style',
-      `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px; overflow: ${this.fold ? 'hidden' : ''};`,
+      `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; overflow: ${this.fold ? 'hidden' : ''};`,
     );
     div.appendChild(p);
 
@@ -82,7 +82,7 @@ export class BlockStart extends BlockCommon {
 
   calcWidth(): number {
     const div = document.getElementById(this.data.id);
-    this.width = this.defaultWidth;
+    this.width = BLOCK_DEFAULT_WIDTH[this.name];
 
     if (div) {
       div.style.width = `${this.width}px`;

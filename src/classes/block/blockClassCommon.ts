@@ -1,3 +1,9 @@
+import {
+  BLOCK_DEFAULT_HEIGHT,
+  BLOCK_DEFAULT_WIDTH,
+  BLOCK_SPACE_DEFAULT_MARGIN,
+  BLOCK_SPACE_DEFAULT_WIDTH,
+} from '../../constants/blockDefaultMap';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
@@ -5,16 +11,12 @@ import { InfinityLoop } from '../infinityLoop/infinityLoop';
 export class BlockCommon implements BlockObject {
   name = '';
   type = '';
-  defaultWidth = 100;
   width = 100;
-  defaultSpaceWidth = 50;
-  defaultSpaceMargin = 10;
-  defaultHeight = 50;
   spaceWidth = [50, 50];
   childWidth? = 100;
   fold = false;
-  data: BlockObject['data'];
   paramSize = 0;
+  data: BlockObject['data'];
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
     this.data = { id, x, y, value };
@@ -55,19 +57,19 @@ export class BlockCommon implements BlockObject {
 
   calcWidth() {
     let addWidth = 0;
-    this.width = this.defaultWidth;
+    this.width = BLOCK_DEFAULT_WIDTH[this.name];
     this.getInnerBlock().forEach((innerProp, index) => {
       const block = this.data[innerProp];
       if (typeof block === 'object' && Object.keys(block).length === 0) {
-        this.spaceWidth[index] = this.defaultSpaceWidth;
-        addWidth += this.defaultSpaceWidth + this.defaultSpaceMargin;
+        this.spaceWidth[index] = BLOCK_SPACE_DEFAULT_WIDTH;
+        addWidth += BLOCK_SPACE_DEFAULT_WIDTH + BLOCK_SPACE_DEFAULT_MARGIN;
       } else if (block instanceof BlockCommon) {
         this.spaceWidth[index] = block.calcWidth();
-        addWidth += this.spaceWidth[index] + this.defaultSpaceMargin;
+        addWidth += this.spaceWidth[index] + BLOCK_SPACE_DEFAULT_MARGIN;
       }
     });
 
-    this.width = this.defaultWidth + addWidth;
+    this.width = BLOCK_DEFAULT_WIDTH[this.name] + addWidth;
     this.childWidth = this.width - 48;
 
     const div = document.getElementById(this.data.id);
@@ -137,7 +139,7 @@ export class BlockCommon implements BlockObject {
         }
       }
     } else {
-      return { childHeight: this.defaultHeight };
+      return { childHeight: BLOCK_DEFAULT_HEIGHT[this.name] };
     }
   }
 

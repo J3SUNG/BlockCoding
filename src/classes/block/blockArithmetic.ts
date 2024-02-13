@@ -1,3 +1,4 @@
+import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
@@ -6,8 +7,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockArithmetic extends BlockCommon {
   name = 'arithmetic';
   type = 'expressionValue';
-  defaultWidth = 100;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -46,7 +45,7 @@ export class BlockArithmetic extends BlockCommon {
       }
     });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
     div.appendChild(space1);
     div.appendChild(operatorSelect);
     div.appendChild(space2);
