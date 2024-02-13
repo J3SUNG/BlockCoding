@@ -2,7 +2,6 @@ interface ConstantBlockMap {
   [key: string]: {
     name:
       | 'start'
-      | 'function'
       | 'variable'
       | 'output'
       | 'timer'
@@ -24,10 +23,6 @@ interface ConstantBlockMap {
 export const BLOCK_MAP: ConstantBlockMap = {
   start: {
     name: 'start',
-    type: 'declare',
-  },
-  function: {
-    name: 'function',
     type: 'declare',
   },
   variable: {
