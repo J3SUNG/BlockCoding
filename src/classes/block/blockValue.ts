@@ -107,15 +107,15 @@ export class BlockValue extends BlockCommon {
   }
 
   async runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     timeManager: InfinityLoop,
   ): Promise<string> {
-    if (typeof blockObject.data.value === 'string') {
-      return blockObject.data.value;
+    if (typeof this.data.value === 'string') {
+      return this.data.value;
     } else {
       return '';
     }

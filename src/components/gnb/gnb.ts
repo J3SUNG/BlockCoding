@@ -129,12 +129,33 @@ const runProgram = async (
   });
 
   updateConsoleLog(['[프로그램을 실행합니다.]', 'ㅤ']);
+
+  const functionMap = new Map<string, BlockCommon>();
+  for (const block of workspaceData) {
+    if (block.name === 'function' && block instanceof BlockCommon) {
+      const value = block.data.value;
+      if (value && value instanceof BlockCommon) {
+        const variableMap = new Map<string, string>();
+        const timeManager = new InfinityLoop();
+        const functionName = await value.runLogic(
+          variableMap,
+          functionMap,
+          getConsoleLog,
+          updateConsoleLog,
+          getProgramState,
+          timeManager,
+        );
+        functionMap.set(functionName, block);
+      }
+    }
+  }
+
   for (const block of startBlock) {
     const variableMap = new Map<string, string>();
 
     if (block instanceof BlockCommon) {
       const timeManager = new InfinityLoop();
-      await block.runLogic(block, variableMap, getConsoleLog, updateConsoleLog, getProgramState, timeManager);
+      await block.runLogic(variableMap, functionMap, getConsoleLog, updateConsoleLog, getProgramState, timeManager);
     }
   }
   updateConsoleLog([...getConsoleLog(), 'ㅤ', '[프로그램이 종료되었습니다.]']);

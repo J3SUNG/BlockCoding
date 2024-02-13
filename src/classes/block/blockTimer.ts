@@ -39,8 +39,8 @@ export class BlockTimer extends BlockCommon {
   }
 
   async runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -50,11 +50,11 @@ export class BlockTimer extends BlockCommon {
       return '';
     }
 
-    const value = blockObject.data.value;
+    const value = this.data.value;
 
     timeManager.stopTimer();
     if (value instanceof BlockCommon) {
-      const time = await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState, timeManager);
+      const time = await value.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager);
 
       await new Promise((resolve) => {
         let timeoutId = setTimeout(resolve, Number(time) * 1000);

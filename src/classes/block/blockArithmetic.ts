@@ -73,8 +73,8 @@ export class BlockArithmetic extends BlockCommon {
   }
 
   async runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -84,15 +84,22 @@ export class BlockArithmetic extends BlockCommon {
       return '';
     }
 
-    const value = blockObject.data.value;
-    const secondValue = blockObject.data.secondValue;
+    const value = this.data.value;
+    const secondValue = this.data.secondValue;
     let result: number = 0;
 
     if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
-      const operand1 = await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState, timeManager);
-      const operand2 = await secondValue?.runLogic(
-        secondValue,
+      const operand1 = await value.runLogic(
         variableMap,
+        functionMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
+      const operand2 = await secondValue?.runLogic(
+        variableMap,
+        functionMap,
         prevLog,
         setChanageLog,
         getProgramState,
