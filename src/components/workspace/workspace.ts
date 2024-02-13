@@ -335,7 +335,7 @@ const insertBlockAnotherBlock = (
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
 
   if (targetObj) {
-    const newBlock = insertBlock ? insertBlock : createBlock(name, createUniqueId(), 0, 0);
+    const newBlock = insert ? insert : createBlock(name, createUniqueId(), 0, 0);
 
     if (spaceId === 'space1' || spaceId === 'space2') {
       return targetObj.insert(newBlock, spaceId);

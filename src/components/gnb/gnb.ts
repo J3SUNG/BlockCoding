@@ -52,12 +52,13 @@ const runProgram = async (
   });
 
   updateConsoleLog(['[프로그램을 실행합니다.]', 'ㅤ']);
+
   for (const block of startBlock) {
     const map = new Map<string, string>();
     await updateLogData(block.data.value as BlockObject, map, getConsoleLog, updateConsoleLog);
   }
+  
   updateConsoleLog([...getConsoleLog(), 'ㅤ', '[프로그램이 종료되었습니다.]']);
-
   updateProgramState('stop');
 };
 
@@ -107,7 +108,7 @@ const updateLogData = async (
     let count = 0;
     let condition = await updateLogData(obj.data.condition as BlockObject, map, prevLog, setChanageLog);
 
-    while (condition[0] === 'true' && count < 123) {
+    while (condition[0] === 'true') {
       const resultArray = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
       result = result.concat(resultArray);
       count++;
