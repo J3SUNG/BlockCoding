@@ -2,7 +2,6 @@ import { BlockArithmetic } from '../block/blockArithmetic';
 import { BlockCommon } from '../block/blockClassCommon';
 import { BlockComparison } from '../block/blockComparison';
 import { BlockCondition } from '../block/blockCondition';
-import { BlockFunction } from '../block/blockFunction';
 import { BlockInput } from '../block/blockInput';
 import { BlockLogical } from '../block/blockLogical';
 import { BlockLoop } from '../block/blockLoop';
@@ -22,7 +21,6 @@ interface BlockTypeMap {
 
 const blockTypes: BlockTypeMap = {
   start: BlockStart,
-  function: BlockFunction,
   variable: BlockVariable,
   output: BlockOutput,
   timer: BlockTimer,
