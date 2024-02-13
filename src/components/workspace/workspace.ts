@@ -145,16 +145,17 @@ const addWorkspaceMouseDragEvent = (
           const relativeY = e.clientY - rect.top - yOffset;
 
           if (child) {
-            child.data.x = relativeX;
-            child.data.y = relativeY;
-            child.data.id = target.id;
-          }
-
-          if (!newChild) {
-            removeTargetBlock(parentData);
-            newWorkspaceData.push(child);
-          } else {
-            newWorkspaceData.push(newChild);
+            if (!newChild) {
+              child.data.x = relativeX;
+              child.data.y = relativeY;
+              child.data.id = target.id;
+              removeTargetBlock(parentData);
+              newWorkspaceData.push(child);
+            } else {
+              newChild.data.x = relativeX;
+              newChild.data.y = relativeY;
+              newWorkspaceData.push(newChild);
+            }
           }
         } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
           if (!newChild) removeTargetBlock(parentData);
