@@ -107,7 +107,7 @@ const runProgram = async (
     const map = new Map<string, string>();
     await updateLogData(block.data.value as BlockObject, map, getConsoleLog, updateConsoleLog);
   }
-  
+
   updateConsoleLog([...getConsoleLog(), 'ㅤ', '[프로그램이 종료되었습니다.]']);
   updateProgramState('stop');
 };
@@ -254,10 +254,10 @@ const loadData = (
 ): void => {
   const newWorkspaceData: BlockCommon[] = [];
   loadWorkspaceData.forEach((block: BlockObject) => {
-    const resotreData = restoreWorkspaceData(block);
+    const restoreData = restoreWorkspaceData(block);
 
-    if (resotreData && !Array.isArray(resotreData)) {
-      newWorkspaceData.push(resotreData);
+    if (restoreData && !Array.isArray(restoreData)) {
+      newWorkspaceData.push(restoreData);
     }
   });
 
