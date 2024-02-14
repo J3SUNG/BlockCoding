@@ -114,7 +114,11 @@ export class BlockCommon implements BlockObject {
         if (child) {
           child.style.display = 'none';
         }
-        return { childHeight: 50 };
+        if (this.name === 'function') {
+          return { childHeight: 100 };
+        } else {
+          return { childHeight: 50 };
+        }
       } else {
         let height = 0;
         let prefixSum: number[] = [0];
