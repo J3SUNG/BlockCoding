@@ -389,3 +389,8 @@ select {
   bottom: 0px;
   left: 80px;
 }
+
+.is-highlight-run {
+  box-shadow: 0px 0px 0px 4px greenyellow;
+  z-index: 999;
+}
