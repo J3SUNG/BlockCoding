@@ -74,21 +74,19 @@ export class BlockCommon implements BlockObject {
       }
     }
 
-    if (this.getChildBlock().length > 0) {
-      this.getChildBlock().forEach((childProp) => {
-        const block = this.data[childProp];
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
 
-        if (Array.isArray(block)) {
-          block.forEach((childBlock) => {
-            childBlock.calcWidth();
-          });
-        }
-      });
-
-      const childSpace = div?.querySelector(':scope > .block__child');
-      if (childSpace instanceof HTMLElement) {
-        childSpace.style.width = `${this.childWidth}px`;
+      if (Array.isArray(block)) {
+        block.forEach((childBlock) => {
+          childBlock.calcWidth();
+        });
       }
+    });
+
+    const childSpace = div?.querySelector(':scope > .block__child');
+    if (childSpace instanceof HTMLElement) {
+      childSpace.style.width = `${this.childWidth}px`;
     }
 
     return this.width;
