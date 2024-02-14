@@ -95,7 +95,9 @@ export class BlockCommon implements BlockObject {
   }
 
   calcHeight(): { childHeight: number; prefixSum?: number[] } {
-    if (this.getChildBlock().length > 0) {
+    if (this.getChildBlock().length <= 0) {
+      return { childHeight: this.defaultHeight };
+    } else {
       if (this.fold) {
         const div = document.querySelector(`#${this.data.id}`) as HTMLDivElement;
         const child = div.querySelector(':scope > .block__child') as HTMLSpanElement;
@@ -126,8 +128,6 @@ export class BlockCommon implements BlockObject {
           return { childHeight: height + 100 > 150 ? height + 100 : 150, prefixSum };
         }
       }
-    } else {
-      return { childHeight: this.defaultHeight };
     }
   }
 
