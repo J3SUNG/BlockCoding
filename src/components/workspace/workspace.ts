@@ -465,7 +465,7 @@ const changeUniqueIdObj = (obj: BlockObjectValue): void => {
     for (const item of obj) {
       changeUniqueIdObj(item);
     }
-  } else if (typeof obj === 'object' && 'data' in obj && (obj.data.value || obj.data.value == '')) {
+  } else if (typeof obj === 'object' && 'data' in obj) {
     const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
     const newUniqueId = createUniqueId();
     obj.data.id = newUniqueId;
