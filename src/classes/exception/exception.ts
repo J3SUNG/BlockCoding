@@ -1,9 +1,13 @@
-export class InfinityLoop {
+import { EXCEPTION } from '../../constants/exceptionMap';
+
+export class Exception {
   startTime: Date | null = null;
   useTime: number = 0;
+  exception: string;
 
   constructor() {
     this.startTime = new Date();
+    this.exception = '';
   }
 
   startTimer() {
@@ -25,8 +29,29 @@ export class InfinityLoop {
     if (this.startTime) {
       const curUseTime = this.useTime + endTime.getTime() - this.startTime.getTime();
 
-      return curUseTime > 10000;
+      if (curUseTime > 10000) {
+        this.exception = 'infinityLoop';
+      }
     }
-    return false;
+  }
+
+  isNan(value: number) {
+    if (isNaN(value)) {
+      this.exception = 'nan';
+    }
+  }
+
+  isInfinity(value: number) {
+    if (value === Infinity || value === -Infinity) {
+      this.exception = 'infinity';
+    }
+  }
+
+  get isError() {
+    return this.exception !== '';
+  }
+
+  errorMessage() {
+    return EXCEPTION[this.exception];
   }
 }
