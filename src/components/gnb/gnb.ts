@@ -12,6 +12,7 @@ import { useState } from '../../core/core';
 import { BlockCommon } from '../../classes/block/blockClassCommon';
 import { createBlock } from '../../classes/blockFactory/createBlock';
 import { Exception } from '../../classes/exception/exception';
+import { Debug } from '../../classes/block/debug/debug';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
@@ -133,10 +134,12 @@ const runProgram = async (
     { text: 'ㅤ', type: 'system' },
   ]);
 
+  const DEFAULT_DEBUG_TIME = 0;
   const functionMap = new Map<string, BlockCommon>();
   for (const block of workspaceData) {
     if (block.name === 'function' && block instanceof BlockCommon) {
       const value = block.data.value;
+      const debugManager = new Debug();
       if (value && value instanceof BlockCommon) {
         const variableMap = new Map<string, string>();
         const exceptionManager = new Exception();
@@ -147,6 +150,7 @@ const runProgram = async (
           updateConsoleLog,
           getProgramState,
           exceptionManager,
+          debugManager,
         );
         functionMap.set(functionName, block);
       }
@@ -155,7 +159,7 @@ const runProgram = async (
 
   for (const block of startBlock) {
     const variableMap = new Map<string, string>();
-
+    const debugManager = new Debug();
     const exceptionManager = new Exception();
     if (block instanceof BlockCommon) {
       await block.runLogic(
@@ -165,6 +169,7 @@ const runProgram = async (
         updateConsoleLog,
         getProgramState,
         exceptionManager,
+        debugManager,
       );
     }
     if (exceptionManager.isError) {
