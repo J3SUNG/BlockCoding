@@ -95,7 +95,7 @@ export class BlockValue extends BlockCommon {
       const width = parseInt(getComputedStyle(span).width, 10);
       span.style.display = 'none';
 
-      this.spaceWidth[0] = width + 20 > BLOCK_SPACE_DEFAULT_WIDTH ? width + 20 : BLOCK_SPACE_DEFAULT_WIDTH;
+      this.spaceWidth[0] = width + 36 > BLOCK_SPACE_DEFAULT_WIDTH ? width + 36 : BLOCK_SPACE_DEFAULT_WIDTH;
       this.width = this.spaceWidth[0] + BLOCK_DEFAULT_HEIGHT[this.name];
     }
   }
