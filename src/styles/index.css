@@ -146,7 +146,7 @@ select {
   z-index: 1000;
 }
 
-.trash-bin--highlight-drop {
+#trash-bin.is-highlight-drop {
   animation: wiggle 0.5s infinite;
   color: tomato;
 }
@@ -242,15 +242,11 @@ select {
 }
 
 .block--highlight-select {
-  box-shadow: 0px 0px 0px 3px #ffcd00;
+  box-shadow: 0px 0px 0px 4px #ffcd00;
 }
 
-.block--highlight-drop {
-  box-shadow: 0px 0px 0px 3px #34c759;
-}
-
-.block--highlight-remove {
-  box-shadow: 0px 0px 0px 3px #ff3b30;
+.block.is-highlight-drop {
+  box-shadow: 0px 0px 0px 4px #34c759;
 }
 
 .block--declare {
