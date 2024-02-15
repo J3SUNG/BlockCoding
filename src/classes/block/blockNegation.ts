@@ -19,7 +19,6 @@ export class BlockNegation extends BlockCommon {
     const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
     const endTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
     startTriangle.setAttribute(
       'style',
       `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; left: -${this.defaultHeight}px; clip-path: polygon(40% 50%, 101% -5%, 101% 105%);`,

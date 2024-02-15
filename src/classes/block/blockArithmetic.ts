@@ -45,8 +45,6 @@ export class BlockArithmetic extends BlockCommon {
       }
     });
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(space1);
     div.appendChild(operatorSelect);

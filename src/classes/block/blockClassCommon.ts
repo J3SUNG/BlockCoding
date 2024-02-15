@@ -1,5 +1,6 @@
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { createUniqueId } from '../../utils/createUniqueId';
 
 export class BlockCommon implements BlockObject {
   name = '';
@@ -10,6 +11,7 @@ export class BlockCommon implements BlockObject {
   defaultHeight = 50;
   spaceWidth = [50, 50];
   childWidth? = 100;
+  fold = false;
   data: BlockObject['data'];
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
@@ -73,21 +75,19 @@ export class BlockCommon implements BlockObject {
       }
     }
 
-    if (this.getChildBlock().length > 0) {
-      this.getChildBlock().forEach((childProp) => {
-        const block = this.data[childProp];
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
 
-        if (Array.isArray(block)) {
-          block.forEach((childBlock) => {
-            childBlock.calcWidth();
-          });
-        }
-      });
-
-      const childSpace = div?.querySelector(':scope > .block__child');
-      if (childSpace instanceof HTMLElement) {
-        childSpace.style.width = `${this.childWidth}px`;
+      if (Array.isArray(block)) {
+        block.forEach((childBlock) => {
+          childBlock.calcWidth();
+        });
       }
+    });
+
+    const childSpace = div?.querySelector(':scope > .block__child');
+    if (childSpace instanceof HTMLElement) {
+      childSpace.style.width = `${this.childWidth}px`;
     }
 
     return this.width;
@@ -103,5 +103,26 @@ export class BlockCommon implements BlockObject {
 
   getChildBlock(): string[] {
     return [];
+  }
+
+  changeUniqueId() {
+    const newUniqueId = createUniqueId();
+    this.data.id = newUniqueId;
+
+    this.getInnerBlock().forEach((innerProp) => {
+      const block = this.data[innerProp];
+      if (block instanceof BlockCommon) {
+        block.changeUniqueId();
+      }
+    });
+
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
+      if (Array.isArray(block)) {
+        block.forEach((child) => {
+          child.changeUniqueId();
+        });
+      }
+    });
   }
 }
