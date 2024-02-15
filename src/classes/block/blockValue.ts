@@ -18,7 +18,7 @@ export class BlockValue extends BlockCommon {
     y: number,
     value?: string,
     onValueChange?: (id: string, value: string, insertLocation?: string) => void,
-    changeBlockWdith?: () => void,
+    changeBlockWidth?: () => void,
   ) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '값' });
@@ -27,8 +27,6 @@ export class BlockValue extends BlockCommon {
       value: value ? value : '',
       readonly: value ? 'false' : 'true',
     });
-
-    this.calcWidth();
 
     if (value === undefined) {
       input.setAttribute('readonly', 'true');
@@ -55,19 +53,19 @@ export class BlockValue extends BlockCommon {
 
     input.addEventListener('input', () => {
       if (input instanceof HTMLInputElement && div instanceof HTMLDivElement && span) {
-        if (changeBlockWdith) {
-          changeBlockWdith();
+        if (changeBlockWidth) {
+          changeBlockWidth();
         }
       }
     });
 
     if (input instanceof HTMLInputElement && div instanceof HTMLDivElement && span) {
-      if (changeBlockWdith) {
-        changeBlockWdith();
+      if (changeBlockWidth) {
+        changeBlockWidth();
       }
     }
     input.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${this.width}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(input);
 

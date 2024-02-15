@@ -27,7 +27,6 @@ export class BlockArithmetic extends BlockCommon {
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const space2 = createElementCommon('span', { id: 'space2', className: 'block__space' });
     const operatorSelect = createElementCommon('select', { className: 'block__operator block__operator--value' });
-    this.calcWidth();
 
     operator.forEach((op) => {
       const option = createElementCommon('option', { value: op, textContent: op });
@@ -46,9 +45,7 @@ export class BlockArithmetic extends BlockCommon {
       }
     });
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${this.width}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(space1);
     div.appendChild(operatorSelect);
     div.appendChild(space2);

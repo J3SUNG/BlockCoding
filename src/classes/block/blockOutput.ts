@@ -16,10 +16,8 @@ export class BlockOutput extends BlockCommon {
     const div = createElementCommon('div', { id, className: `block block--general` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '출력' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
-    this.calcWidth();
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${this.width}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(space1);
 

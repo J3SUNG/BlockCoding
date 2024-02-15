@@ -29,7 +29,6 @@ export class BlockLogical extends BlockCommon {
     const operatorSelect = createElementCommon('select', { className: 'block__operator block__operator--logical' });
     const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
     const endTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
-    this.calcWidth();
 
     operator.forEach((op) => {
       const option = createElementCommon('option', { value: op, textContent: op });
@@ -57,12 +56,7 @@ export class BlockLogical extends BlockCommon {
       `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
-    div.setAttribute(
-      'style',
-      `left: ${x + 10}px; top: ${y}px; width: ${this.width}px; height: ${this.defaultHeight}px;`,
-    );
+    div.setAttribute('style', `left: ${x + 10}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(space1);

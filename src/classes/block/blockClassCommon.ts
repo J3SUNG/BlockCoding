@@ -11,6 +11,7 @@ export class BlockCommon implements BlockObject {
   defaultHeight = 50;
   spaceWidth = [50, 50];
   childWidth? = 100;
+  fold = false;
   data: BlockObject['data'];
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
@@ -27,7 +28,7 @@ export class BlockCommon implements BlockObject {
     y: number,
     value?: string,
     onValueChange?: (id: string, value: string, insertLocation?: string) => void,
-    changeBlockWdith?: () => void,
+    changeBlockWidth?: () => void,
   ) {
     const div = createElementCommon('div', { id, className: `block` });
     div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
@@ -84,11 +85,9 @@ export class BlockCommon implements BlockObject {
       }
     });
 
-    if (this.getChildBlock().length > 0) {
-      const childSpace = div?.querySelector(':scope > .block__child');
-      if (childSpace instanceof HTMLElement) {
-        childSpace.style.width = `${this.childWidth}px`;
-      }
+    const childSpace = div?.querySelector(':scope > .block__child');
+    if (childSpace instanceof HTMLElement) {
+      childSpace.style.width = `${this.childWidth}px`;
     }
 
     return this.width;

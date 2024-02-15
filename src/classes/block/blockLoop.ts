@@ -5,7 +5,7 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockLoop extends BlockCommon {
   name = 'loop';
   type = 'control';
-  defaultWidth = 150;
+  defaultWidth = 250;
   defaultHeight = 150;
 
   constructor(id: string, x: number, y: number) {
@@ -24,12 +24,11 @@ export class BlockLoop extends BlockCommon {
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const childSpace = createElementCommon('span', { id: 'child', className: 'block__child' });
     const { childHeight } = this.calcHeight();
-    this.calcWidth();
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px; margin-top: 5px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${this.width}px; height: ${childHeight}px;`);
+    space1.setAttribute('style', `margin-top: 5px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${childHeight}px;`);
     p.setAttribute('style', `padding-top: 12px`);
-    childSpace.setAttribute('style', `width: ${this.width - 48}px; height: ${childHeight - 100}px;`);
+    childSpace.setAttribute('style', `height: ${childHeight - 100}px;`);
     div.appendChild(p);
     div.appendChild(space1);
     div.appendChild(childSpace);

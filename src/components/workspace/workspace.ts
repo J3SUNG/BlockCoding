@@ -10,14 +10,14 @@ interface WorkspaceProps {
   workspaceData: WorkspaceData;
   updateWorkspaceDataAll: UpdateWorkspaceDataAll;
   updateWorkspaceDataValue: UpdateWorkspaceDataValue;
-  changeBlockWdith: () => void;
+  changeBlockWidth: () => void;
 }
 
 export const workspace = ({
   workspaceData,
   updateWorkspaceDataAll,
   updateWorkspaceDataValue,
-  changeBlockWdith,
+  changeBlockWidth,
 }: WorkspaceProps) => {
   const section = createElementCommon('div', { id: 'workspace' });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
@@ -32,10 +32,9 @@ export const workspace = ({
       obj,
       { x: obj.data.x, y: obj.data.y, index: 0 },
       updateWorkspaceDataValue,
-      changeBlockWdith,
+      changeBlockWidth,
     );
   });
-  changeBlockWdith();
 
   section.appendChild(trashBin);
   trashBin.appendChild(trashIcon);
@@ -52,7 +51,7 @@ const paintWorkspace = (
     index?: number;
   },
   updateWorkspaceDataValue: UpdateWorkspaceDataValue,
-  changeBlockWdith: () => void,
+  changeBlockWidth: () => void,
   parentObj?: BlockObjectValue,
 ) => {
   if (!obj) {
@@ -66,7 +65,7 @@ const paintWorkspace = (
         item,
         { x: data.x, y: data.y, index: itemIndex },
         updateWorkspaceDataValue,
-        changeBlockWdith,
+        changeBlockWidth,
         parentObj,
       );
     });
@@ -86,7 +85,7 @@ const paintWorkspace = (
         newY,
         obj.data.value,
         updateWorkspaceDataValue,
-        changeBlockWdith,
+        changeBlockWidth,
       );
       parent.appendChild(block);
 
@@ -99,7 +98,7 @@ const paintWorkspace = (
             blockProps,
             { x: newX, y: newY, index: itemIndex },
             updateWorkspaceDataValue,
-            changeBlockWdith,
+            changeBlockWidth,
             obj,
           );
         }

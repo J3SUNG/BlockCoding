@@ -5,8 +5,8 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockStart extends BlockCommon {
   name = 'start';
   type = 'declare';
-  BLOCK_START_MIN_WIDTH = 250;
   defaultHeight = 50;
+  defaultWidth = 250;
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
   }
@@ -20,7 +20,7 @@ export class BlockStart extends BlockCommon {
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '시작하기 버튼을 클릭했을 때' });
-    this.calcWidth();
+
     const triangle = createElementCommon('span', { className: 'block__triangle block--declare' });
 
     triangle.setAttribute(
@@ -28,10 +28,7 @@ export class BlockStart extends BlockCommon {
       `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
     div.appendChild(triangle);
-    div.setAttribute(
-      'style',
-      `left: ${x}px; top: ${y}px; width: ${this.BLOCK_START_MIN_WIDTH > this.width ? this.BLOCK_START_MIN_WIDTH : this.width}px; height: ${this.defaultHeight}px;`,
-    );
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
 
     return { block: div, space: [div] };
@@ -76,6 +73,13 @@ export class BlockStart extends BlockCommon {
   }
 
   calcWidth(): number {
+    const div = document.getElementById(this.data.id);
+    this.width = this.defaultWidth;
+
+    if (div) {
+      div.style.width = `${this.width}px`;
+    }
+
     if (Array.isArray(this.data.value)) {
       this.data.value.forEach((block) => {
         if (block instanceof BlockCommon) {
@@ -83,6 +87,6 @@ export class BlockStart extends BlockCommon {
         }
       });
     }
-    return this.BLOCK_START_MIN_WIDTH;
+    return this.width;
   }
 }
