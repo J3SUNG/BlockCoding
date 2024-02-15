@@ -91,6 +91,10 @@ export class BlockComparison extends BlockCommon {
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
   ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
     const value = obj.data.value;
     const secondValue = obj.data.secondValue;
     let result: boolean = false;

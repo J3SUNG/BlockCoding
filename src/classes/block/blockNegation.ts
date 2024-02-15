@@ -57,6 +57,10 @@ export class BlockNegation extends BlockCommon {
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
   ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
     const value = obj.data.value;
     let result: boolean = false;
 

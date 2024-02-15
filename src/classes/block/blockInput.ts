@@ -21,4 +21,50 @@ export class BlockInput extends BlockCommon {
 
     return { block: div, space: [] };
   }
+
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
+    setChanageLog([...prevLog(), '[입력 해주세요.]']);
+
+    const waitInput = () => {
+      return new Promise<string>((resolve) => {
+        const onKeyDown = (e: KeyboardEvent) => {
+          const input = document.querySelector('#console__input') as HTMLInputElement;
+          if (e.key === 'Enter') {
+            if (input.value !== '') {
+              document.removeEventListener('keydown', onKeyDown);
+              setChanageLog([...prevLog(), '[입력] ' + input.value]);
+              resolve(input.value);
+            } else {
+              input.focus();
+            }
+          }
+        };
+
+        const onProgramStateChange = (e: Event) => {
+          const customEvent = e as CustomEvent;
+
+          if (customEvent.detail === 'stop') {
+            document.removeEventListener('keydown', onKeyDown);
+            document.removeEventListener('ProgramStateChange', onProgramStateChange);
+            resolve('');
+          }
+        };
+
+        document.addEventListener('keydown', onKeyDown);
+        document.addEventListener('ProgramStateChange', onProgramStateChange);
+      });
+    };
+
+    return await waitInput();
+  }
 }

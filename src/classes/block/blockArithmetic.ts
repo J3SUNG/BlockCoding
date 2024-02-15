@@ -78,6 +78,10 @@ export class BlockArithmetic extends BlockCommon {
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
   ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
     const value = obj.data.value;
     const secondValue = obj.data.secondValue;
     let result: number = 0;
