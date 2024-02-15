@@ -17,7 +17,7 @@ export class BlockValue extends BlockCommon {
     x: number,
     y: number,
     value?: string,
-    onValueChange?: (id: string, value: string, insertLocation?: string) => void,
+    onChange?: (id: string, value: string, insertLocation?: string) => void,
     changeBlockWidth?: () => void,
   ) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
@@ -38,8 +38,8 @@ export class BlockValue extends BlockCommon {
       if (target instanceof HTMLInputElement) {
         const targetClosestDiv = target.closest('div');
 
-        if (onValueChange && value !== target.value) {
-          onValueChange(targetClosestDiv?.id ?? '', target.value);
+        if (onChange && value !== target.value) {
+          onChange(targetClosestDiv?.id ?? '', target.value);
         }
       }
     });

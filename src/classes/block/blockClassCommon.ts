@@ -27,7 +27,7 @@ export class BlockCommon implements BlockObject {
     x: number,
     y: number,
     value?: string,
-    onValueChange?: (id: string, value: string, insertLocation?: string) => void,
+    onChange?: (id: string, value: string, insertLocation?: string) => void,
     changeBlockWidth?: () => void,
   ) {
     const div = createElementCommon('div', { id, className: `block` });
@@ -94,7 +94,40 @@ export class BlockCommon implements BlockObject {
   }
 
   calcHeight(): { childHeight: number; prefixSum?: number[] } {
-    return { childHeight: this.defaultHeight };
+    if (this.getChildBlock().length <= 0) {
+      return { childHeight: this.defaultHeight };
+    } else {
+      if (this.fold) {
+        const div = document.querySelector(`#${this.data.id}`) as HTMLDivElement;
+        const child = div.querySelector(':scope > .block__child') as HTMLSpanElement;
+        if (child) {
+          child.style.display = 'none';
+        }
+        return { childHeight: 50 };
+      } else {
+        let height = 0;
+        let prefixSum: number[] = [0];
+        this.getChildBlock().forEach((key) => {
+          const childList = this.data[key];
+
+          if (Array.isArray(childList)) {
+            childList.forEach((child) => {
+              if (child instanceof BlockCommon) {
+                const { childHeight } = child.calcHeight();
+                height += childHeight;
+                prefixSum.push(prefixSum[prefixSum.length - 1] + childHeight);
+              }
+            });
+          }
+        });
+
+        if (this.name === 'start') {
+          return { childHeight: 50, prefixSum };
+        } else {
+          return { childHeight: height + 100 > 150 ? height + 100 : 150, prefixSum };
+        }
+      }
+    }
   }
 
   getInnerBlock(): string[] {

@@ -18,7 +18,7 @@ export class BlockString extends BlockCommon {
     x: number,
     y: number,
     value: string,
-    onValueChange?: (id: string, value: string, insertLocation: string) => void,
+    onChange?: (id: string, value: string, insertLocation: string) => void,
   ) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '문자열' });
