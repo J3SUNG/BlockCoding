@@ -1,7 +1,7 @@
 import { BlockCommon } from '../classes/block/blockClassCommon';
 import { Debug } from '../classes/block/debug/debug';
 import { Exception } from '../classes/exception/exception';
-import { UpdateWorkspaceDataValue } from './stateType';
+import { RefreshWorkspaceData } from './stateType';
 
 export type BlockObjectValue = BlockObject | BlockObject[] | string;
 
@@ -31,8 +31,8 @@ export interface BlockObject {
     id: string,
     x: number,
     y: number,
+    onChange?: RefreshWorkspaceData,
     value?: BlockObjectValue,
-    onChange?: UpdateWorkspaceDataValue,
     changeBlockWidth?: () => void,
   ): { block: HTMLElement; space: HTMLElement[] };
   insert(obj: BlockObject, insertType?: string): boolean;
