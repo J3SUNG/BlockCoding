@@ -39,14 +39,16 @@ export class BlockFunctionCall extends BlockCommon {
 
     addButton.addEventListener('click', () => {
       if (onChange) {
-        this.paramSize = this.paramSize + 1 > 4 ? 4 : this.paramSize + 1;
+        const PARAM_MAX_SIZE = 4;
+        this.paramSize = this.paramSize + 1 > PARAM_MAX_SIZE ? PARAM_MAX_SIZE : this.paramSize + 1;
         onChange(id, this.paramSize + '', 'param');
       }
     });
 
     removeButton.addEventListener('click', () => {
       if (onChange) {
-        this.paramSize = this.paramSize > 0 ? this.paramSize - 1 : 0;
+        const PARAM_MIN_SIZE = 0;
+        this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
         onChange(id, this.paramSize + '', 'param');
       }
     });
