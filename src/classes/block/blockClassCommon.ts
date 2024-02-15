@@ -152,11 +152,12 @@ export class BlockCommon implements BlockObject {
 
   async wait(time: number, exceptionManager: Exception) {
     exceptionManager.stopTimer();
+    const SECOND = 1000;
 
     await new Promise((resolve) => {
-      let timeoutId = setTimeout(resolve, time * 1000);
+      let timeoutId = setTimeout(resolve, time * SECOND);
       let startTime = new Date().getTime();
-      let remainingTime: number = time * 1000;
+      let remainingTime: number = time * SECOND;
 
       const onProgramStateChange = (e: Event) => {
         const customEvent = e as CustomEvent;
