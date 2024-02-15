@@ -167,7 +167,7 @@ const runProgram = async (
       );
     }
     if (exceptionManager.isError) {
-      const errMessage = exceptionManager.errorMessage;
+      const errMessage = exceptionManager.errorMessage();
       updateConsoleLog([...getConsoleLog(), { text: errMessage, type: 'error' }]);
     }
   }
