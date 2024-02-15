@@ -50,8 +50,23 @@ export class BlockNegation extends BlockCommon {
     return false;
   }
 
-  runLogic(operand1: string): boolean {
-    const booleanOperand = operand1 === 'true' ? true : false;
-    return !booleanOperand;
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const value = obj.data.value;
+    let result: boolean = false;
+
+    if (value instanceof BlockCommon) {
+      const operand1 =
+        (await value.runLogic(value, map, prevLog, setChanageLog, getProgramState)) === 'true' ? true : false;
+
+      result = !operand1;
+    }
+
+    return result + '';
   }
 }

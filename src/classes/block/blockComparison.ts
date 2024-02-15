@@ -84,23 +84,43 @@ export class BlockComparison extends BlockCommon {
     return false;
   }
 
-  runLogic(operand1: string, operand2: string): boolean {
-    switch (this.data.operator) {
-      case '=':
-        return operand1 === operand2;
-      case '!=':
-        return operand1 != operand2;
-      case '>':
-        return Number(operand1) > Number(operand2);
-      case '<':
-        return Number(operand1) < Number(operand2);
-      case '>=':
-        return Number(operand1) >= Number(operand2);
-      case '<=':
-        return Number(operand1) <= Number(operand2);
-    }
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const value = obj.data.value;
+    const secondValue = obj.data.secondValue;
+    let result: boolean = false;
 
-    throw new Error('blockComparison - runLogic - 예상치 못한 연산자');
+    if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
+      const operand1 = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
+      const operand2 = await secondValue?.runLogic(secondValue, map, prevLog, setChanageLog, getProgramState);
+
+      switch (this.data.operator) {
+        case '=':
+          result = operand1 === operand2;
+          break;
+        case '!=':
+          result = operand1 != operand2;
+          break;
+        case '>':
+          result = Number(operand1) > Number(operand2);
+          break;
+        case '<':
+          result = Number(operand1) < Number(operand2);
+          break;
+        case '>=':
+          result = Number(operand1) >= Number(operand2);
+          break;
+        case '<=':
+          result = Number(operand1) <= Number(operand2);
+          break;
+      }
+    }
+    return result + '';
   }
 
   getInnerBlock(): string[] {

@@ -36,4 +36,23 @@ export class BlockOutput extends BlockCommon {
 
     return false;
   }
+
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const value = obj.data.value;
+
+    if (value instanceof BlockCommon) {
+      const result: string = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
+
+      console.log(result);
+      setChanageLog([...prevLog(), result]);
+    }
+
+    return '';
+  }
 }

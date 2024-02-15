@@ -1,3 +1,4 @@
+import { BlockCommon } from '../classes/block/blockClassCommon';
 import { UpdateWorkspaceDataValue } from './stateType';
 
 export type BlockObjectValue = BlockObject | BlockObject[] | string;
@@ -29,7 +30,13 @@ export interface BlockObject {
   insert(obj: BlockObject, insertType?: string): boolean;
   getInnerBlock(): string[];
   getChildBlock(): string[];
-  runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
+  runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string>;
   calcWidth(): number;
   calcHeight(): { childHeight: number; prefixSum?: number[] };
   changeUniqueId(): void;

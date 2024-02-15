@@ -48,4 +48,24 @@ export class BlockVariable extends BlockCommon {
   getInnerBlock(): string[] {
     return ['varName', 'value'];
   }
+
+  async runLogic(
+    obj: BlockCommon,
+    map: Map<string, string>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+  ): Promise<string> {
+    const varName = obj.data.varName;
+    const value = obj.data.value;
+
+    if (varName instanceof BlockCommon && value instanceof BlockCommon) {
+      const operand1 = await varName.runLogic(varName, map, prevLog, setChanageLog, getProgramState);
+      const operand2 = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
+
+      map.set(operand1, operand2);
+    }
+
+    return '';
+  }
 }

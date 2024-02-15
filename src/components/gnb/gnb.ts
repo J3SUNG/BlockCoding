@@ -44,7 +44,7 @@ export const gnb = ({
 
   playButton.addEventListener('click', () => {
     if (getProgramState() === 'stop') {
-      runProgram(getWorkspaceData(), getConsoleLog, updateConsoleLog, updateProgramState);
+      runProgram(getWorkspaceData(), getConsoleLog, updateConsoleLog, updateProgramState, getProgramState);
     }
   });
 
@@ -95,6 +95,7 @@ const runProgram = async (
   getConsoleLog: () => ConsoleLog,
   updateConsoleLog: UpdateConsoleLog,
   updateProgramState: UpdateProgramState,
+  getProgramState: () => ProgramState,
 ) => {
   updateProgramState('run');
   const startBlock = workspaceData.filter((block) => {
@@ -105,113 +106,14 @@ const runProgram = async (
 
   for (const block of startBlock) {
     const map = new Map<string, string>();
-    await updateLogData(block.data.value as BlockObject, map, getConsoleLog, updateConsoleLog);
-  }
 
+    if (block instanceof BlockCommon) {
+      await block.runLogic(block, map, getConsoleLog, updateConsoleLog, getProgramState);
+    }
+  }
   updateConsoleLog([...getConsoleLog(), 'ㅤ', '[프로그램이 종료되었습니다.]']);
+
   updateProgramState('stop');
-};
-
-const updateLogData = async (
-  obj: BlockObject,
-  map: Map<string, string>,
-  prevLog: () => string[],
-  setChanageLog: (log: string[]) => void,
-): Promise<string[]> => {
-  if (Array.isArray(obj)) {
-    const results: string[] = [];
-    for (const item of obj) {
-      const result = await updateLogData(item, map, prevLog, setChanageLog);
-      results.push(...result);
-    }
-    return results;
-  } else if (obj.name === 'start') {
-    return [];
-  } else if (obj.name === 'variable') {
-    const varName = (await updateLogData(obj.data.varName as BlockObject, map, prevLog, setChanageLog))[0];
-    const varValue = (await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog))[0];
-    map.set(varName, varValue);
-    return [];
-  } else if (obj.name === 'output') {
-    const outputData = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
-    setChanageLog([...prevLog(), ...outputData]);
-    return outputData;
-  } else if (obj.name === 'value') {
-    return [obj.data.value as string];
-  } else if (obj.name === 'refVariable') {
-    const varName: string = (await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog))[0];
-    const varValue = map.get(varName);
-    return varValue ? [varValue] : [];
-  } else if (obj.name === 'arithmetic') {
-    const operand1 = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
-    const operand2 = await updateLogData(obj.data.secondValue as BlockObject, map, prevLog, setChanageLog);
-    return [(await obj.runLogic(operand1[0], operand2[0])) as string];
-  } else if (obj.name === 'condition') {
-    const condition = await updateLogData(obj.data.condition as BlockObject, map, prevLog, setChanageLog);
-    if (condition[0] === 'true') {
-      return await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
-    } else {
-      return [];
-    }
-  } else if (obj.name === 'loop') {
-    let result: string[] = [];
-    let count = 0;
-    let condition = await updateLogData(obj.data.condition as BlockObject, map, prevLog, setChanageLog);
-
-    while (condition[0] === 'true') {
-      const resultArray = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
-      result = result.concat(resultArray);
-      count++;
-      condition = await updateLogData(obj.data.condition as BlockObject, map, prevLog, setChanageLog);
-    }
-    return result;
-  } else if (obj.name === 'comparison' || obj.name === 'logical') {
-    const operand1 = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
-    const operand2 = await updateLogData(obj.data.secondValue as BlockObject, map, prevLog, setChanageLog);
-    return [obj.runLogic(operand1[0], operand2[0]) + ''];
-  } else if (obj.name === 'negation') {
-    const operand = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
-    return [obj.runLogic(operand[0]) + ''];
-  } else if (obj.name === 'timer') {
-    const time = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
-    await new Promise((resolve) => setTimeout(resolve, Number(time[0]) * 1000));
-    return [];
-  } else if (obj.name === 'input') {
-    setChanageLog([...prevLog(), '[입력 해주세요.]']);
-
-    const waitInput = () => {
-      return new Promise<string>((resolve) => {
-        const onKeyDown = (e: KeyboardEvent) => {
-          const input = document.querySelector('#console__input') as HTMLInputElement;
-          if (e.key === 'Enter') {
-            if (input.value !== '') {
-              document.body.removeEventListener('keydown', onKeyDown);
-              setChanageLog([...prevLog(), '[입력] ' + input.value]);
-              resolve(input.value);
-            } else {
-              input.focus();
-            }
-          }
-        };
-
-        document.body.addEventListener('keydown', onKeyDown);
-      });
-    };
-
-    const userInput = await waitInput();
-    return [userInput];
-  } else if (obj.name === 'string') {
-    const operand1 = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
-    const operand2 = await updateLogData(obj.data.secondValue as BlockObject, map, prevLog, setChanageLog);
-    const string = obj.runLogic(operand1[0], operand2[0]);
-    if (typeof string === 'string') return [string];
-  } else if (obj.name === 'randomNumber') {
-    const operand = await updateLogData(obj.data.value as BlockObject, map, prevLog, setChanageLog);
-    const num = obj.runLogic(operand[0]);
-    if (num) return [num.toString()];
-  }
-
-  return [];
 };
 
 const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] => {
