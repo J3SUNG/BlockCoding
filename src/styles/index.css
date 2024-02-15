@@ -143,6 +143,30 @@ select {
   position: absolute;
   bottom: 2rem;
   right: 2rem;
+  z-index: 1000;
+}
+
+#trash-bin.is-highlight-drop {
+  animation: wiggle 0.5s infinite;
+  color: tomato;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 .material-symbols-outlined {
@@ -218,15 +242,11 @@ select {
 }
 
 .block--highlight-select {
-  box-shadow: 0px 0px 0px 3px #ffcd00;
+  box-shadow: 0px 0px 0px 4px #ffcd00;
 }
 
-.block--highlight-drop {
-  box-shadow: 0px 0px 0px 3px #34c759;
-}
-
-.block--highlight-remove {
-  box-shadow: 0px 0px 0px 3px #ff3b30;
+.block.is-highlight-drop {
+  box-shadow: 0px 0px 0px 4px #34c759;
 }
 
 .block--declare {

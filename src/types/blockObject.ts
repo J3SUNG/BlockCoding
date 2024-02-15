@@ -32,4 +32,5 @@ export interface BlockObject {
   runLogic(operand1?: string, operand2?: string): string | boolean | Promise<void>;
   calcWidth(): number;
   calcHeight(): { childHeight: number; prefixSum?: number[] };
+  changeUniqueId(): void;
 }
