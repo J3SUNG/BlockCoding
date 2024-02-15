@@ -245,18 +245,7 @@ const loadData = (
   updateWorkspaceDataAll: UpdateWorkspaceDataAll,
   updateConsoleLog: UpdateConsoleLog,
 ): void => {
-  const newWorkspaceData: BlockCommon[] = [];
-  loadWorkspaceData.forEach((block: BlockObject) => {
-    const restoreData = restoreWorkspaceData(block);
-
-    if (restoreData && !Array.isArray(restoreData)) {
-      newWorkspaceData.push(restoreData);
-    }
-  });
-
-  newWorkspaceData.forEach((block: BlockCommon) => {
-    block.calcWidth();
-  });
+  const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
 
   updateWorkspaceDataAll(newWorkspaceData);
   updateConsoleLog([]);
