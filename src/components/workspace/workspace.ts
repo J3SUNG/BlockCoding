@@ -166,7 +166,7 @@ const addWorkspaceMouseDragEvent = (
           let newChild = null;
           if (e.metaKey || e.ctrlKey) {
             newChild = deepCopy(child);
-            changeUniqueIdObj(newChild);
+            newChild.changeUniqueId();
           }
 
           if (anotherBlock.id === 'workspace') {
@@ -175,21 +175,17 @@ const addWorkspaceMouseDragEvent = (
             const relativeY = e.clientY - rect.top - yOffset;
 
             if (child) {
-              child.data.x = relativeX;
-              child.data.y = relativeY;
-              child.data.id = target.id;
-            }
-
-            if (newChild) {
-              newChild.data.x = relativeX;
-              newChild.data.y = relativeY;
-            }
-
-            if (!newChild) {
-              removeTargetBlock(parentData);
-              newWorkspaceData.push(child);
-            } else {
-              newWorkspaceData.push(newChild);
+              if (!newChild) {
+                child.data.x = relativeX;
+                child.data.y = relativeY;
+                child.data.id = target.id;
+                removeTargetBlock(parentData);
+                newWorkspaceData.push(child);
+              } else {
+                newChild.data.x = relativeX;
+                newChild.data.y = relativeY;
+                newWorkspaceData.push(newChild);
+              }
             }
           } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
             if (!newChild) removeTargetBlock(parentData);
@@ -213,22 +209,22 @@ const addWorkspaceMouseDragEvent = (
               );
             }
           }
+
+          initialX = currentX;
+          initialY = currentY;
+
+          if (changeCheck) {
+            updateWorkspaceDataAll(newWorkspaceData);
+          } else {
+          }
         }
 
-        initialX = currentX;
-        initialY = currentY;
-
-        if (changeCheck) {
-          updateWorkspaceDataAll(newWorkspaceData);
-        } else {
-        }
+        target.style.zIndex = '0';
+        target.style.transform = 'translate(0px, 0px)';
       }
-
-      target.style.zIndex = '0';
-      target.style.transform = 'translate(0px, 0px)';
+      target = null;
+      active = false;
     }
-    target = null;
-    active = false;
   });
 
   let lastHighlighted: Element | null = null;

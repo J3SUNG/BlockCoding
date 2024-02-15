@@ -22,7 +22,12 @@ export const blockCoding = () => {
   };
 
   const gnbRender = () => {
-    render(gnb({ getWorkspaceData, getConsoleLog, updateConsoleLog, render: gnbRender }), root, 'gnb', GNB_INDEX);
+    render(
+      gnb({ getWorkspaceData, updateWorkspaceDataAll, getConsoleLog, updateConsoleLog, render: gnbRender }),
+      root,
+      'gnb',
+      GNB_INDEX,
+    );
   };
 
   const consoleRender = () => {
@@ -80,6 +85,7 @@ export const blockCoding = () => {
 
   const gnbComponent = gnb({
     getWorkspaceData,
+    updateWorkspaceDataAll,
     getConsoleLog,
     updateConsoleLog,
     render: gnbRender,

@@ -1,5 +1,4 @@
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
-import { UpdateWorkspaceDataValue } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { createUniqueId } from '../../utils/createUniqueId';
 

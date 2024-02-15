@@ -1,22 +1,39 @@
-import { ConsoleLog, ProgramState, UpdateConsoleLog, UpdateProgramState, WorkspaceData } from '../../types/stateType';
+import {
+  ConsoleLog,
+  ProgramState,
+  UpdateConsoleLog,
+  UpdateProgramState,
+  UpdateWorkspaceDataAll,
+  WorkspaceData,
+} from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockObject } from '../../types/blockObject';
 import { useState } from '../../core/core';
+import { BlockCommon } from '../../classes/block/blockClassCommon';
+import { createBlock } from '../../classes/factory/createBlock';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
+  updateWorkspaceDataAll: UpdateWorkspaceDataAll;
   getConsoleLog: () => ConsoleLog;
   updateConsoleLog: UpdateConsoleLog;
   render: () => void;
 }
 
-export const gnb = ({ getWorkspaceData, getConsoleLog, updateConsoleLog, render }: GnbProps) => {
+export const gnb = ({
+  getWorkspaceData,
+  updateWorkspaceDataAll,
+  getConsoleLog,
+  updateConsoleLog,
+  render,
+}: GnbProps) => {
   const [getProgramState, setProgramState] = useState<ProgramState>('prgramState', 'stop');
   const header = createElementCommon('header', { id: 'gnb' });
   const h1 = createElementCommon('h1', { id: 'title', textContent: 'Block Coding' });
   const nav = createElementCommon('nav', {});
   const saveButton = createElementCommon('button', { type: 'button', className: 'bg-yellow', textContent: 'Save' });
   const loadButton = createElementCommon('button', { type: 'button', className: 'bg-gray', textContent: 'Load' });
+  const fileInput = createElementCommon('input', { type: 'file', accept: '.json', style: 'display: none' });
   const playButton = createElementCommon('button', { type: 'button', className: 'bg-green', textContent: '▶' });
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
 
@@ -26,11 +43,44 @@ export const gnb = ({ getWorkspaceData, getConsoleLog, updateConsoleLog, render 
   };
 
   playButton.addEventListener('click', () => {
-    runProgram(getWorkspaceData(), getConsoleLog, updateConsoleLog, updateProgramState);
+    if (getProgramState() === 'stop') {
+      runProgram(getWorkspaceData(), getConsoleLog, updateConsoleLog, updateProgramState);
+    }
+  });
+
+  saveButton.addEventListener('click', () => {
+    const data = JSON.stringify(getWorkspaceData());
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'workspaceData.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  });
+
+  loadButton.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', async (e) => {
+    if (fileInput instanceof HTMLInputElement) {
+      const file = fileInput.files?.[0];
+
+      if (file) {
+        const text = await file.text();
+        const loadWorkspaceData = JSON.parse(text);
+
+        loadData(loadWorkspaceData, updateWorkspaceDataAll, updateConsoleLog);
+
+        fileInput.value = '';
+      }
+    }
   });
 
   nav.appendChild(saveButton);
   nav.appendChild(loadButton);
+  nav.appendChild(fileInput);
   nav.appendChild(playButton);
   nav.appendChild(stopButton);
 
@@ -57,7 +107,7 @@ const runProgram = async (
     const map = new Map<string, string>();
     await updateLogData(block.data.value as BlockObject, map, getConsoleLog, updateConsoleLog);
   }
-  
+
   updateConsoleLog([...getConsoleLog(), 'ㅤ', '[프로그램이 종료되었습니다.]']);
   updateProgramState('stop');
 };
@@ -128,19 +178,23 @@ const updateLogData = async (
     return [];
   } else if (obj.name === 'input') {
     setChanageLog([...prevLog(), '[입력 해주세요.]']);
-    const input = document.querySelector('#console__input') as HTMLInputElement;
 
     const waitInput = () => {
       return new Promise<string>((resolve) => {
         const onKeyDown = (e: KeyboardEvent) => {
+          const input = document.querySelector('#console__input') as HTMLInputElement;
           if (e.key === 'Enter') {
-            input.removeEventListener('keydown', onKeyDown);
-            setChanageLog([...prevLog(), '[입력] ' + input.value]);
-            resolve(input.value);
+            if (input.value !== '') {
+              document.body.removeEventListener('keydown', onKeyDown);
+              setChanageLog([...prevLog(), '[입력] ' + input.value]);
+              resolve(input.value);
+            } else {
+              input.focus();
+            }
           }
         };
 
-        input.addEventListener('keydown', onKeyDown);
+        document.body.addEventListener('keydown', onKeyDown);
       });
     };
 
@@ -158,4 +212,41 @@ const updateLogData = async (
   }
 
   return [];
+};
+
+const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] => {
+  if (Array.isArray(block)) {
+    return block.flatMap((item) => {
+      const newBlock = restoreWorkspaceData(item);
+      return newBlock instanceof BlockCommon ? [newBlock] : [];
+    });
+  } else {
+    const newBlock = createBlock(block.name, block.data.id, block.data.x, block.data.y);
+    Object.assign(newBlock, block);
+
+    [...newBlock.getInnerBlock(), ...newBlock.getChildBlock()].forEach((key) => {
+      const innerBlock = newBlock.data[key];
+
+      if (typeof innerBlock === 'object' && innerBlock !== null && Object.keys(innerBlock).length > 0) {
+        const newChildBlock = restoreWorkspaceData(innerBlock);
+
+        if (newChildBlock) {
+          newBlock.data[key] = newChildBlock;
+        }
+      }
+    });
+
+    return newBlock;
+  }
+};
+
+const loadData = (
+  loadWorkspaceData: WorkspaceData,
+  updateWorkspaceDataAll: UpdateWorkspaceDataAll,
+  updateConsoleLog: UpdateConsoleLog,
+): void => {
+  const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
+
+  updateWorkspaceDataAll(newWorkspaceData);
+  updateConsoleLog([]);
 };
