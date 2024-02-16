@@ -24,6 +24,7 @@ export interface BlockObject {
     param2?: BlockObject;
     param3?: BlockObject;
     param4?: BlockObject;
+    child?: BlockObject[];
     [key: string]: BlockObjectValue | string | number | undefined;
   };
   setChildPosition(index?: number): { childX: number; childY: number };
@@ -49,4 +50,5 @@ export interface BlockObject {
   ): Promise<string>;
   calcWidth(): number;
   calcHeight(): { childHeight: number; prefixSum?: number[] };
+  getJsCode(defs: number): string;
 }

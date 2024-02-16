@@ -8,6 +8,7 @@ import { fileInput } from './fileInput';
 import { stopButton } from './stopButton';
 import { pauseButton } from './pauseButton';
 import { playButton } from './playButton';
+import { jsExportButton } from './jsExportButton';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
@@ -37,7 +38,9 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
   const pause = pauseButton({ getProgramState, updateProgramState });
   const stop = stopButton({ getProgramState, updateProgramState });
   const urlCopy = urlCopyButton({ getWorkspaceData });
+  const jsExport = jsExportButton({ getWorkspaceData });
 
+  nav.appendChild(jsExport);
   nav.appendChild(urlCopy);
   nav.appendChild(save);
   nav.appendChild(load);
