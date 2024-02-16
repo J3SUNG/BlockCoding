@@ -121,4 +121,20 @@ export class BlockStart extends BlockCommon {
 
     return '';
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = `(function () {\n`;
+
+    if (Array.isArray(this.data.value)) {
+      for (const child of this.data.value) {
+        if (child instanceof BlockCommon) {
+          jsCode += child.getJsCode(defs + 1);
+        }
+      }
+    }
+
+    jsCode += '})();\n';
+
+    return jsCode;
+  }
 }

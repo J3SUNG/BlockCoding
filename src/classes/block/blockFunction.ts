@@ -218,4 +218,41 @@ export class BlockFunction extends BlockCommon {
 
     return result;
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = 'function ';
+
+    const value = this.data.value;
+    if (value instanceof BlockCommon) {
+      jsCode += `${this.removeQuarters(value.getJsCode(defs))}(`;
+    }
+
+    for (let i = 0; i < this.paramSize; i++) {
+      const propName = `param${i + 1}`;
+      const paramBlock = this.data[propName];
+
+      if (paramBlock && paramBlock instanceof BlockCommon) {
+        jsCode += this.removeQuarters(paramBlock.getJsCode(defs));
+      }
+
+      jsCode += i !== this.paramSize - 1 ? ', ' : '';
+    }
+    jsCode += ') {\n';
+
+    this.data.child?.forEach((block) => {
+      if (block instanceof BlockCommon) {
+        const func = block.getJsCode(defs + 1);
+        jsCode += func;
+      }
+    });
+
+    const returnValue = this.data.return;
+    if (returnValue instanceof BlockCommon) {
+      jsCode += `${this.getJsTab(defs + 1)} return ${this.removeQuarters(returnValue.getJsCode(defs))};\n`;
+    }
+
+    jsCode += '}\n';
+
+    return jsCode;
+  }
 }

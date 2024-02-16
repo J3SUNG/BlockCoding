@@ -88,4 +88,8 @@ export class BlockInput extends BlockCommon {
 
     return result;
   }
+
+  getJsCode(defs: number): string {
+    return 'input()';
+  }
 }

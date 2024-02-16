@@ -132,4 +132,16 @@ export class BlockArithmetic extends BlockCommon {
   getInnerBlock(): string[] {
     return ['value', 'secondValue'];
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+    const value = this.data.value;
+    const secondValue = this.data.secondValue;
+
+    if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
+      jsCode = `(${value.getJsCode(defs)} ${this.data.operator} ${secondValue.getJsCode(defs)})`;
+    }
+
+    return jsCode;
+  }
 }

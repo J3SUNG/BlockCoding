@@ -91,4 +91,17 @@ export class BlockVariable extends BlockCommon {
 
     return '';
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+
+    if (this.data.varName instanceof BlockCommon && this.data.value instanceof BlockCommon) {
+      const operand1 = this.removeQuarters(this.data.varName.getJsCode(defs));
+      const operand2 = this.data.value.getJsCode(defs);
+
+      jsCode = `${this.getJsTab(defs)}var ${operand1} = ${operand2};\n`;
+    }
+
+    return jsCode;
+  }
 }

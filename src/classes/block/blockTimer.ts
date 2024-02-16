@@ -78,4 +78,15 @@ export class BlockTimer extends BlockCommon {
 
     return '';
   }
+
+  getJsCode(defs: number): string {
+    const MILISECONDS = 0.001;
+    let jsCode = '';
+
+    if (this.data.value instanceof BlockCommon) {
+      jsCode = `${this.getJsTab(defs)}setTimeout(() => {}, ${Number(this.data.value.getJsCode(defs)) / MILISECONDS});\n`;
+    }
+
+    return jsCode;
+  }
 }

@@ -69,4 +69,14 @@ export class BlockOutput extends BlockCommon {
 
     return '';
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+
+    if (this.data.value instanceof BlockCommon) {
+      jsCode = `${this.getJsTab(defs)}console.log(${this.data.value.getJsCode(defs)});\n`;
+    }
+
+    return jsCode;
+  }
 }
