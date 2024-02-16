@@ -35,6 +35,7 @@ export const gnb = ({
   const loadButton = createElementCommon('button', { type: 'button', className: 'bg-gray', textContent: 'Load' });
   const fileInput = createElementCommon('input', { type: 'file', accept: '.json', style: 'display: none' });
   const playButton = createElementCommon('button', { type: 'button', className: 'bg-green', textContent: '▶' });
+  const pauseButton = createElementCommon('button', { type: 'button', className: 'bg-yellow', textContent: '⏸' });
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
 
   const updateProgramState = (state: ProgramState) => {
@@ -48,6 +49,14 @@ export const gnb = ({
   playButton.addEventListener('click', () => {
     if (getProgramState() === 'stop') {
       runProgram(getWorkspaceData(), getConsoleLog, updateConsoleLog, updateProgramState, getProgramState);
+    } else if (getProgramState() === 'pause') {
+      updateProgramState('run');
+    }
+  });
+
+  pauseButton.addEventListener('click', () => {
+    if (getProgramState() === 'run') {
+      updateProgramState('pause');
     }
   });
 
@@ -77,12 +86,18 @@ export const gnb = ({
       const file = fileInput.files?.[0];
 
       if (file) {
-        const text = await file.text();
-        const loadWorkspaceData = JSON.parse(text);
+        const reader: FileReader = new FileReader();
 
-        loadData(loadWorkspaceData, updateWorkspaceDataAll, updateConsoleLog);
+        reader.onload = function (e: ProgressEvent<FileReader>) {
+          const content: string = e.target?.result as string;
+          const jsonData: WorkspaceData = JSON.parse(content);
 
-        fileInput.value = '';
+          loadData(jsonData, updateWorkspaceData, updateProgramState, updateConsoleLog);
+
+          element.value = '';
+        };
+
+        reader.readAsText(file);
       }
     }
   });
@@ -91,6 +106,7 @@ export const gnb = ({
   nav.appendChild(loadButton);
   nav.appendChild(fileInput);
   nav.appendChild(playButton);
+  nav.appendChild(pauseButton);
   nav.appendChild(stopButton);
 
   header.appendChild(h1);
@@ -154,10 +170,12 @@ const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon |
 const loadData = (
   loadWorkspaceData: WorkspaceData,
   updateWorkspaceDataAll: UpdateWorkspaceDataAll,
+  updateProgramState: UpdateProgramState,
   updateConsoleLog: UpdateConsoleLog,
 ): void => {
   const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
 
   updateWorkspaceDataAll(newWorkspaceData);
+  updateProgramState('stop');
   updateConsoleLog([]);
 };

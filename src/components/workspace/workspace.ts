@@ -214,10 +214,8 @@ const addWorkspaceMouseDragEvent = (
           initialX = currentX;
           initialY = currentY;
 
-          if (changeCheck) {
-            updateWorkspaceDataAll(newWorkspaceData);
-          } else {
-          }
+        if (changeCheck) {
+          updateWorkspaceDataAll(newWorkspaceData);
         }
 
         target.style.zIndex = '0';

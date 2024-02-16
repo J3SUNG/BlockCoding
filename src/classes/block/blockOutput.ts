@@ -53,7 +53,6 @@ export class BlockOutput extends BlockCommon {
     if (value instanceof BlockCommon) {
       const result: string = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
 
-      console.log(result);
       setChanageLog([...prevLog(), result]);
     }
 

@@ -42,6 +42,7 @@ export class BlockInput extends BlockCommon {
           if (e.key === 'Enter') {
             if (input.value !== '') {
               document.removeEventListener('keydown', onKeyDown);
+              document.removeEventListener('ProgramStateChange', onProgramStateChange);
               setChanageLog([...prevLog(), '[입력] ' + input.value]);
               resolve(input.value);
             } else {
@@ -57,6 +58,10 @@ export class BlockInput extends BlockCommon {
             document.removeEventListener('keydown', onKeyDown);
             document.removeEventListener('ProgramStateChange', onProgramStateChange);
             resolve('');
+          } else if (customEvent.detail === 'pause') {
+            document.removeEventListener('keydown', onKeyDown);
+          } else if (customEvent.detail === 'run') {
+            document.addEventListener('keydown', onKeyDown);
           }
         };
 

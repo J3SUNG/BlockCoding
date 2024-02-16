@@ -54,7 +54,9 @@ export class BlockTimer extends BlockCommon {
       const time = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
 
       await new Promise((resolve) => {
-        const timeoutId = setTimeout(resolve, Number(time) * 1000);
+        let timeoutId = setTimeout(resolve, Number(time) * 1000);
+        let startTime = new Date().getTime();
+        let remainingTime: number = Number(time) * 1000;
 
         const onProgramStateChange = (e: Event) => {
           const customEvent = e as CustomEvent;
@@ -62,6 +64,13 @@ export class BlockTimer extends BlockCommon {
             clearTimeout(timeoutId);
             document.removeEventListener('ProgramStateChange', onProgramStateChange);
             resolve('');
+          } else if (customEvent.detail === 'pause') {
+            const endTime = new Date().getTime();
+            remainingTime = remainingTime - (endTime - startTime);
+            clearTimeout(timeoutId);
+          } else if (customEvent.detail === 'run') {
+            startTime = new Date().getTime();
+            timeoutId = setTimeout(resolve, remainingTime);
           }
         };
 
