@@ -39,4 +39,5 @@ export interface BlockObject {
   ): Promise<string>;
   calcWidth(): number;
   calcHeight(): { childHeight: number; prefixSum?: number[] };
+  changeUniqueId(): void;
 }
