@@ -3,7 +3,7 @@ import { createElementCommon } from '../../utils/createElementCommon';
 import { deepCopy } from '../../utils/deepCopy';
 import { createUniqueId } from '../../utils/createUniqueId';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
-import { findTargetBlock } from '../../utils/findTargetBlock';
+import { findTargetBlock } from '../../utils/findBlock';
 import { createBlock } from '../../classes/blockFactory/createBlock';
 import { workspaceSection } from './workspaceSection';
 
@@ -26,7 +26,6 @@ export const workspace = ({
     removeTargetBlock,
     inserBlockWorkspace,
     insertBlockAnotherBlock,
-    findTargetParentBlock,
   });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
   const trashIcon = createElementCommon('span', { className: 'material-symbols-outlined', textContent: 'delete' });
@@ -104,53 +103,6 @@ const paintWorkspace = (
       });
     }
   }
-};
-
-const findTargetParentBlock = (
-  targetId: string,
-  obj: BlockObjectValue,
-  parent: BlockObject | BlockObject[],
-): { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null => {
-  if (!obj) {
-    return null;
-  }
-
-  if (Array.isArray(obj)) {
-    for (let index = 0; index < obj.length; ++index) {
-      const item = obj[index];
-      const result = findTargetParentBlock(targetId, item, obj);
-      if (result) {
-        if (result.index || result.prop || result.index === 0) {
-          return result;
-        } else {
-          return { parent: obj, index };
-        }
-      }
-    }
-  } else if (typeof obj === 'object' && 'data' in obj) {
-    if (obj.data.id === targetId) {
-      return { parent };
-    }
-
-    const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
-    for (const prop of blockProps) {
-      if (prop in obj.data) {
-        const blockObj = obj.data[prop];
-        if (typeof blockObj === 'object') {
-          const result = findTargetParentBlock(targetId, blockObj, obj);
-          if (result) {
-            if (result.index || result.prop || result.index === 0) {
-              return result;
-            } else {
-              return { parent: obj, prop };
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return null;
 };
 
 const removeTargetBlock = (result: { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null) => {

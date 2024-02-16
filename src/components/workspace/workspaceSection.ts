@@ -3,7 +3,7 @@ import { UpdateWorkspaceData, WorkspaceData } from '../../types/stateType';
 import { changeUniqueIdObj } from '../../utils/changeUniqueIdObj';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { deepCopy } from '../../utils/deepCopy';
-import { findTargetBlock } from '../../utils/findTargetBlock';
+import { findTargetBlock, findTargetParentBlock } from '../../utils/findBlock';
 
 interface WorkspaceSectionProps {
   workspaceData: WorkspaceData;
@@ -19,11 +19,6 @@ interface WorkspaceSectionProps {
     anotherBlock: HTMLElement,
     insertBlock?: BlockObject,
   ) => boolean;
-  findTargetParentBlock: (
-    targetId: string,
-    obj: BlockObjectValue,
-    parent: BlockObject | BlockObject[],
-  ) => { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null;
 }
 
 export const workspaceSection = ({
@@ -32,18 +27,10 @@ export const workspaceSection = ({
   removeTargetBlock,
   inserBlockWorkspace,
   insertBlockAnotherBlock,
-  findTargetParentBlock,
 }: WorkspaceSectionProps) => {
   const section = createElementCommon('div', { id: 'workspace' });
 
-  addWorkspaceMouseDragEvent(
-    section,
-    workspaceData,
-    updateWorkspaceData,
-    findTargetParentBlock,
-    removeTargetBlock,
-    insertBlockAnotherBlock,
-  );
+  addWorkspaceMouseDragEvent(section, workspaceData, updateWorkspaceData, removeTargetBlock, insertBlockAnotherBlock);
   addWorkspaceReceiveDragEvent(
     section,
     workspaceData,
@@ -59,11 +46,6 @@ const addWorkspaceMouseDragEvent = (
   section: HTMLElement,
   workspaceData: WorkspaceData,
   updateWorkspaceData: UpdateWorkspaceData,
-  findTargetParentBlock: (
-    uniqueId: string,
-    workspaceData: WorkspaceData,
-    parent: BlockObject | BlockObject[],
-  ) => { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null,
   removeTargetBlock: (
     parentData: { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null,
   ) => void,
