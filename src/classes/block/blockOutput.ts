@@ -39,8 +39,8 @@ export class BlockOutput extends BlockCommon {
   }
 
   async runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -50,12 +50,12 @@ export class BlockOutput extends BlockCommon {
       return '';
     }
 
-    const value = blockObject.data.value;
+    const value = this.data.value;
 
     if (value instanceof BlockCommon) {
       const result: string = await value.runLogic(
-        value,
         variableMap,
+        functionMap,
         prevLog,
         setChanageLog,
         getProgramState,

@@ -86,8 +86,8 @@ export class BlockLogical extends BlockCommon {
   }
 
   async runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -97,17 +97,18 @@ export class BlockLogical extends BlockCommon {
       return '';
     }
 
-    const value = blockObject.data.value;
-    const secondValue = blockObject.data.secondValue;
+    const value = this.data.value;
+    const secondValue = this.data.secondValue;
     let result: boolean = false;
 
     if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
       const operand1 =
-        (await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState, timeManager)) === 'true'
+        (await value.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
+        'true'
           ? true
           : false;
       const operand2 =
-        (await secondValue.runLogic(secondValue, variableMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
+        (await secondValue.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
         'true'
           ? true
           : false;

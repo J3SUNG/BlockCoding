@@ -24,8 +24,8 @@ export class BlockInput extends BlockCommon {
   }
 
   async runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',

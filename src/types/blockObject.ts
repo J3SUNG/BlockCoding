@@ -8,15 +8,21 @@ export interface BlockObject {
   name: string;
   type: string;
   fold?: boolean;
+  paramSize?: number;
   data: {
     id: string;
     x: number;
     y: number;
     value: BlockObjectValue;
     varName?: BlockObject;
+    funcName?: BlockObject;
     condition?: BlockObject;
     operator?: string;
     secondValue?: BlockObject;
+    param1?: BlockObject;
+    param2?: BlockObject;
+    param3?: BlockObject;
+    param4?: BlockObject;
     [key: string]: BlockObjectValue | string | number | undefined;
   };
   setChildPosition(index?: number): { childX: number; childY: number };
@@ -32,8 +38,8 @@ export interface BlockObject {
   getInnerBlock(): string[];
   getChildBlock(): string[];
   runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',

@@ -9,11 +9,13 @@ export class BlockCommon implements BlockObject {
   defaultWidth = 100;
   width = 100;
   defaultSpaceWidth = 50;
+  defaultSpaceMargin = 10;
   defaultHeight = 50;
   spaceWidth = [50, 50];
   childWidth? = 100;
   fold = false;
   data: BlockObject['data'];
+  paramSize = 0;
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
     this.data = { id, x, y, value };
@@ -42,8 +44,8 @@ export class BlockCommon implements BlockObject {
   }
 
   async runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -59,10 +61,10 @@ export class BlockCommon implements BlockObject {
       const block = this.data[innerProp];
       if (typeof block === 'object' && Object.keys(block).length === 0) {
         this.spaceWidth[index] = this.defaultSpaceWidth;
-        addWidth += this.defaultSpaceWidth;
+        addWidth += this.defaultSpaceWidth + this.defaultSpaceMargin;
       } else if (block instanceof BlockCommon) {
         this.spaceWidth[index] = block.calcWidth();
-        addWidth += this.spaceWidth[index];
+        addWidth += this.spaceWidth[index] + this.defaultSpaceMargin;
       }
     });
 

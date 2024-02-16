@@ -39,6 +39,10 @@ export class BlockCondition extends BlockCommon {
     });
 
     toggle.addEventListener('click', () => {
+      if (!this.data.id) {
+        return;
+      }
+
       this.fold = !this.fold;
       if (onChange) {
         if (this.fold) {
@@ -53,7 +57,6 @@ export class BlockCondition extends BlockCommon {
       childSpace.style.height = childHeight - 100 + 'px';
     });
 
-    space1.setAttribute('style', `margin-top: 5px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${childHeight}px;`);
     p.setAttribute('style', `padding-top: 12px`);
     childSpace.setAttribute('style', `height: ${childHeight - 100}px; ${this.fold ? 'display: none' : ''}`);
@@ -92,8 +95,8 @@ export class BlockCondition extends BlockCommon {
   }
 
   async runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -103,13 +106,13 @@ export class BlockCondition extends BlockCommon {
       return '';
     }
 
-    const condition = blockObject.data.condition;
-    const value = blockObject.data.value;
+    const condition = this.data.condition;
+    const value = this.data.value;
 
     if (condition instanceof BlockCommon) {
       const operand1 = await condition.runLogic(
-        condition,
         variableMap,
+        functionMap,
         prevLog,
         setChanageLog,
         getProgramState,
@@ -119,7 +122,7 @@ export class BlockCondition extends BlockCommon {
         if (Array.isArray(value)) {
           for (const child of value) {
             if (child instanceof BlockCommon) {
-              await child.runLogic(child, variableMap, prevLog, setChanageLog, getProgramState, timeManager);
+              await child.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager);
             }
           }
         }

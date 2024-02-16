@@ -37,6 +37,10 @@ export class BlockLoop extends BlockCommon {
     });
 
     toggle.addEventListener('click', () => {
+      if (!this.data.id) {
+        return;
+      }
+
       this.fold = !this.fold;
       if (onChange) {
         if (this.fold) {
@@ -51,7 +55,6 @@ export class BlockLoop extends BlockCommon {
       childSpace.style.height = childHeight - 100 + 'px';
     });
 
-    space1.setAttribute('style', `margin-top: 5px;`);
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${childHeight}px;`);
     p.setAttribute('style', `padding-top: 12px`);
     childSpace.setAttribute('style', `height: ${childHeight - 100}px; ${this.fold ? 'display: none' : ''}`);
@@ -90,20 +93,20 @@ export class BlockLoop extends BlockCommon {
   }
 
   async runLogic(
-    blockObject: BlockCommon,
     variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     timeManager: InfinityLoop,
   ): Promise<string> {
-    const condition = blockObject.data.condition;
-    const value = blockObject.data.value;
+    const condition = this.data.condition;
+    const value = this.data.value;
     let result: string = '';
 
     if (condition instanceof BlockCommon) {
       let operand =
-        (await condition.runLogic(condition, variableMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
+        (await condition.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
         'true'
           ? true
           : false;
@@ -118,13 +121,20 @@ export class BlockLoop extends BlockCommon {
         if (Array.isArray(value)) {
           for (const child of value) {
             if (child instanceof BlockCommon) {
-              result = await child.runLogic(child, variableMap, prevLog, setChanageLog, getProgramState, timeManager);
+              result = await child.runLogic(
+                variableMap,
+                functionMap,
+                prevLog,
+                setChanageLog,
+                getProgramState,
+                timeManager,
+              );
             }
           }
         }
 
         operand =
-          (await condition.runLogic(condition, variableMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
+          (await condition.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
           'true'
             ? true
             : false;
