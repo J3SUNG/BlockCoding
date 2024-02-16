@@ -1,4 +1,3 @@
-import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
@@ -45,7 +44,7 @@ export class BlockArithmetic extends BlockCommon {
       }
     });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(space1);
     div.appendChild(operatorSelect);
     div.appendChild(space2);

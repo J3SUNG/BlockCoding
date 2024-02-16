@@ -57,19 +57,19 @@ export class BlockCommon implements BlockObject {
 
   calcWidth() {
     let addWidth = 0;
-    this.width = BLOCK_DEFAULT_WIDTH[this.name];
+    this.width = this.defaultWidth;
     this.getInnerBlock().forEach((innerProp, index) => {
       const block = this.data[innerProp];
       if (typeof block === 'object' && Object.keys(block).length === 0) {
-        this.spaceWidth[index] = BLOCK_SPACE_DEFAULT_WIDTH;
-        addWidth += BLOCK_SPACE_DEFAULT_WIDTH + BLOCK_SPACE_DEFAULT_MARGIN;
+        this.spaceWidth[index] = this.defaultSpaceWidth;
+        addWidth += this.defaultSpaceWidth + this.defaultSpaceMargin;
       } else if (block instanceof BlockCommon) {
         this.spaceWidth[index] = block.calcWidth();
-        addWidth += this.spaceWidth[index] + BLOCK_SPACE_DEFAULT_MARGIN;
+        addWidth += this.spaceWidth[index] + this.defaultSpaceMargin;
       }
     });
 
-    this.width = BLOCK_DEFAULT_WIDTH[this.name] + addWidth;
+    this.width = this.defaultWidth + addWidth;
     this.childWidth = this.width - 48;
 
     const div = document.getElementById(this.data.id);
@@ -139,7 +139,7 @@ export class BlockCommon implements BlockObject {
         }
       }
     } else {
-      return { childHeight: BLOCK_DEFAULT_HEIGHT[this.name] };
+      return { childHeight: this.defaultHeight };
     }
   }
 
@@ -149,5 +149,21 @@ export class BlockCommon implements BlockObject {
 
   getChildBlock(): string[] {
     return [];
+  }
+
+  get defaultWidth() {
+    return BLOCK_DEFAULT_WIDTH[this.name];
+  }
+
+  get defaultHeight() {
+    return BLOCK_DEFAULT_HEIGHT[this.name];
+  }
+
+  get defaultSpaceWidth() {
+    return BLOCK_SPACE_DEFAULT_WIDTH;
+  }
+
+  get defaultSpaceMargin() {
+    return BLOCK_SPACE_DEFAULT_MARGIN;
   }
 }
