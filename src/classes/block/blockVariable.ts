@@ -1,5 +1,6 @@
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockVariable extends BlockCommon {
@@ -55,6 +56,7 @@ export class BlockVariable extends BlockCommon {
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: InfinityLoop,
   ): Promise<string> {
     if (getProgramState() === 'stop') {
       return '';
@@ -64,8 +66,22 @@ export class BlockVariable extends BlockCommon {
     const value = blockObject.data.value;
 
     if (varName instanceof BlockCommon && value instanceof BlockCommon) {
-      const operand1 = await varName.runLogic(varName, variablevariableMap, prevLog, setChanageLog, getProgramState);
-      const operand2 = await value.runLogic(value, variablevariableMap, prevLog, setChanageLog, getProgramState);
+      const operand1 = await varName.runLogic(
+        varName,
+        variablevariableMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
+      const operand2 = await value.runLogic(
+        value,
+        variablevariableMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
 
       variablevariableMap.set(operand1, operand2);
     }

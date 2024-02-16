@@ -1,5 +1,6 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockLoop extends BlockCommon {
@@ -94,29 +95,37 @@ export class BlockLoop extends BlockCommon {
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: InfinityLoop,
   ): Promise<string> {
     const condition = blockObject.data.condition;
     const value = blockObject.data.value;
     let result: string = '';
 
     if (condition instanceof BlockCommon) {
-      let count = 0;
       let operand =
-        (await condition.runLogic(condition, variableMap, prevLog, setChanageLog, getProgramState)) === 'true'
+        (await condition.runLogic(condition, variableMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
+        'true'
           ? true
           : false;
 
-      while (operand && count++ < 123) {
+      while (operand) {
+        if (getProgramState() === 'stop') {
+          return '';
+        }
+        if (timeManager.isInfinityLoop()) {
+          return '';
+        }
         if (Array.isArray(value)) {
           for (const child of value) {
             if (child instanceof BlockCommon) {
-              result = await child.runLogic(child, variableMap, prevLog, setChanageLog, getProgramState);
+              result = await child.runLogic(child, variableMap, prevLog, setChanageLog, getProgramState, timeManager);
             }
           }
         }
 
         operand =
-          (await condition.runLogic(condition, variableMap, prevLog, setChanageLog, getProgramState)) === 'true'
+          (await condition.runLogic(condition, variableMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
+          'true'
             ? true
             : false;
       }

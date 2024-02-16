@@ -4,7 +4,7 @@ import { deepCopy } from '../../utils/deepCopy';
 import { createUniqueId } from '../../utils/createUniqueId';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock } from '../../utils/findTargetBlock';
-import { createBlock } from '../../classes/factory/createBlock';
+import { createBlock } from '../../classes/blockFactory/createBlock';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
@@ -214,16 +214,17 @@ const addWorkspaceMouseDragEvent = (
           initialX = currentX;
           initialY = currentY;
 
-        if (changeCheck) {
-          updateWorkspaceDataAll(newWorkspaceData);
-        }
+          if (changeCheck) {
+            updateWorkspaceDataAll(newWorkspaceData);
+          }
 
-        target.style.zIndex = '0';
-        target.style.opacity = '1';
-        target.style.transform = 'translate(0px, 0px)';
+          target.style.zIndex = '0';
+          target.style.opacity = '1';
+          target.style.transform = 'translate(0px, 0px)';
+        }
+        target = null;
+        active = false;
       }
-      target = null;
-      active = false;
     }
   });
 

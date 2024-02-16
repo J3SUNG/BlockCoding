@@ -1,5 +1,6 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockCondition extends BlockCommon {
@@ -96,6 +97,7 @@ export class BlockCondition extends BlockCommon {
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: InfinityLoop,
   ): Promise<string> {
     if (getProgramState() === 'stop') {
       return '';
@@ -105,12 +107,19 @@ export class BlockCondition extends BlockCommon {
     const value = blockObject.data.value;
 
     if (condition instanceof BlockCommon) {
-      const operand1 = await condition.runLogic(condition, variableMap, prevLog, setChanageLog, getProgramState);
+      const operand1 = await condition.runLogic(
+        condition,
+        variableMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
       if (operand1 === 'true') {
         if (Array.isArray(value)) {
           for (const child of value) {
             if (child instanceof BlockCommon) {
-              await child.runLogic(child, variableMap, prevLog, setChanageLog, getProgramState);
+              await child.runLogic(child, variableMap, prevLog, setChanageLog, getProgramState, timeManager);
             }
           }
         }

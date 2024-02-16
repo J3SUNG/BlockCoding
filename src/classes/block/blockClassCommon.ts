@@ -1,5 +1,6 @@
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { createUniqueId } from '../../utils/createUniqueId';
 
 export class BlockCommon implements BlockObject {
@@ -46,6 +47,7 @@ export class BlockCommon implements BlockObject {
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: InfinityLoop,
   ): Promise<string> {
     return '';
   }
