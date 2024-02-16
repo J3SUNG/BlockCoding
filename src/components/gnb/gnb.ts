@@ -10,9 +10,11 @@ import { createElementCommon } from '../../utils/createElementCommon';
 import { BlockObject } from '../../types/blockObject';
 import { useState } from '../../core/core';
 import { BlockCommon } from '../../classes/block/blockClassCommon';
-import { createBlock } from '../../classes/blockFactory/createBlock';
 import { Exception } from '../../classes/exception/exception';
 import { Debug } from '../../classes/block/debug/debug';
+import { restoreWorkspaceData } from '../../utils/restoreWorkspaceData';
+import { unzip, zip } from '../../utils/zipBlock';
+import { changeUniqueIdObj } from '../../utils/changeUniqueIdObj';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
@@ -33,6 +35,12 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
   const playButton = createElementCommon('button', { type: 'button', className: 'bg-green', textContent: '▶' });
   const pauseButton = createElementCommon('button', { type: 'button', className: 'bg-yellow', textContent: '⏸' });
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
+  const urlCopyButton = createElementCommon('button', {
+    type: 'button',
+    className: 'bg-green',
+    textContent: 'URL Copy',
+    style: 'width: 100px',
+  });
 
   const updateProgramState = (state: ProgramState) => {
     setProgramState(state);
@@ -63,7 +71,7 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
   });
 
   saveButton.addEventListener('click', () => {
-    const data = JSON.stringify(getWorkspaceData());
+    const data = JSON.stringify(zip(getWorkspaceData()));
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -75,6 +83,40 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
 
   loadButton.addEventListener('click', () => {
     fileInput.click();
+  });
+
+  urlCopyButton.addEventListener('click', () => {
+    const url = new URL(window.location.origin) + '?workspaceData=';
+    const zipWorkspaceData = JSON.stringify(zip(getWorkspaceData()));
+    const URL_MAX_SIZE = 9600;
+
+    console.log(zipWorkspaceData.length);
+
+    if (zipWorkspaceData.length > URL_MAX_SIZE) {
+      if (urlCopyButton instanceof HTMLButtonElement) {
+        urlCopyButton.textContent = 'Fail Large!';
+        urlCopyButton.style.backgroundColor = 'rgb(255 69 58)';
+        urlCopyButton.disabled = true;
+        setTimeout(() => {
+          urlCopyButton.textContent = 'URL Copy';
+          urlCopyButton.style.backgroundColor = 'rgb(34 197 94)';
+          urlCopyButton.disabled = false;
+        }, 2000);
+      }
+    } else {
+      navigator.clipboard.writeText(url + zipWorkspaceData);
+
+      if (urlCopyButton instanceof HTMLButtonElement) {
+        urlCopyButton.textContent = 'Copied!';
+        urlCopyButton.classList.add('gnb__button--active');
+        urlCopyButton.disabled = true;
+        setTimeout(() => {
+          urlCopyButton.textContent = 'URL Copy';
+          urlCopyButton.classList.remove('gnb__button--active');
+          urlCopyButton.disabled = false;
+        }, 2000);
+      }
+    }
   });
 
   fileInput.addEventListener('change', function (e) {
@@ -98,6 +140,7 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
     }
   });
 
+  nav.appendChild(urlCopyButton);
   nav.appendChild(saveButton);
   nav.appendChild(loadButton);
   nav.appendChild(fileInput);
@@ -181,39 +224,6 @@ const runProgram = async (
   updateProgramState('stop');
 };
 
-const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] | null => {
-  if (Array.isArray(block)) {
-    let array: BlockCommon[] = [];
-    block.forEach((item) => {
-      if (!Array.isArray(item)) {
-        const newBlock = restoreWorkspaceData(item);
-        if (newBlock && newBlock instanceof BlockCommon) {
-          array.push(newBlock);
-        }
-      }
-    });
-
-    return array;
-  } else {
-    const newBlock = createBlock(block.name, block.data.id, block.data.x, block.data.y);
-    Object.assign(newBlock, block);
-
-    [...newBlock.getInnerBlock(), ...newBlock.getChildBlock()].forEach((key) => {
-      const innerBlock = newBlock.data[key];
-
-      if (typeof innerBlock === 'object' && Object.keys(innerBlock).length > 0) {
-        const newChildBlock = restoreWorkspaceData(innerBlock);
-
-        if (newChildBlock) {
-          newBlock.data[key] = newChildBlock;
-        }
-      }
-    });
-
-    return newBlock;
-  }
-};
-
 const loadData = (
   loadWorkspaceData: WorkspaceData,
   updateWorkspaceData: UpdateWorkspaceData,
@@ -222,13 +232,14 @@ const loadData = (
 ): void => {
   const newWorkspaceData: BlockCommon[] = [];
   loadWorkspaceData.forEach((block: BlockObject) => {
-    const resotreData = restoreWorkspaceData(block);
+    const resotreData = restoreWorkspaceData(unzip(block));
 
     if (resotreData && !Array.isArray(resotreData)) {
       newWorkspaceData.push(resotreData);
     }
   });
 
+  changeUniqueIdObj(newWorkspaceData);
   newWorkspaceData.forEach((block: BlockCommon) => {
     block.calcWidth();
   });

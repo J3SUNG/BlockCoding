@@ -1,13 +1,14 @@
 import { render, useState } from '../core/core';
 import { gnb } from '../components/gnb/gnb';
-import { WorkspaceData, ConsoleLog } from '../types/stateType';
+import { WorkspaceData, ConsoleLog, UpdateWorkspaceData } from '../types/stateType';
 import { blockMenu } from '../components/blockMenu/blockMenu';
 import { workspace } from '../components/workspace/workspace';
 import { consoleSpace } from '../components/consoleSpace/consoleSpace';
 import { createElementCommon } from '../utils/createElementCommon';
-import { deepCopy } from '../utils/deepCopy';
-import { findTargetBlock } from '../utils/findTargetBlock';
-import { BlockObject, BlockObjectValue } from '../types/blockObject';
+import { restoreWorkspaceData } from '../utils/restoreWorkspaceData';
+import { BlockCommon } from '../classes/block/blockClassCommon';
+import { changeUniqueIdObj } from '../utils/changeUniqueIdObj';
+import { unzip } from '../utils/zipBlock';
 
 export const blockCoding = () => {
   const [getConsoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
@@ -99,5 +100,25 @@ export const blockCoding = () => {
   fragment.appendChild(gnbComponent);
   fragment.appendChild(mainComponent);
 
+  urlParser(updateWorkspaceData);
+
   return fragment;
+};
+
+const urlParser = (updateWorkspaceData: UpdateWorkspaceData) => {
+  const url = new URL(window.location.href);
+
+  try {
+    const searchParams = url.searchParams;
+    const zipWorkspaceData = searchParams.get('workspaceData');
+
+    if (zipWorkspaceData) {
+      const unZipWorkspaceData = unzip(JSON.parse(zipWorkspaceData));
+      const newWorkspaceData = restoreWorkspaceData(unZipWorkspaceData) as BlockCommon[];
+      changeUniqueIdObj(newWorkspaceData);
+      updateWorkspaceData(newWorkspaceData);
+    }
+  } catch (e) {
+    window.location.href = url.origin;
+  }
 };
