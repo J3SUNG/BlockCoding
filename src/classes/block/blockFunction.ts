@@ -1,3 +1,4 @@
+import { PARAM_MAX_SIZE, PARAM_MIN_SIZE } from '../../constants/blockDataMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
@@ -75,7 +76,6 @@ export class BlockFunction extends BlockCommon {
 
     addButton.addEventListener('click', () => {
       if (onChange) {
-        const PARAM_MAX_SIZE = 4;
         this.paramSize = this.paramSize + 1 > PARAM_MAX_SIZE ? PARAM_MAX_SIZE : this.paramSize + 1;
         onChange(id, this.paramSize + '', 'param');
       }
@@ -83,7 +83,6 @@ export class BlockFunction extends BlockCommon {
 
     removeButton.addEventListener('click', () => {
       if (onChange) {
-        const PARAM_MIN_SIZE = 0;
         this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
         onChange(id, this.paramSize + '', 'param');
       }
