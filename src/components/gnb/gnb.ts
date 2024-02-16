@@ -93,9 +93,9 @@ export const gnb = ({
           const content: string = e.target?.result as string;
           const jsonData: WorkspaceData = JSON.parse(content);
 
-          loadData(jsonData, updateWorkspaceData, updateProgramState, updateConsoleLog);
+          loadData(jsonData, updateWorkspaceDataAll, updateProgramState, updateConsoleLog);
 
-          element.value = '';
+          fileInput.value = '';
         };
 
         reader.readAsText(file);

@@ -214,16 +214,17 @@ const addWorkspaceMouseDragEvent = (
           initialX = currentX;
           initialY = currentY;
 
-        if (changeCheck) {
-          updateWorkspaceDataAll(newWorkspaceData);
-        }
+          if (changeCheck) {
+            updateWorkspaceDataAll(newWorkspaceData);
+          }
 
-        target.style.zIndex = '0';
-        target.style.opacity = '1';
-        target.style.transform = 'translate(0px, 0px)';
+          target.style.zIndex = '0';
+          target.style.opacity = '1';
+          target.style.transform = 'translate(0px, 0px)';
+        }
+        target = null;
+        active = false;
       }
-      target = null;
-      active = false;
     }
   });
 
