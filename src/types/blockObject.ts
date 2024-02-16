@@ -31,8 +31,8 @@ export interface BlockObject {
   getInnerBlock(): string[];
   getChildBlock(): string[];
   runLogic(
-    obj: BlockCommon,
-    map: Map<string, string>,
+    blockObject: BlockCommon,
+    variableMap: Map<string, string>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',

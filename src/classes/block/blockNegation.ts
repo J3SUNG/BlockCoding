@@ -51,8 +51,8 @@ export class BlockNegation extends BlockCommon {
   }
 
   async runLogic(
-    obj: BlockCommon,
-    map: Map<string, string>,
+    blockObject: BlockCommon,
+    variableMap: Map<string, string>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -61,12 +61,12 @@ export class BlockNegation extends BlockCommon {
       return '';
     }
 
-    const value = obj.data.value;
+    const value = blockObject.data.value;
     let result: boolean = false;
 
     if (value instanceof BlockCommon) {
       const operand1 =
-        (await value.runLogic(value, map, prevLog, setChanageLog, getProgramState)) === 'true' ? true : false;
+        (await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState)) === 'true' ? true : false;
 
       result = !operand1;
     }

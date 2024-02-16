@@ -85,8 +85,8 @@ export class BlockComparison extends BlockCommon {
   }
 
   async runLogic(
-    obj: BlockCommon,
-    map: Map<string, string>,
+    blockObject: BlockCommon,
+    variableMap: Map<string, string>,
     prevLog: () => string[],
     setChanageLog: (log: string[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
@@ -95,13 +95,13 @@ export class BlockComparison extends BlockCommon {
       return '';
     }
 
-    const value = obj.data.value;
-    const secondValue = obj.data.secondValue;
+    const value = blockObject.data.value;
+    const secondValue = blockObject.data.secondValue;
     let result: boolean = false;
 
     if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
-      const operand1 = await value.runLogic(value, map, prevLog, setChanageLog, getProgramState);
-      const operand2 = await secondValue?.runLogic(secondValue, map, prevLog, setChanageLog, getProgramState);
+      const operand1 = await value.runLogic(value, variableMap, prevLog, setChanageLog, getProgramState);
+      const operand2 = await secondValue?.runLogic(secondValue, variableMap, prevLog, setChanageLog, getProgramState);
 
       switch (this.data.operator) {
         case '=':

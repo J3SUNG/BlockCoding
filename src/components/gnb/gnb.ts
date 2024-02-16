@@ -130,10 +130,10 @@ const runProgram = async (
   updateConsoleLog(['[프로그램을 실행합니다.]', 'ㅤ']);
 
   for (const block of startBlock) {
-    const map = new Map<string, string>();
+    const variableMap = new Map<string, string>();
 
     if (block instanceof BlockCommon) {
-      await block.runLogic(block, map, getConsoleLog, updateConsoleLog, getProgramState);
+      await block.runLogic(block, variableMap, getConsoleLog, updateConsoleLog, getProgramState);
     }
   }
   updateConsoleLog([...getConsoleLog(), 'ㅤ', '[프로그램이 종료되었습니다.]']);
