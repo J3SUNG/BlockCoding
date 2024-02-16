@@ -79,7 +79,6 @@ export const zip = (item: any): any => {
         result[mappedKey] = zip(value);
       }
     });
-    console.log(result);
     return result;
   }
   return item;

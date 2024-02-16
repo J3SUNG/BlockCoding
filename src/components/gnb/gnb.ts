@@ -37,7 +37,7 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
   const urlCopyButton = createElementCommon('button', {
     type: 'button',
-    className: 'bg-green',
+    className: 'bg-gray',
     textContent: 'URL Copy',
     style: 'width: 100px',
   });
@@ -89,33 +89,30 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
     const url = new URL(window.location.origin) + '?workspaceData=';
     const zipWorkspaceData = JSON.stringify(zip(getWorkspaceData()));
     const URL_MAX_SIZE = 9600;
+    const COLOR_RED = 'rgb(255 69 58)';
+    const COLOR_GREEN = 'rgb(34 197 94)';
+    const COLOR_GRAY = 'rgb(100 116 139)';
+    const COPY_TEXT = 'URL Copy';
+    const COPIED_TEXT = 'Copied!';
+    const FAIL_TEXT = 'Fail Large!';
+    const BUTTON_ACTIVE_TIME = 1000;
 
-    console.log(zipWorkspaceData.length);
-
-    if (zipWorkspaceData.length > URL_MAX_SIZE) {
-      if (urlCopyButton instanceof HTMLButtonElement) {
-        urlCopyButton.textContent = 'Fail Large!';
-        urlCopyButton.style.backgroundColor = 'rgb(255 69 58)';
-        urlCopyButton.disabled = true;
-        setTimeout(() => {
-          urlCopyButton.textContent = 'URL Copy';
-          urlCopyButton.style.backgroundColor = 'rgb(34 197 94)';
-          urlCopyButton.disabled = false;
-        }, 2000);
+    if (urlCopyButton instanceof HTMLButtonElement) {
+      urlCopyButton.disabled = true;
+      if (zipWorkspaceData.length > URL_MAX_SIZE) {
+        urlCopyButton.textContent = FAIL_TEXT;
+        urlCopyButton.style.backgroundColor = COLOR_RED;
+      } else {
+        navigator.clipboard.writeText(url + zipWorkspaceData);
+        urlCopyButton.textContent = COPIED_TEXT;
+        urlCopyButton.style.backgroundColor = COLOR_GREEN;
       }
-    } else {
-      navigator.clipboard.writeText(url + zipWorkspaceData);
 
-      if (urlCopyButton instanceof HTMLButtonElement) {
-        urlCopyButton.textContent = 'Copied!';
-        urlCopyButton.classList.add('gnb__button--active');
-        urlCopyButton.disabled = true;
-        setTimeout(() => {
-          urlCopyButton.textContent = 'URL Copy';
-          urlCopyButton.classList.remove('gnb__button--active');
-          urlCopyButton.disabled = false;
-        }, 2000);
-      }
+      setTimeout(() => {
+        urlCopyButton.textContent = COPY_TEXT;
+        urlCopyButton.style.backgroundColor = COLOR_GRAY;
+        urlCopyButton.disabled = false;
+      }, BUTTON_ACTIVE_TIME);
     }
   });
 
