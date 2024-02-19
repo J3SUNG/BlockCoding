@@ -13,6 +13,7 @@ import { unzip } from '../utils/zipBlock';
 export const blockCoding = () => {
   const [getConsoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
   const [getWorkspaceData, setWorkspaceData] = useState<WorkspaceData>('workspaceData', []);
+  const prevWorkspaceData = new Stack();
   const BLOCK_MENU_INDEX = 0;
   const WORKSPACE_INDEX = 1;
   const CONSOLE_SPACE_INDEX = 2;
@@ -49,6 +50,7 @@ export const blockCoding = () => {
     );
 
     requestAnimationFrame(() => {
+      prevWorkspaceData.push(getWorkspaceData());
       changeBlockWidth();
     });
   };
@@ -102,6 +104,17 @@ export const blockCoding = () => {
 
   urlParser(updateWorkspaceData);
 
+  document.addEventListener('keydown', function (event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
+      prevWorkspaceData.pop();
+      const prevData = prevWorkspaceData.peek();
+      if (prevData) {
+        updateWorkspaceData(prevData);
+        prevWorkspaceData.pop();
+      }
+    }
+  });
+
   return fragment;
 };
 
@@ -122,3 +135,33 @@ const urlParser = (updateWorkspaceData: UpdateWorkspaceData) => {
     window.location.href = url.origin;
   }
 };
+
+class Stack {
+  #stack: WorkspaceData[];
+  #capacity: number;
+
+  constructor() {
+    this.#stack = [[]];
+    this.#capacity = 10;
+  }
+
+  push(item: WorkspaceData): void {
+    if (this.#stack.length >= this.#capacity) {
+      this.#stack.shift();
+    }
+
+    this.#stack.push(item);
+  }
+
+  pop(): WorkspaceData | undefined {
+    const MIN_STACK_SIZE = 1;
+    if (this.#stack.length > MIN_STACK_SIZE) {
+      return this.#stack.pop();
+    }
+    return this.peek();
+  }
+
+  peek(): WorkspaceData | undefined {
+    return this.#stack[this.#stack.length - 1];
+  }
+}
