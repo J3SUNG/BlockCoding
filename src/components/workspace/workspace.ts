@@ -3,7 +3,7 @@ import { createElementCommon } from '../../utils/createElementCommon';
 import { deepCopy } from '../../utils/deepCopy';
 import { createUniqueId } from '../../utils/createUniqueId';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
-import { findTargetBlock } from '../../utils/findBlock';
+import { findTargetBlock, findTargetParentBlock } from '../../utils/findBlock';
 import { createBlock } from '../../classes/blockFactory/createBlock';
 import { workspaceSection } from './workspaceSection';
 
@@ -20,6 +20,7 @@ export const workspace = ({
   refreshWorkspaceData,
   changeBlockWidth,
 }: WorkspaceProps) => {
+  const main = createElementCommon('main', { id: 'workspace-container' });
   const section = workspaceSection({
     workspaceData,
     updateWorkspaceData,
@@ -36,8 +37,9 @@ export const workspace = ({
 
   section.appendChild(trashBin);
   trashBin.appendChild(trashIcon);
+  main.appendChild(section);
 
-  return section;
+  return main;
 };
 
 const paintWorkspace = (
@@ -144,12 +146,14 @@ const inserBlockWorkspace = (section: HTMLElement, event: DragEvent, workspaceDa
 };
 
 const insertBlockAnotherBlock = (
-  targetUniqueId: string,
+  event: MouseEvent,
+  anotherBlockClosestDiv: HTMLElement,
   name: string,
   newWorkspaceData: BlockObject[],
   anotherBlock: HTMLElement,
   insertBlock?: BlockObject,
 ): boolean => {
+  const targetUniqueId = anotherBlockClosestDiv.id;
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
 
   if (targetObj) {
@@ -157,7 +161,27 @@ const insertBlockAnotherBlock = (
     if (anotherBlock.classList.contains('block__space')) {
       return targetObj.insert(newBlock, anotherBlock.id);
     } else {
-      return targetObj.insert(newBlock);
+      if (
+        (targetObj.type === 'general' || targetObj.type === 'control') &&
+        (newBlock.type === 'general' || newBlock.type === 'control')
+      ) {
+        const parentData = findTargetParentBlock(targetUniqueId, newWorkspaceData, newWorkspaceData);
+        if (parentData && Array.isArray(parentData.parent) && typeof parentData.index === 'number') {
+          const rect = anotherBlockClosestDiv.getBoundingClientRect();
+          const y = event.pageY - rect.top + window.scrollY;
+          if (y < 25) {
+            parentData.parent.splice(parentData.index, 0, newBlock);
+            return true;
+          } else if (y > rect.height - 25) {
+            parentData.parent.splice(parentData.index + 1, 0, newBlock);
+            return true;
+          } else {
+            return targetObj.insert(newBlock);
+          }
+        }
+      } else {
+        return targetObj.insert(newBlock);
+      }
     }
   }
 
