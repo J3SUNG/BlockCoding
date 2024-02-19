@@ -123,7 +123,7 @@ export class BlockStart extends BlockCommon {
   }
 
   getJsCode(defs: number): string {
-    let jsCode = `(function () {\n`;
+    let jsCode = `(async function () {\n`;
 
     if (Array.isArray(this.data.value)) {
       for (const child of this.data.value) {

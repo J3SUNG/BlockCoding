@@ -84,7 +84,7 @@ export class BlockTimer extends BlockCommon {
     let jsCode = '';
 
     if (this.data.value instanceof BlockCommon) {
-      jsCode = `${this.getJsTab(defs)}setTimeout(() => {}, ${Number(this.data.value.getJsCode(defs)) / MILISECONDS});\n`;
+      jsCode = `${this.getJsTab(defs)}await new Promise(resolve => setTimeout(resolve, ${Number(this.data.value.getJsCode(defs)) / MILISECONDS}));\n`;
     }
 
     return jsCode;

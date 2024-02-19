@@ -30,6 +30,7 @@ export class BlockFunction extends BlockCommon {
     const p = createElementCommon('p', { className: 'block__text', textContent: '함수 선언' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const childSpace = createElementCommon('span', { id: 'child', className: 'block__child' });
+    const triangle = createElementCommon('span', { className: 'block__triangle block--declare' });
     const { childHeight } = this.calcHeight();
     const toggle = createElementCommon('button', {
       className: 'block__toggle',
@@ -67,6 +68,11 @@ export class BlockFunction extends BlockCommon {
 
     removeButton.addEventListener('click', () => {
       this.paramSize = this.paramSize > 0 ? this.paramSize - 1 : 0;
+      for (let i = 1; i <= 4; i++) {
+        if (this.paramSize < i) {
+          this.data[`param${i}`] = {} as BlockObject;
+        }
+      }
       onChange();
     });
 
@@ -76,7 +82,12 @@ export class BlockFunction extends BlockCommon {
       'style',
       `height: ${childHeight - 100}px; width: 202px; ${this.fold ? 'display: none' : ''}`,
     );
+    triangle.setAttribute(
+      'style',
+      `width: 50px; height: 50px; position: absolute; right: -50px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
+    );
     div.appendChild(toggle);
+    div.appendChild(triangle);
     div.appendChild(p);
     div.appendChild(space1);
     let array = [];
@@ -220,7 +231,7 @@ export class BlockFunction extends BlockCommon {
   }
 
   getJsCode(defs: number): string {
-    let jsCode = 'function ';
+    let jsCode = 'async function ';
 
     const value = this.data.value;
     if (value instanceof BlockCommon) {
