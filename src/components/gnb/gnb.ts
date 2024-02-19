@@ -90,8 +90,6 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
     const zipWorkspaceData = JSON.stringify(zip(getWorkspaceData()));
     const URL_MAX_SIZE = 9600;
 
-    console.log(zipWorkspaceData.length);
-
     if (zipWorkspaceData.length > URL_MAX_SIZE) {
       if (urlCopyButton instanceof HTMLButtonElement) {
         urlCopyButton.textContent = 'Fail Large!';
