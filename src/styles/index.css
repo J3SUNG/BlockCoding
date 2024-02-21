@@ -143,6 +143,30 @@ select {
   position: absolute;
   bottom: 2rem;
   right: 2rem;
+  z-index: 1000;
+}
+
+#trash-bin.is-highlight-drop {
+  animation: wiggle 0.5s infinite;
+  color: tomato;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 .material-symbols-outlined {
@@ -156,18 +180,29 @@ select {
 
 /* 콘솔 영역 */
 #console {
+  position: relative;
   background-color: #3b3b3b;
-  min-width: 20rem;
+  min-width: 16rem;
   color: #fff;
   display: flex;
   flex-direction: column;
+  padding-bottom: 60px;
+  max-height: calc(100vh - 6rem);
+  overflow: hidden;
+}
+
+.console__output {
   padding-left: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 #console > input {
+  position: absolute;
   padding: 0.25rem 0.5rem;
-  width: 100%;
-  margin: auto 0 0 0;
+  width: calc(100% - 20px);
+  bottom: 10px;
+  left: 10px;
 }
 
 /* 색상 지정용 */
@@ -230,15 +265,15 @@ select {
 }
 
 .block--highlight-select {
-  box-shadow: 0px 0px 0px 3px #ffcd00;
+  box-shadow: 0px 0px 0px 4px #ffcd00;
+  z-index: 999;
 }
 
-.block--highlight-drop {
-  box-shadow: 0px 0px 0px 3px #34c759;
-}
-
-.block--highlight-remove {
-  box-shadow: 0px 0px 0px 3px #ff3b30;
+.block.is-highlight-drop,
+.block__space.is-highlight-drop,
+.block__child.is-highlight-drop {
+  box-shadow: 0px 0px 0px 4px #34c759;
+  z-index: 998;
 }
 
 .block--declare {
