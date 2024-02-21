@@ -2,7 +2,7 @@ import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
-import { Debug } from './debug/debug';
+import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockTimer extends BlockCommon {
@@ -65,7 +65,7 @@ export class BlockTimer extends BlockCommon {
         debugManager,
       );
 
-      if (debugManager.getTime > 0) {
+      if (debugManager.time > 0) {
         const div = document.getElementById(this.data.id);
         div?.classList.add('is-highlight-run');
         await this.wait(Number(time), exceptionManager);
