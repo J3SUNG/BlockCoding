@@ -18,13 +18,7 @@ export class BlockLoop extends BlockCommon {
     return { childX: 0, childY: prefixSum?.[index] ?? 0 };
   }
 
-  getElement(
-    id: string,
-    x: number,
-    y: number,
-    value?: string,
-    onChange?: (id: string, value: string, insertLocation?: string) => void,
-  ) {
+  getElement(id: string, x: number, y: number, onChange: () => void, value?: string) {
     const div = createElementCommon('div', { id, className: `block block--control` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '반복문' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
@@ -41,13 +35,7 @@ export class BlockLoop extends BlockCommon {
       }
 
       this.fold = !this.fold;
-      if (onChange) {
-        if (this.fold) {
-          onChange(id, 'true', 'fold');
-        } else {
-          onChange(id, 'false', 'fold');
-        }
-      }
+      onChange();
 
       const { childHeight } = this.calcHeight();
       div.style.height = childHeight + 'px';
@@ -126,6 +114,7 @@ export class BlockLoop extends BlockCommon {
           return '';
         }
 
+        exceptionManager.isInfinityLoop();
         await this.wait(0, exceptionManager);
         if (Array.isArray(value)) {
           for (const child of value) {

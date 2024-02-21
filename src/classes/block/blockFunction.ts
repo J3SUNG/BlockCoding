@@ -26,13 +26,7 @@ export class BlockFunction extends BlockCommon {
     return { childX: 0, childY: 0 };
   }
 
-  getElement(
-    id: string,
-    x: number,
-    y: number,
-    value?: string,
-    onChange?: (id: string, value: string, insertLocation?: string) => void,
-  ) {
+  getElement(id: string, x: number, y: number, onChange: () => void, value?: string) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '함수 선언' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
@@ -60,13 +54,7 @@ export class BlockFunction extends BlockCommon {
       }
 
       this.fold = !this.fold;
-      if (onChange) {
-        if (this.fold) {
-          onChange(id, 'true', 'fold');
-        } else {
-          onChange(id, 'false', 'fold');
-        }
-      }
+      onChange();
 
       const { childHeight } = this.calcHeight();
       div.style.height = childHeight + 'px';
@@ -74,17 +62,13 @@ export class BlockFunction extends BlockCommon {
     });
 
     addButton.addEventListener('click', () => {
-      if (onChange) {
-        this.paramSize = this.paramSize + 1 > PARAM_MAX_SIZE ? PARAM_MAX_SIZE : this.paramSize + 1;
-        onChange(id, this.paramSize + '', 'param');
-      }
+      this.paramSize = this.paramSize + 1 > PARAM_MAX_SIZE ? PARAM_MAX_SIZE : this.paramSize + 1;
+      onChange();
     });
 
     removeButton.addEventListener('click', () => {
-      if (onChange) {
-        this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
-        onChange(id, this.paramSize + '', 'param');
-      }
+      this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
+      onChange();
     });
 
     div.setAttribute('style', `left: ${x}px; top: ${y}px; width: 250px; height: ${childHeight}px; align-items: start`);

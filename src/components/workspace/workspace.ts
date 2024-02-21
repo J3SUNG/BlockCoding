@@ -1,4 +1,4 @@
-import { UpdateWorkspaceDataAll, UpdateWorkspaceDataValue, WorkspaceData } from '../../types/stateType';
+import { UpdateWorkspaceData, RefreshWorkspaceData, WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { deepCopy } from '../../utils/deepCopy';
 import { createUniqueId } from '../../utils/createUniqueId';
@@ -9,32 +9,26 @@ import { BlockCommon } from '../../classes/block/blockClassCommon';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
-  updateWorkspaceDataAll: UpdateWorkspaceDataAll;
-  updateWorkspaceDataValue: UpdateWorkspaceDataValue;
+  updateWorkspaceData: UpdateWorkspaceData;
+  refreshWorkspaceData: RefreshWorkspaceData;
   changeBlockWidth: () => void;
 }
 
 export const workspace = ({
   workspaceData,
-  updateWorkspaceDataAll,
-  updateWorkspaceDataValue,
+  updateWorkspaceData,
+  refreshWorkspaceData,
   changeBlockWidth,
 }: WorkspaceProps) => {
   const section = createElementCommon('div', { id: 'workspace' });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
   const trashIcon = createElementCommon('span', { className: 'material-symbols-outlined', textContent: 'delete' });
 
-  addWorkspaceReceiveDragEvent(section, workspaceData, updateWorkspaceDataAll);
-  addWorkspaceMouseDragEvent(section, workspaceData, updateWorkspaceDataAll);
+  addWorkspaceReceiveDragEvent(section, workspaceData, updateWorkspaceData);
+  addWorkspaceMouseDragEvent(section, workspaceData, updateWorkspaceData);
 
   workspaceData.forEach((obj) => {
-    paintWorkspace(
-      section,
-      obj,
-      { x: obj.data.x, y: obj.data.y, index: 0 },
-      updateWorkspaceDataValue,
-      changeBlockWidth,
-    );
+    paintWorkspace(section, obj, { x: obj.data.x, y: obj.data.y, index: 0 }, refreshWorkspaceData, changeBlockWidth);
   });
 
   section.appendChild(trashBin);
@@ -51,7 +45,7 @@ const paintWorkspace = (
     y: number;
     index?: number;
   },
-  updateWorkspaceDataValue: UpdateWorkspaceDataValue,
+  refreshWorkspaceData: RefreshWorkspaceData,
   changeBlockWidth: () => void,
   parentObj?: BlockObjectValue,
 ) => {
@@ -65,7 +59,7 @@ const paintWorkspace = (
         parent,
         item,
         { x: data.x, y: data.y, index: itemIndex },
-        updateWorkspaceDataValue,
+        refreshWorkspaceData,
         changeBlockWidth,
         parentObj,
       );
@@ -84,8 +78,8 @@ const paintWorkspace = (
         obj.data.id,
         newX,
         newY,
+        refreshWorkspaceData,
         obj.data.value,
-        updateWorkspaceDataValue,
         changeBlockWidth,
       );
       parent.appendChild(block);
@@ -98,7 +92,7 @@ const paintWorkspace = (
             space[itemIndex],
             blockProps,
             { x: newX, y: newY, index: 0 },
-            updateWorkspaceDataValue,
+            refreshWorkspaceData,
             changeBlockWidth,
             obj,
           );
@@ -111,7 +105,7 @@ const paintWorkspace = (
 const addWorkspaceMouseDragEvent = (
   section: HTMLElement,
   workspaceData: WorkspaceData,
-  updateWorkspaceDataAll: UpdateWorkspaceDataAll,
+  updateWorkspaceData: UpdateWorkspaceData,
 ) => {
   let active = false;
   let currentX: number;
@@ -190,7 +184,7 @@ const addWorkspaceMouseDragEvent = (
           initialY = currentY;
 
           if (changeCheck) {
-            updateWorkspaceDataAll(newWorkspaceData);
+            updateWorkspaceData(newWorkspaceData);
           }
 
           target.style.zIndex = '0';
@@ -408,7 +402,7 @@ const removeTargetBlock = (result: { parent: BlockObject | BlockObject[]; prop?:
 const addWorkspaceReceiveDragEvent = (
   section: HTMLElement,
   workspaceData: WorkspaceData,
-  updateWorkspaceDataAll: UpdateWorkspaceDataAll,
+  updateWorkspaceData: UpdateWorkspaceData,
 ) => {
   const trashBin = document.getElementById('trash-bin') as HTMLElement;
   const trashIcon = document.querySelector('#trash-bin > span') as HTMLElement;
@@ -449,7 +443,7 @@ const addWorkspaceReceiveDragEvent = (
       return;
     } else if (e.target === section) {
       const newWorkspaceData = inserBlockWorkspace(section, e, workspaceData);
-      updateWorkspaceDataAll(newWorkspaceData);
+      updateWorkspaceData(newWorkspaceData);
     } else if (e.dataTransfer) {
       const newWorkspaceData = deepCopy(workspaceData);
       const target = e.target;
@@ -460,7 +454,7 @@ const addWorkspaceReceiveDragEvent = (
         const insertSuccess = insertBlockAnotherBlock(uniqueId, name, newWorkspaceData, target);
 
         if (insertSuccess) {
-          updateWorkspaceDataAll(newWorkspaceData);
+          updateWorkspaceData(newWorkspaceData);
         }
       }
     }

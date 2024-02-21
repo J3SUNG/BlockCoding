@@ -4,6 +4,7 @@ import {
   BLOCK_SPACE_DEFAULT_MARGIN,
   BLOCK_SPACE_DEFAULT_WIDTH,
 } from '../../constants/blockDefaultMap';
+import { MILLISECONDS } from '../../constants/commonMap';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { createUniqueId } from '../../utils/createUniqueId';
@@ -28,14 +29,7 @@ export class BlockCommon implements BlockObject {
     return { childX: 0, childY: 0 };
   }
 
-  getElement(
-    id: string,
-    x: number,
-    y: number,
-    value?: string,
-    onChange?: (id: string, value: string, insertLocation?: string) => void,
-    changeBlockWidth?: () => void,
-  ) {
+  getElement(id: string, x: number, y: number, onChange?: () => void, value?: string, changeBlockWidth?: () => void) {
     const div = createElementCommon('div', { id, className: `block` });
     div.setAttribute('style', `left: ${x}px; top: ${y}px;`);
 
@@ -197,9 +191,9 @@ export class BlockCommon implements BlockObject {
     exceptionManager.stopTimer();
 
     await new Promise((resolve) => {
-      let timeoutId = setTimeout(resolve, time * 1000);
+      let timeoutId = setTimeout(resolve, time / MILLISECONDS);
       let startTime = Date.now();
-      let remainingTime: number = time * 1000;
+      let remainingTime: number = time / MILLISECONDS;
 
       const onProgramStateChange = (e: Event) => {
         const customEvent = e as CustomEvent;
@@ -232,15 +226,17 @@ export class BlockCommon implements BlockObject {
       return false;
     }
 
-    const time = debugManager.time;
+    await this.debugRun(debugManager.getTime, exceptionManager);
 
+    return true;
+  }
+
+  async debugRun(time: number, exceptionManager: Exception) {
     if (time > 0) {
       const div = document.getElementById(this.data.id);
       div?.classList.add('is-highlight-run');
       await this.wait(time, exceptionManager);
       div?.classList.remove('is-highlight-run');
     }
-
-    return true;
   }
 }

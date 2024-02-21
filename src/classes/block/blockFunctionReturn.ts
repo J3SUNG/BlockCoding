@@ -17,13 +17,7 @@ export class BlockFunctionReturn extends BlockCommon {
     this.data.param4 = {} as BlockObject;
   }
 
-  getElement(
-    id: string,
-    x: number,
-    y: number,
-    value?: string,
-    onChange?: (id: string, value: string, insertLocation?: string) => void,
-  ) {
+  getElement(id: string, x: number, y: number, onChange: () => void, value?: string) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '함수 호출' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
@@ -38,17 +32,13 @@ export class BlockFunctionReturn extends BlockCommon {
     });
 
     addButton.addEventListener('click', () => {
-      if (onChange) {
-        this.paramSize = this.paramSize + 1 > PARAM_MAX_SIZE ? PARAM_MAX_SIZE : this.paramSize + 1;
-        onChange(id, this.paramSize + '', 'param');
-      }
+      this.paramSize = this.paramSize + 1 > PARAM_MAX_SIZE ? PARAM_MAX_SIZE : this.paramSize + 1;
+      onChange();
     });
 
     removeButton.addEventListener('click', () => {
-      if (onChange) {
-        this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
-        onChange(id, this.paramSize + '', 'param');
-      }
+      this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
+      onChange();
     });
 
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);

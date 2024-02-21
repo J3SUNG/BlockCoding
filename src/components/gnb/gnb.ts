@@ -3,7 +3,7 @@ import {
   ProgramState,
   UpdateConsoleLog,
   UpdateProgramState,
-  UpdateWorkspaceDataAll,
+  UpdateWorkspaceData,
   WorkspaceData,
 } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
@@ -16,19 +16,13 @@ import { Debug } from '../../classes/debug/debug';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
-  updateWorkspaceDataAll: UpdateWorkspaceDataAll;
+  updateWorkspaceData: UpdateWorkspaceData;
   getConsoleLog: () => ConsoleLog;
   updateConsoleLog: UpdateConsoleLog;
   render: () => void;
 }
 
-export const gnb = ({
-  getWorkspaceData,
-  updateWorkspaceDataAll,
-  getConsoleLog,
-  updateConsoleLog,
-  render,
-}: GnbProps) => {
+export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, updateConsoleLog, render }: GnbProps) => {
   const [getProgramState, setProgramState] = useState<ProgramState>('prgramState', 'stop');
   const header = createElementCommon('header', { id: 'gnb' });
   const h1 = createElementCommon('h1', { id: 'title', textContent: 'Block Coding' });
@@ -94,7 +88,7 @@ export const gnb = ({
           const content: string = e.target?.result as string;
           const jsonData: WorkspaceData = JSON.parse(content);
 
-          loadData(jsonData, updateWorkspaceDataAll, updateProgramState, updateConsoleLog);
+          loadData(jsonData, updateWorkspaceData, updateProgramState, updateConsoleLog);
 
           fileInput.value = '';
         };
@@ -215,13 +209,13 @@ const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon |
 
 const loadData = (
   loadWorkspaceData: WorkspaceData,
-  updateWorkspaceDataAll: UpdateWorkspaceDataAll,
+  updateWorkspaceData: UpdateWorkspaceData,
   updateProgramState: UpdateProgramState,
   updateConsoleLog: UpdateConsoleLog,
 ): void => {
   const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
 
-  updateWorkspaceDataAll(newWorkspaceData);
+  updateWorkspaceData(newWorkspaceData);
   updateProgramState('stop');
   updateConsoleLog([]);
 };
