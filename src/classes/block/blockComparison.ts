@@ -34,6 +34,10 @@ export class BlockComparison extends BlockCommon {
     });
 
     operatorSelect.addEventListener('change', (e: Event) => {
+      if (!this.data.id) {
+        return;
+      }
+
       const target = e.target as HTMLSelectElement;
       const selectedValue: string = target.value;
 
@@ -152,8 +156,8 @@ export class BlockComparison extends BlockCommon {
       '<': '<',
       '>=': '>=',
       '<=': '<=',
-      '=': '===',
-      '!=': '!==',
+      '=': '==',
+      '!=': '!=',
     };
 
     if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {

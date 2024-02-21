@@ -32,11 +32,19 @@ export class BlockFunctionCall extends BlockCommon {
     });
 
     addButton.addEventListener('click', () => {
+      if (!this.data.id) {
+        return;
+      }
+
       this.paramSize = this.paramSize + 1 > 4 ? 4 : this.paramSize + 1;
       onChange();
     });
 
     removeButton.addEventListener('click', () => {
+      if (!this.data.id) {
+        return;
+      }
+
       this.paramSize = this.paramSize > 0 ? this.paramSize - 1 : 0;
       for (let i = 1; i <= 4; i++) {
         if (this.paramSize < i) {
@@ -189,7 +197,7 @@ export class BlockFunctionCall extends BlockCommon {
     const value = this.data.value;
 
     if (value instanceof BlockCommon) {
-      jsCode = `${this.getJsTab(defs)}${this.removeQuarters(value.getJsCode(defs))}(`;
+      jsCode = `${this.getJsTab(defs)}await ${this.removeQuarters(value.getJsCode(defs))}(`;
     }
 
     for (let i = 0; i < this.paramSize; i++) {

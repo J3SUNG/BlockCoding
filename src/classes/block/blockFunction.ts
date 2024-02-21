@@ -62,11 +62,19 @@ export class BlockFunction extends BlockCommon {
     });
 
     addButton.addEventListener('click', () => {
+      if (!this.data.id) {
+        return;
+      }
+
       this.paramSize = this.paramSize + 1 > 4 ? 4 : this.paramSize + 1;
       onChange();
     });
 
     removeButton.addEventListener('click', () => {
+      if (!this.data.id) {
+        return;
+      }
+
       this.paramSize = this.paramSize > 0 ? this.paramSize - 1 : 0;
       for (let i = 1; i <= 4; i++) {
         if (this.paramSize < i) {
