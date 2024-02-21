@@ -1,57 +1,59 @@
 import { EXCEPTION } from '../../constants/exceptionMap';
 
+type ExceptionType = '' | 'infinityLoop' | 'nan' | 'infinity';
+
 export class Exception {
-  startTime: number | null = null;
-  useTime: number = 0;
-  exception: string;
+  #startTime: number | null = null;
+  #useTime: number = 0;
+  #exception: ExceptionType;
 
   constructor() {
-    this.startTime = Date.now();
-    this.exception = '';
+    this.#startTime = Date.now();
+    this.#exception = '';
   }
 
   startTimer() {
-    if (this.startTime === null) {
-      this.startTime = Date.now();
+    if (this.#startTime === null) {
+      this.#startTime = Date.now();
     }
   }
 
   stopTimer() {
-    if (this.startTime !== null) {
+    if (this.#startTime !== null) {
       const endTime = Date.now();
-      this.useTime += endTime - this.startTime;
-      this.startTime = null;
+      this.#useTime += endTime - this.startTime;
+      this.#startTime = null;
     }
   }
 
   isInfinityLoop() {
-    const endTime = Date.now();
-    if (this.startTime) {
-      const curUseTime = this.useTime + endTime - this.startTime;
+    const #endTime = Date.now();
+    if (this.#startTime) {
+      const curUseTime = this.#useTime + #endTime - this.#startTime;
 
       if (curUseTime > 10000) {
-        this.exception = 'infinityLoop';
+        this.#exception = 'infinityLoop';
       }
     }
   }
 
   isNan(value: number) {
     if (isNaN(value)) {
-      this.exception = 'nan';
+      this.#exception = 'nan';
     }
   }
 
   isInfinity(value: number) {
     if (value === Infinity || value === -Infinity) {
-      this.exception = 'infinity';
+      this.#exception = 'infinity';
     }
   }
 
   get isError() {
-    return this.exception !== '';
+    return this.#exception !== '';
   }
 
   errorMessage() {
-    return EXCEPTION[this.exception];
+    return EXCEPTION[this.#exception];
   }
 }
