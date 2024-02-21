@@ -6,7 +6,7 @@ import {
 } from '../../constants/blockDefaultMap';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { InfinityLoop } from '../infinityLoop/infinityLoop';
+import { Exception } from '../exception/exception';
 
 export class BlockCommon implements BlockObject {
   name = '';
@@ -47,10 +47,10 @@ export class BlockCommon implements BlockObject {
   async runLogic(
     variableMap: Map<string, string>,
     functionMap: Map<string, BlockCommon>,
-    prevLog: () => string[],
-    setChanageLog: (log: string[]) => void,
+    prevLog: () => { text: string; type: string }[],
+    setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
-    timeManager: InfinityLoop,
+    exceptionManager: Exception,
   ): Promise<string> {
     return '';
   }

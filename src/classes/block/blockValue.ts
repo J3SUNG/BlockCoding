@@ -1,6 +1,6 @@
 import { BLOCK_DEFAULT_HEIGHT, BLOCK_DEFAULT_WIDTH, BLOCK_SPACE_DEFAULT_WIDTH } from '../../constants/blockDefaultMap';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { InfinityLoop } from '../infinityLoop/infinityLoop';
+import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockValue extends BlockCommon {
@@ -103,10 +103,10 @@ export class BlockValue extends BlockCommon {
   async runLogic(
     variableMap: Map<string, string>,
     functionMap: Map<string, BlockCommon>,
-    prevLog: () => string[],
-    setChanageLog: (log: string[]) => void,
+    prevLog: () => { text: string; type: string }[],
+    setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
-    timeManager: InfinityLoop,
+    exceptionManager: Exception,
   ): Promise<string> {
     if (typeof this.data.value === 'string') {
       return this.data.value;

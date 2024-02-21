@@ -1,7 +1,7 @@
 import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { InfinityLoop } from '../infinityLoop/infinityLoop';
+import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockNegation extends BlockCommon {
@@ -53,12 +53,12 @@ export class BlockNegation extends BlockCommon {
   async runLogic(
     variableMap: Map<string, string>,
     functionMap: Map<string, BlockCommon>,
-    prevLog: () => string[],
-    setChanageLog: (log: string[]) => void,
+    prevLog: () => { text: string; type: string }[],
+    setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
-    timeManager: InfinityLoop,
+    exceptionManager: Exception,
   ): Promise<string> {
-    if (getProgramState() === 'stop') {
+    if (getProgramState() === 'stop' || exceptionManager.isError) {
       return '';
     }
 
@@ -67,7 +67,7 @@ export class BlockNegation extends BlockCommon {
 
     if (value instanceof BlockCommon) {
       const operand1 =
-        (await value.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
+        (await value.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, exceptionManager)) ===
         'true'
           ? true
           : false;

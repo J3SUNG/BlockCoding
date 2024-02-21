@@ -1,7 +1,8 @@
+import { ConsoleLog } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 
 interface ConsoleSpaceProps {
-  consoleLog: string[];
+  consoleLog: ConsoleLog;
 }
 
 export const consoleSpace = ({ consoleLog }: ConsoleSpaceProps) => {
@@ -10,7 +11,17 @@ export const consoleSpace = ({ consoleLog }: ConsoleSpaceProps) => {
   const outputDiv = createElementCommon('div', {});
 
   consoleLog.forEach((item) => {
-    const p = createElementCommon('p', { textContent: item });
+    const p = createElementCommon('p', { textContent: item.text });
+
+    if (item.type === 'output') {
+      p.style.color = 'white';
+    } else if (item.type === 'input') {
+      p.style.color = 'aqua';
+    } else if (item.type === 'system') {
+      p.style.color = 'lime';
+    } else if (item.type === 'error') {
+      p.style.color = 'yellow';
+    }
     outputDiv.appendChild(p);
   });
 
