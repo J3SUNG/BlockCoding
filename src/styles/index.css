@@ -394,17 +394,31 @@ select {
 }
 
 .block__param-button--add {
-  background-color: #34c759;
+  background-color: #f0f0f0;
 }
 
 .block__param-button--add:hover {
-  background-color: #30b750;
+  background-color: rgb(34 197 94);
 }
 
 .block__param-button--remove {
-  background-color: #ff3b30;
+  background-color: #f0f0f0;
 }
 
 .block__param-button--remove:hover {
-  background-color: #d93025;
+  background-color: rgb(255 69 58);
+}
+
+.block__return-text {
+  position: absolute;
+  bottom: 12px;
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  left: 20px;
+}
+.block__return-space {
+  position: absolute;
+  bottom: 0px;
+  left: 80px;
 }

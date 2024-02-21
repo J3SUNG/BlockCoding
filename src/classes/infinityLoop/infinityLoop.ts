@@ -25,7 +25,7 @@ export class InfinityLoop {
     if (this.startTime) {
       const curUseTime = this.useTime + endTime.getTime() - this.startTime.getTime();
 
-      return curUseTime > 3000;
+      return curUseTime > 10000;
     }
     return false;
   }

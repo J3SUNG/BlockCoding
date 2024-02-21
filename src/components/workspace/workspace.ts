@@ -74,7 +74,7 @@ const paintWorkspace = (
       let newX = data.x;
       let newY = data.y;
       if (parentObj && typeof parentObj === 'object' && !Array.isArray(parentObj)) {
-        const { childX, childY } = parentObj.setChildPosition(data.index!);
+        const { childX, childY } = parentObj.setChildPosition(data.index);
         newX = childX;
         newY = childY;
       }
@@ -96,7 +96,7 @@ const paintWorkspace = (
           paintWorkspace(
             space[itemIndex],
             blockProps,
-            { x: newX, y: newY, index: itemIndex },
+            { x: newX, y: newY, index: 0 },
             updateWorkspaceDataValue,
             changeBlockWidth,
             obj,
@@ -197,7 +197,7 @@ const addWorkspaceMouseDragEvent = (
                 anotherBlockClosestDiv.id as string,
                 child.name,
                 newWorkspaceData,
-                anotherBlock.id,
+                anotherBlock,
                 child,
               );
             } else {
@@ -205,7 +205,7 @@ const addWorkspaceMouseDragEvent = (
                 anotherBlockClosestDiv.id as string,
                 newChild.name,
                 newWorkspaceData,
-                anotherBlock.id,
+                anotherBlock,
                 newChild,
               );
             }
@@ -412,15 +412,16 @@ const addWorkspaceReceiveDragEvent = (
       updateWorkspaceDataAll(newWorkspaceData);
     } else if (e.dataTransfer) {
       const newWorkspaceData = deepCopy(workspaceData);
-      const target = e.target as Element;
-      const targetDiv = target.closest('div');
-      const uniqueId = targetDiv?.id ?? '';
-      const name = e.dataTransfer.getData('name');
+      const target = e.target;
 
-      targetDiv?.classList.remove('is-highlight-drop');
+      if (target instanceof HTMLElement) {
+        const uniqueId = target.closest('div')?.id ?? '';
+        const name = e.dataTransfer.getData('name');
+        const insertSuccess = insertBlockAnotherBlock(uniqueId, name, newWorkspaceData, target);
 
-      if (insertBlockAnotherBlock(uniqueId, name, newWorkspaceData, target.id)) {
-        updateWorkspaceDataAll(newWorkspaceData);
+        if (insertSuccess) {
+          updateWorkspaceDataAll(newWorkspaceData);
+        }
       }
     }
   });
@@ -448,15 +449,15 @@ const insertBlockAnotherBlock = (
   targetUniqueId: string,
   name: string,
   newWorkspaceData: BlockObject[],
-  location: string,
+  anotherBlock: HTMLElement,
   insertBlock?: BlockObject,
 ): boolean => {
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
 
   if (targetObj) {
     const newBlock = insertBlock ? insertBlock : createBlock(name, createUniqueId(), 0, 0);
-    if (location === 'space1' || location === 'space2') {
-      return targetObj.insert(newBlock, location);
+    if (anotherBlock.classList.contains('block__space')) {
+      return targetObj.insert(newBlock, anotherBlock.id);
     } else {
       return targetObj.insert(newBlock);
     }
