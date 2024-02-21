@@ -18,7 +18,8 @@ interface ConstantBlockMap {
       | 'negation'
       | 'logical'
       | 'string'
-      | 'randomNumber';
+      | 'randomNumber'
+      | 'debug';
     type: 'declare' | 'general' | 'control' | 'expressionValue' | 'expressionLogical';
   };
 }
@@ -46,6 +47,10 @@ export const BLOCK_MAP: ConstantBlockMap = {
   },
   functionCall: {
     name: 'functionCall',
+    type: 'general',
+  },
+  debug: {
+    name: 'debug',
     type: 'general',
   },
   condition: {

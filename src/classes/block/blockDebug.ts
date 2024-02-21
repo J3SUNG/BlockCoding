@@ -1,23 +1,24 @@
+import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
 
-export class BlockRefVariable extends BlockCommon {
-  name = 'refVariable';
-  type = 'expressionValue';
+export class BlockDeubg extends BlockCommon {
+  name = 'debug';
+  type = 'general';
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
   }
 
   getElement(id: string, x: number, y: number) {
-    const div = createElementCommon('div', { id, className: `block block--expression-value` });
-    const p = createElementCommon('p', { className: 'block__text', textContent: '변수 참조' });
+    const div = createElementCommon('div', { id, className: `block block--general` });
+    const p = createElementCommon('p', { className: 'block__text', textContent: '디버깅 시간' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
     div.appendChild(p);
     div.appendChild(space1);
 
@@ -51,10 +52,9 @@ export class BlockRefVariable extends BlockCommon {
     }
 
     const value = this.data.value;
-    let result: string = '';
 
     if (value instanceof BlockCommon) {
-      const operand = await value.runLogic(
+      const result: string = await value.runLogic(
         variableMap,
         functionMap,
         prevLog,
@@ -63,9 +63,10 @@ export class BlockRefVariable extends BlockCommon {
         exceptionManager,
         debugManager,
       );
-      result = variableMap.get(operand) || '';
+
+      debugManager.time = Number(result);
     }
 
-    return result;
+    return '';
   }
 }

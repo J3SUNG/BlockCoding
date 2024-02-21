@@ -2,6 +2,7 @@ import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
+import { Debug } from '../debug/debug';
 
 export class BlockComparison extends BlockCommon {
   name = 'comparison';
@@ -90,8 +91,9 @@ export class BlockComparison extends BlockCommon {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
-    if (getProgramState() === 'stop' || exceptionManager.isError) {
+    if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
       return '';
     }
 
@@ -107,6 +109,7 @@ export class BlockComparison extends BlockCommon {
         setChanageLog,
         getProgramState,
         exceptionManager,
+        debugManager,
       );
       const operand2 = await secondValue?.runLogic(
         variableMap,
@@ -115,6 +118,7 @@ export class BlockComparison extends BlockCommon {
         setChanageLog,
         getProgramState,
         exceptionManager,
+        debugManager,
       );
 
       switch (this.data.operator) {

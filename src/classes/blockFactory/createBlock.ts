@@ -2,6 +2,7 @@ import { BlockArithmetic } from '../block/blockArithmetic';
 import { BlockCommon } from '../block/blockClassCommon';
 import { BlockComparison } from '../block/blockComparison';
 import { BlockCondition } from '../block/blockCondition';
+import { BlockDeubg } from '../block/blockDebug';
 import { BlockFunction } from '../block/blockFunction';
 import { BlockFunctionCall } from '../block/blockFunctionCall';
 import { BlockFunctionReturn } from '../block/blockFunctionReturn';
@@ -41,6 +42,7 @@ const blockTypes: BlockTypeMap = {
   logical: BlockLogical,
   string: BlockString,
   randomNumber: BlockRandomNumber,
+  debug: BlockDeubg,
 };
 
 export const createBlock = (name: string, id: string, x: number, y: number): BlockCommon => {

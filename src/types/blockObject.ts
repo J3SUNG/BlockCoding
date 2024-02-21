@@ -1,4 +1,5 @@
 import { BlockCommon } from '../classes/block/blockClassCommon';
+import { Debug } from '../classes/debug/debug';
 import { Exception } from '../classes/exception/exception';
 import { UpdateWorkspaceDataValue } from './stateType';
 
@@ -44,6 +45,7 @@ export interface BlockObject {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string>;
   calcWidth(): number;
   calcHeight(): { childHeight: number; prefixSum?: number[] };

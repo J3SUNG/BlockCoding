@@ -8,6 +8,7 @@ import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { createUniqueId } from '../../utils/createUniqueId';
 import { Exception } from '../exception/exception';
+import { Debug } from '../debug/debug';
 
 export class BlockCommon implements BlockObject {
   name = '';
@@ -52,6 +53,7 @@ export class BlockCommon implements BlockObject {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
     return '';
   }
@@ -189,5 +191,56 @@ export class BlockCommon implements BlockObject {
         });
       }
     });
+  }
+
+  async wait(time: number, exceptionManager: Exception) {
+    exceptionManager.stopTimer();
+
+    await new Promise((resolve) => {
+      let timeoutId = setTimeout(resolve, time * 1000);
+      let startTime = Date.now();
+      let remainingTime: number = time * 1000;
+
+      const onProgramStateChange = (e: Event) => {
+        const customEvent = e as CustomEvent;
+        if (customEvent.detail === 'stop') {
+          clearTimeout(timeoutId);
+          document.removeEventListener('ProgramStateChange', onProgramStateChange);
+          resolve('');
+        } else if (customEvent.detail === 'pause') {
+          const endTime = Date.now();
+          remainingTime = remainingTime - (endTime - startTime);
+          clearTimeout(timeoutId);
+        } else if (customEvent.detail === 'run') {
+          startTime = Date.now();
+          timeoutId = setTimeout(resolve, remainingTime);
+        }
+      };
+
+      document.addEventListener('ProgramStateChange', onProgramStateChange);
+    });
+
+    exceptionManager.stopTimer();
+  }
+
+  async preprocessingRun(
+    getProgramState: () => 'run' | 'stop' | 'pause',
+    exceptionManager: Exception,
+    debugManager: Debug,
+  ): Promise<boolean> {
+    if (getProgramState() === 'stop' || exceptionManager.isError) {
+      return false;
+    }
+
+    const time = debugManager.time;
+
+    if (time > 0) {
+      const div = document.getElementById(this.data.id);
+      div?.classList.add('is-highlight-run');
+      await this.wait(time, exceptionManager);
+      div?.classList.remove('is-highlight-run');
+    }
+
+    return true;
   }
 }

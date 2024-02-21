@@ -1,6 +1,7 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
+import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockNegation extends BlockCommon {
@@ -56,8 +57,9 @@ export class BlockNegation extends BlockCommon {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
-    if (getProgramState() === 'stop' || exceptionManager.isError) {
+    if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
       return '';
     }
 
@@ -66,8 +68,15 @@ export class BlockNegation extends BlockCommon {
 
     if (value instanceof BlockCommon) {
       const operand1 =
-        (await value.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, exceptionManager)) ===
-        'true'
+        (await value.runLogic(
+          variableMap,
+          functionMap,
+          prevLog,
+          setChanageLog,
+          getProgramState,
+          exceptionManager,
+          debugManager,
+        )) === 'true'
           ? true
           : false;
 

@@ -1,6 +1,7 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
+import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockString extends BlockCommon {
@@ -57,8 +58,9 @@ export class BlockString extends BlockCommon {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
-    if (getProgramState() === 'stop' || exceptionManager.isError) {
+    if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
       return '';
     }
 
@@ -74,6 +76,7 @@ export class BlockString extends BlockCommon {
         setChanageLog,
         getProgramState,
         exceptionManager,
+        debugManager,
       );
       const operand2 = await secondValue.runLogic(
         variableMap,
@@ -82,6 +85,7 @@ export class BlockString extends BlockCommon {
         setChanageLog,
         getProgramState,
         exceptionManager,
+        debugManager,
       );
 
       result = operand1 + ' ' + operand2;

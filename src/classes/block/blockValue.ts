@@ -1,6 +1,7 @@
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
+import { Debug } from '../debug/debug';
 
 export class BlockValue extends BlockCommon {
   name = 'value';
@@ -106,7 +107,12 @@ export class BlockValue extends BlockCommon {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
+    if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
+      return '';
+    }
+
     if (typeof this.data.value === 'string') {
       return this.data.value;
     } else {

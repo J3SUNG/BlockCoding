@@ -1,33 +1,33 @@
 import { EXCEPTION } from '../../constants/exceptionMap';
 
 export class Exception {
-  startTime: Date | null = null;
+  startTime: number | null = null;
   useTime: number = 0;
   exception: string;
 
   constructor() {
-    this.startTime = new Date();
+    this.startTime = Date.now();
     this.exception = '';
   }
 
   startTimer() {
     if (this.startTime === null) {
-      this.startTime = new Date();
+      this.startTime = Date.now();
     }
   }
 
   stopTimer() {
     if (this.startTime !== null) {
-      const endTime = new Date();
-      this.useTime += endTime.getTime() - this.startTime.getTime();
+      const endTime = Date.now();
+      this.useTime += endTime - this.startTime;
       this.startTime = null;
     }
   }
 
   isInfinityLoop() {
-    const endTime = new Date();
+    const endTime = Date.now();
     if (this.startTime) {
-      const curUseTime = this.useTime + endTime.getTime() - this.startTime.getTime();
+      const curUseTime = this.useTime + endTime - this.startTime;
 
       if (curUseTime > 10000) {
         this.exception = 'infinityLoop';

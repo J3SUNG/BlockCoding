@@ -1,6 +1,7 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
+import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockInput extends BlockCommon {
@@ -28,8 +29,9 @@ export class BlockInput extends BlockCommon {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
-    if (getProgramState() === 'stop' || exceptionManager.isError) {
+    if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
       return '';
     }
 
@@ -71,7 +73,16 @@ export class BlockInput extends BlockCommon {
       });
     };
 
-    const result = await waitInput();
+    let result = '';
+    if (debugManager.time > 0) {
+      const div = document.getElementById(this.data.id);
+      div?.classList.add('is-highlight-run');
+      result = await waitInput();
+      div?.classList.remove('is-highlight-run');
+    } else {
+      result = await waitInput();
+    }
+
     exceptionManager.startTimer();
 
     return result;

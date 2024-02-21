@@ -3,6 +3,7 @@ import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
+import { Debug } from '../debug/debug';
 
 export class BlockFunction extends BlockCommon {
   name = 'function';
@@ -174,11 +175,13 @@ export class BlockFunction extends BlockCommon {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
     let result: string = '';
 
     exceptionManager.isInfinityLoop();
-    if (getProgramState() === 'stop' || exceptionManager.isError) {
+    await this.wait(0, exceptionManager);
+    if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
       return '';
     }
 
@@ -192,6 +195,7 @@ export class BlockFunction extends BlockCommon {
           setChanageLog,
           getProgramState,
           exceptionManager,
+          debugManager,
         );
         variableMap.set(`param${i + 1}`, paramResult);
       }
@@ -208,6 +212,7 @@ export class BlockFunction extends BlockCommon {
             setChanageLog,
             getProgramState,
             exceptionManager,
+            debugManager,
           );
         }
       }
@@ -221,6 +226,7 @@ export class BlockFunction extends BlockCommon {
         setChanageLog,
         getProgramState,
         exceptionManager,
+        debugManager,
       );
       result = returnResult;
 

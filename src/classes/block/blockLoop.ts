@@ -2,6 +2,7 @@ import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
+import { Debug } from '../debug/debug';
 
 export class BlockLoop extends BlockCommon {
   name = 'loop';
@@ -97,11 +98,15 @@ export class BlockLoop extends BlockCommon {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
     const condition = this.data.condition;
     const value = this.data.value;
     let result: string = '';
 
+    if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
+      return '';
+    }
     if (condition instanceof BlockCommon) {
       let operand =
         (await condition.runLogic(
@@ -111,15 +116,17 @@ export class BlockLoop extends BlockCommon {
           setChanageLog,
           getProgramState,
           exceptionManager,
+          debugManager,
         )) === 'true'
           ? true
           : false;
 
       while (operand) {
-        exceptionManager.isInfinityLoop();
-        if (getProgramState() === 'stop' || exceptionManager.isError) {
+        if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
           return '';
         }
+
+        await this.wait(0, exceptionManager);
         if (Array.isArray(value)) {
           for (const child of value) {
             if (child instanceof BlockCommon) {
@@ -130,6 +137,7 @@ export class BlockLoop extends BlockCommon {
                 setChanageLog,
                 getProgramState,
                 exceptionManager,
+                debugManager,
               );
             }
           }
@@ -143,6 +151,7 @@ export class BlockLoop extends BlockCommon {
             setChanageLog,
             getProgramState,
             exceptionManager,
+            debugManager,
           )) === 'true'
             ? true
             : false;
