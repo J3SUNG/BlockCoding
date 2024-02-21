@@ -4,7 +4,6 @@ import { UpdateConsoleLog, UpdateProgramState, UpdateWorkspaceData, WorkspaceDat
 import { changeUniqueIdObj } from '../../utils/changeUniqueIdObj';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { restoreWorkspaceData } from '../../utils/restoreWorkspaceData';
-import { unzip } from '../../utils/zipBlock';
 
 interface FileInputProps {
   updateWorkspaceData: UpdateWorkspaceData;
@@ -45,14 +44,7 @@ const loadData = (
   updateProgramState: UpdateProgramState,
   updateConsoleLog: UpdateConsoleLog,
 ): void => {
-  const newWorkspaceData: BlockCommon[] = [];
-  loadWorkspaceData.forEach((block: BlockObject) => {
-    const resotreData = restoreWorkspaceData(unzip(block));
-
-    if (resotreData && !Array.isArray(resotreData)) {
-      newWorkspaceData.push(resotreData);
-    }
-  });
+  const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
 
   changeUniqueIdObj(newWorkspaceData);
   newWorkspaceData.forEach((block: BlockCommon) => {

@@ -1,8 +1,9 @@
+import { PARAM_MAX_SIZE, PARAM_MIN_SIZE } from '../../constants/blockDataMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
-import { Debug } from './debug/debug';
+import { Debug } from '../debug/debug';
 
 export class BlockFunction extends BlockCommon {
   name = 'function';
@@ -62,12 +63,12 @@ export class BlockFunction extends BlockCommon {
     });
 
     addButton.addEventListener('click', () => {
-      this.paramSize = this.paramSize + 1 > 4 ? 4 : this.paramSize + 1;
+      this.paramSize = this.paramSize + 1 > PARAM_MAX_SIZE ? PARAM_MAX_SIZE : this.paramSize + 1;
       onChange();
     });
 
     removeButton.addEventListener('click', () => {
-      this.paramSize = this.paramSize > 0 ? this.paramSize - 1 : 0;
+      this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
       for (let i = 1; i <= 4; i++) {
         if (this.paramSize < i) {
           this.data[`param${i}`] = {} as BlockObject;
