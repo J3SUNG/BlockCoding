@@ -1,5 +1,5 @@
 import { BlockCommon } from '../../classes/block/blockClassCommon';
-import { Debug } from '../../classes/block/debug/debug';
+import { Debug } from '../../classes/debug/debug';
 import { Exception } from '../../classes/exception/exception';
 import { ConsoleLog, ProgramState, UpdateConsoleLog, UpdateProgramState, WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
@@ -49,7 +49,6 @@ const runProgram = async (
     { text: 'ㅤ', type: 'system' },
   ]);
 
-  const DEFAULT_DEBUG_TIME = 0;
   const functionMap = new Map<string, BlockCommon>();
   for (const block of workspaceData) {
     if (block.name === 'function' && block instanceof BlockCommon) {

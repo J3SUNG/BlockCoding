@@ -1,5 +1,5 @@
 import { BlockCommon } from '../classes/block/blockClassCommon';
-import { Debug } from '../classes/block/debug/debug';
+import { Debug } from '../classes/debug/debug';
 import { Exception } from '../classes/exception/exception';
 import { RefreshWorkspaceData } from './stateType';
 
@@ -51,4 +51,5 @@ export interface BlockObject {
   calcWidth(): number;
   calcHeight(): { childHeight: number; prefixSum?: number[] };
   getJsCode(defs: number): string;
+  changeUniqueId(): void;
 }

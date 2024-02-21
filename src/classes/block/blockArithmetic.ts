@@ -1,8 +1,7 @@
-import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
-import { Debug } from './debug/debug';
+import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockArithmetic extends BlockCommon {
@@ -39,7 +38,7 @@ export class BlockArithmetic extends BlockCommon {
       onChange();
     });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(space1);
     div.appendChild(operatorSelect);
     div.appendChild(space2);
