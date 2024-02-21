@@ -20,7 +20,6 @@ export const workspace = ({
   refreshWorkspaceData,
   changeBlockWidth,
 }: WorkspaceProps) => {
-  const main = createElementCommon('main', { id: 'workspace-container' });
   const section = workspaceSection({
     workspaceData,
     updateWorkspaceData,
@@ -37,9 +36,8 @@ export const workspace = ({
 
   section.appendChild(trashBin);
   trashBin.appendChild(trashIcon);
-  main.appendChild(section);
 
-  return main;
+  return section;
 };
 
 const paintWorkspace = (
@@ -161,27 +159,7 @@ const insertBlockAnotherBlock = (
     if (anotherBlock.classList.contains('block__space')) {
       return targetObj.insert(newBlock, anotherBlock.id);
     } else {
-      if (
-        (targetObj.type === 'general' || targetObj.type === 'control') &&
-        (newBlock.type === 'general' || newBlock.type === 'control')
-      ) {
-        const parentData = findTargetParentBlock(targetUniqueId, newWorkspaceData, newWorkspaceData);
-        if (parentData && Array.isArray(parentData.parent) && typeof parentData.index === 'number') {
-          const rect = anotherBlockClosestDiv.getBoundingClientRect();
-          const y = event.pageY - rect.top + window.scrollY;
-          if (y < 25) {
-            parentData.parent.splice(parentData.index, 0, newBlock);
-            return true;
-          } else if (y > rect.height - 25) {
-            parentData.parent.splice(parentData.index + 1, 0, newBlock);
-            return true;
-          } else {
-            return targetObj.insert(newBlock);
-          }
-        }
-      } else {
-        return targetObj.insert(newBlock);
-      }
+      return targetObj.insert(newBlock);
     }
   }
 
