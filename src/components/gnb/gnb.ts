@@ -176,7 +176,7 @@ const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon |
     [...newBlock.getInnerBlock(), ...newBlock.getChildBlock()].forEach((key) => {
       const innerBlock = newBlock.data[key];
 
-      if (typeof innerBlock === 'object' && innerBlock !== null && Object.keys(innerBlock).length > 0) {
+      if (typeof innerBlock === 'object' && Object.keys(innerBlock).length > 0) {
         const newChildBlock = restoreWorkspaceData(innerBlock);
 
         if (newChildBlock) {

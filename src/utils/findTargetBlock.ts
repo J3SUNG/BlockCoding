@@ -12,7 +12,7 @@ export const findTargetBlock = (targetId: string, obj: BlockObjectValue): BlockO
         return findTarget;
       }
     }
-  } else if (typeof obj === 'object' && 'data' in obj && (obj.data.value || obj.data.value == '')) {
+  } else if (typeof obj === 'object' && 'data' in obj) {
     if (obj.data.id === targetId) {
       return obj;
     }
