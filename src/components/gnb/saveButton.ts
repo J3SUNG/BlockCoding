@@ -14,6 +14,7 @@ export const saveButton = ({ getWorkspaceData }: SaveButtonProps) => {
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
+
     link.href = url;
     link.download = 'workspaceData.json';
     link.click();
