@@ -2,7 +2,7 @@ import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
-import { Debug } from './debug/debug';
+import { Debug } from '../debug/debug';
 
 export class BlockCondition extends BlockCommon {
   name = 'condition';

@@ -12,7 +12,7 @@ import { useState } from '../../core/core';
 import { BlockCommon } from '../../classes/block/blockClassCommon';
 import { createBlock } from '../../classes/blockFactory/createBlock';
 import { Exception } from '../../classes/exception/exception';
-import { Debug } from '../../classes/block/debug/debug';
+import { Debug } from '../../classes/debug/debug';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;

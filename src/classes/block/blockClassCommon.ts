@@ -7,7 +7,7 @@ import {
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
-import { Debug } from './debug/debug';
+import { Debug } from '../debug/debug';
 
 export class BlockCommon implements BlockObject {
   name = '';
@@ -196,7 +196,7 @@ export class BlockCommon implements BlockObject {
       return false;
     }
 
-    const time = debugManager.getTime;
+    const time = debugManager.time;
 
     if (time > 0) {
       const div = document.getElementById(this.data.id);
