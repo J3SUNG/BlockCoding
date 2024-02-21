@@ -162,7 +162,7 @@ export class BlockCommon implements BlockObject {
 
     await new Promise((resolve) => {
       let timeoutId = setTimeout(resolve, time * 1000);
-      let startTime = new Date().getTime();
+      let startTime = Date.now();
       let remainingTime: number = time * 1000;
 
       const onProgramStateChange = (e: Event) => {
@@ -172,11 +172,11 @@ export class BlockCommon implements BlockObject {
           document.removeEventListener('ProgramStateChange', onProgramStateChange);
           resolve('');
         } else if (customEvent.detail === 'pause') {
-          const endTime = new Date().getTime();
+          const endTime = Date.now();
           remainingTime = remainingTime - (endTime - startTime);
           clearTimeout(timeoutId);
         } else if (customEvent.detail === 'run') {
-          startTime = new Date().getTime();
+          startTime = Date.now();
           timeoutId = setTimeout(resolve, remainingTime);
         }
       };
