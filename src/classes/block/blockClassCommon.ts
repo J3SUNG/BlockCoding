@@ -4,6 +4,7 @@ import {
   BLOCK_SPACE_DEFAULT_MARGIN,
   BLOCK_SPACE_DEFAULT_WIDTH,
 } from '../../constants/blockDefaultMap';
+import { MILLISECONDS } from '../../constants/commonMap';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
@@ -154,9 +155,9 @@ export class BlockCommon implements BlockObject {
     exceptionManager.stopTimer();
 
     await new Promise((resolve) => {
-      let timeoutId = setTimeout(resolve, time * 1000);
+      let timeoutId = setTimeout(resolve, time / MILLISECONDS);
       let startTime = Date.now();
-      let remainingTime: number = time * 1000;
+      let remainingTime: number = time / MILLISECONDS;
 
       const onProgramStateChange = (e: Event) => {
         const customEvent = e as CustomEvent;
