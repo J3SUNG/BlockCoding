@@ -4,17 +4,7 @@ import { BlockObject } from '../types/blockObject';
 
 export const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] | null => {
   if (Array.isArray(block)) {
-    let array: BlockCommon[] = [];
-    block.forEach((item) => {
-      if (!Array.isArray(item)) {
-        const newBlock = restoreWorkspaceData(item);
-        if (newBlock && newBlock instanceof BlockCommon) {
-          array.push(newBlock);
-        }
-      }
-    });
-
-    return array;
+    return block.map((item) => restoreWorkspaceData(item) as BlockCommon);
   } else {
     const newBlock = createBlock(block.name, block.data.id, block.data.x, block.data.y);
     Object.assign(newBlock, block);

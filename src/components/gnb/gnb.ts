@@ -11,7 +11,7 @@ import { BlockObject } from '../../types/blockObject';
 import { useState } from '../../core/core';
 import { BlockCommon } from '../../classes/block/blockClassCommon';
 import { Exception } from '../../classes/exception/exception';
-import { Debug } from '../../classes/block/debug/debug';
+import { Debug } from '../../classes/debug/debug';
 import { restoreWorkspaceData } from '../../utils/restoreWorkspaceData';
 import { unzip, zip } from '../../utils/zipBlock';
 import { changeUniqueIdObj } from '../../utils/changeUniqueIdObj';
@@ -37,7 +37,7 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
   const urlCopyButton = createElementCommon('button', {
     type: 'button',
-    className: 'bg-green',
+    className: 'gnb-button__url-copy',
     textContent: 'URL Copy',
     style: 'width: 100px',
   });
@@ -86,20 +86,20 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
   });
 
   urlCopyButton.addEventListener('click', () => {
-    const url = new URL(window.location.origin) + '?workspaceData=';
+    const url = window.location.origin + '/?workspaceData=';
     const zipWorkspaceData = JSON.stringify(zip(getWorkspaceData()));
     const URL_MAX_SIZE = 9600;
-
-    console.log(zipWorkspaceData.length);
 
     if (zipWorkspaceData.length > URL_MAX_SIZE) {
       if (urlCopyButton instanceof HTMLButtonElement) {
         urlCopyButton.textContent = 'Fail Large!';
-        urlCopyButton.style.backgroundColor = 'rgb(255 69 58)';
+        urlCopyButton.classList.remove('gnb-button__url-copy');
+        urlCopyButton.classList.add('gnb-button__url-copy--fail');
         urlCopyButton.disabled = true;
         setTimeout(() => {
           urlCopyButton.textContent = 'URL Copy';
-          urlCopyButton.style.backgroundColor = 'rgb(34 197 94)';
+          urlCopyButton.classList.add('gnb-button__url-copy');
+          urlCopyButton.classList.remove('gnb-button__url-copy--fail');
           urlCopyButton.disabled = false;
         }, 2000);
       }
@@ -108,20 +108,22 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
 
       if (urlCopyButton instanceof HTMLButtonElement) {
         urlCopyButton.textContent = 'Copied!';
-        urlCopyButton.classList.add('gnb__button--active');
+        urlCopyButton.classList.remove('gnb-button__url-copy');
+        urlCopyButton.classList.add('gnb-button__url-copy--success');
         urlCopyButton.disabled = true;
         setTimeout(() => {
           urlCopyButton.textContent = 'URL Copy';
-          urlCopyButton.classList.remove('gnb__button--active');
+          urlCopyButton.classList.add('gnb-button__url-copy');
+          urlCopyButton.classList.remove('gnb-button__url-copy--success');
           urlCopyButton.disabled = false;
         }, 2000);
       }
     }
   });
 
-  fileInput.addEventListener('change', function (e) {
+  fileInput.addEventListener('change', async (e) => {
     if (fileInput instanceof HTMLInputElement) {
-      const file: File | undefined = fileInput.files?.[0];
+      const file = fileInput.files?.[0];
 
       if (file) {
         const reader: FileReader = new FileReader();
@@ -230,14 +232,7 @@ const loadData = (
   updateProgramState: UpdateProgramState,
   updateConsoleLog: UpdateConsoleLog,
 ): void => {
-  const newWorkspaceData: BlockCommon[] = [];
-  loadWorkspaceData.forEach((block: BlockObject) => {
-    const resotreData = restoreWorkspaceData(unzip(block));
-
-    if (resotreData && !Array.isArray(resotreData)) {
-      newWorkspaceData.push(resotreData);
-    }
-  });
+  const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
 
   changeUniqueIdObj(newWorkspaceData);
   newWorkspaceData.forEach((block: BlockCommon) => {

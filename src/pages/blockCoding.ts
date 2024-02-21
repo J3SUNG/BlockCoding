@@ -5,10 +5,7 @@ import { blockMenu } from '../components/blockMenu/blockMenu';
 import { workspace } from '../components/workspace/workspace';
 import { consoleSpace } from '../components/consoleSpace/consoleSpace';
 import { createElementCommon } from '../utils/createElementCommon';
-import { restoreWorkspaceData } from '../utils/restoreWorkspaceData';
-import { BlockCommon } from '../classes/block/blockClassCommon';
-import { changeUniqueIdObj } from '../utils/changeUniqueIdObj';
-import { unzip } from '../utils/zipBlock';
+import { UrlTool } from '../classes/urlTool';
 
 export const blockCoding = () => {
   const [getConsoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
@@ -100,25 +97,8 @@ export const blockCoding = () => {
   fragment.appendChild(gnbComponent);
   fragment.appendChild(mainComponent);
 
-  urlParser(updateWorkspaceData);
+  const urlTool = new UrlTool();
+  urlTool.urlParser(updateWorkspaceData);
 
   return fragment;
-};
-
-const urlParser = (updateWorkspaceData: UpdateWorkspaceData) => {
-  const url = new URL(window.location.href);
-
-  try {
-    const searchParams = url.searchParams;
-    const zipWorkspaceData = searchParams.get('workspaceData');
-
-    if (zipWorkspaceData) {
-      const unZipWorkspaceData = unzip(JSON.parse(zipWorkspaceData));
-      const newWorkspaceData = restoreWorkspaceData(unZipWorkspaceData) as BlockCommon[];
-      changeUniqueIdObj(newWorkspaceData);
-      updateWorkspaceData(newWorkspaceData);
-    }
-  } catch (e) {
-    window.location.href = url.origin;
-  }
 };
