@@ -4,6 +4,7 @@ import {
   BLOCK_SPACE_DEFAULT_MARGIN,
   BLOCK_SPACE_DEFAULT_WIDTH,
 } from '../../constants/blockDefaultMap';
+import { MILLISECONDS } from '../../constants/commonMap';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
@@ -152,7 +153,6 @@ export class BlockCommon implements BlockObject {
 
   async wait(time: number, exceptionManager: Exception) {
     exceptionManager.stopTimer();
-    const MILLISECONDS = 0.001;
 
     await new Promise((resolve) => {
       let timeoutId = setTimeout(resolve, time / MILLISECONDS);
