@@ -15,13 +15,7 @@ export class BlockComparison extends BlockCommon {
     this.data.secondValue = {} as BlockObject;
   }
 
-  getElement(
-    id: string,
-    x: number,
-    y: number,
-    value: string,
-    onChange?: (id: string, value: string, insertLocation: string) => void,
-  ) {
+  getElement(id: string, x: number, y: number, onChange: () => void, value: string) {
     const operator = ['=', '!=', '>', '<', '>=', '<='];
 
     const div = createElementCommon('div', { id, className: `block block--expression-logical` });
@@ -43,9 +37,8 @@ export class BlockComparison extends BlockCommon {
       const target = e.target as HTMLSelectElement;
       const selectedValue: string = target.value;
 
-      if (onChange) {
-        onChange(id, selectedValue, 'operator');
-      }
+      this.data.operator = selectedValue;
+      onChange();
     });
 
     startTriangle.setAttribute(

@@ -12,14 +12,7 @@ export class BlockValue extends BlockCommon {
     super(id, x, y, '');
   }
 
-  getElement(
-    id: string,
-    x: number,
-    y: number,
-    value?: string,
-    onChange?: (id: string, value: string, insertLocation?: string) => void,
-    changeBlockWidth?: () => void,
-  ) {
+  getElement(id: string, x: number, y: number, onChange: () => void, value?: string, changeBlockWidth?: () => void) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '값' });
     const input = createElementCommon('input', {
@@ -36,7 +29,8 @@ export class BlockValue extends BlockCommon {
       const target = e.target;
 
       if (onChange && target instanceof HTMLInputElement) {
-        onChange(id, target.value);
+        this.data.value = target.value;
+        onChange();
       }
     });
 
@@ -96,7 +90,7 @@ export class BlockValue extends BlockCommon {
       const width = parseInt(getComputedStyle(span).width, 10);
       span.style.display = 'none';
 
-      this.spaceWidth[0] = width + 20 > BLOCK_SPACE_DEFAULT_WIDTH ? width + 20 : BLOCK_SPACE_DEFAULT_WIDTH;
+      this.spaceWidth[0] = width + 36 > BLOCK_SPACE_DEFAULT_WIDTH ? width + 36 : BLOCK_SPACE_DEFAULT_WIDTH;
       this.width = this.spaceWidth[0] + BLOCK_DEFAULT_HEIGHT[this.name];
     }
   }

@@ -23,7 +23,7 @@ export const blockCoding = () => {
 
   const gnbRender = () => {
     render(
-      gnb({ getWorkspaceData, updateWorkspaceDataAll, getConsoleLog, updateConsoleLog, render: gnbRender }),
+      gnb({ getWorkspaceData, updateWorkspaceData, getConsoleLog, updateConsoleLog, render: gnbRender }),
       root,
       'gnb',
       GNB_INDEX,
@@ -38,8 +38,8 @@ export const blockCoding = () => {
     render(
       workspace({
         workspaceData: getWorkspaceData(),
-        updateWorkspaceDataAll,
-        updateWorkspaceDataValue,
+        updateWorkspaceData,
+        refreshWorkspaceData,
         changeBlockWidth,
       }),
       mainComponent,
@@ -57,36 +57,13 @@ export const blockCoding = () => {
     consoleRender();
   };
 
-  const updateWorkspaceDataAll = (data: WorkspaceData) => {
+  const updateWorkspaceData = (data: WorkspaceData) => {
     setWorkspaceData(data);
     workspaceRender();
   };
 
-  const updateWorkspaceDataValue = (targetId: string, value: BlockObjectValue, insertLocation?: string): void => {
-    const newWorkspaceData = deepCopy(getWorkspaceData());
-    const targetObj = findTargetBlock(targetId, newWorkspaceData);
-    if (targetObj) {
-      if (insertLocation === 'operator') {
-        targetObj.data.operator = value as string;
-      } else if (insertLocation === 'fold') {
-        targetObj.fold = value === 'true' ? true : false;
-      } else if (insertLocation === 'param') {
-        targetObj.paramSize = Number(value);
-        for (let i = 1; i <= 4; i++) {
-          if (targetObj.paramSize < i) {
-            targetObj.data[`param${i}`] = {} as BlockObject;
-          }
-        }
-      } else if (Array.isArray(targetObj.data.value)) {
-        targetObj.data.value.push(value as BlockObject);
-      } else {
-        if (targetObj.data.value === value) {
-          return;
-        }
-        targetObj.data.value = value;
-      }
-    }
-    setWorkspaceData(newWorkspaceData);
+  const refreshWorkspaceData = () => {
+    setWorkspaceData(getWorkspaceData());
     workspaceRender();
   };
 
@@ -98,7 +75,7 @@ export const blockCoding = () => {
 
   const gnbComponent = gnb({
     getWorkspaceData,
-    updateWorkspaceDataAll,
+    updateWorkspaceData,
     getConsoleLog,
     updateConsoleLog,
     render: gnbRender,
@@ -106,8 +83,8 @@ export const blockCoding = () => {
   const blockMenuComponent = blockMenu({ render: blockMenuRender });
   const workspaceComponent = workspace({
     workspaceData: getWorkspaceData(),
-    updateWorkspaceDataAll,
-    updateWorkspaceDataValue,
+    updateWorkspaceData,
+    refreshWorkspaceData,
     changeBlockWidth,
   });
   const consoleSpaceComponent = consoleSpace({ consoleLog: getConsoleLog() });

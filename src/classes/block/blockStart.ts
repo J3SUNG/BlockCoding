@@ -22,13 +22,7 @@ export class BlockStart extends BlockCommon {
     }
   }
 
-  getElement(
-    id: string,
-    x: number,
-    y: number,
-    value?: string,
-    onChange?: (id: string, value: string, insertLocation?: string) => void,
-  ) {
+  getElement(id: string, x: number, y: number, onChange: () => void, value?: string) {
     const div = createElementCommon('div', { id, className: `block block--declare` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '시작하기 버튼을 클릭했을 때' });
     const triangle = createElementCommon('span', { className: 'block__triangle block--declare' });
@@ -39,13 +33,8 @@ export class BlockStart extends BlockCommon {
 
     toggle.addEventListener('click', () => {
       this.fold = !this.fold;
-      if (onChange) {
-        if (this.fold) {
-          onChange(id, 'true', 'fold');
-        } else {
-          onChange(id, 'false', 'fold');
-        }
-      }
+
+      onChange();
     });
 
     triangle.setAttribute(
