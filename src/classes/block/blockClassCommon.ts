@@ -7,6 +7,7 @@ import {
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
+import { createUniqueId } from '../../utils/createUniqueId';
 
 export class BlockCommon implements BlockObject {
   name = '';
@@ -86,28 +87,28 @@ export class BlockCommon implements BlockObject {
       }
     }
 
-    if (this.getChildBlock().length > 0) {
-      this.getChildBlock().forEach((childProp) => {
-        const block = this.data[childProp];
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
 
-        if (Array.isArray(block)) {
-          block.forEach((childBlock) => {
-            childBlock.calcWidth();
-          });
-        }
-      });
-
-      const childSpace = div?.querySelector(':scope > .block__child');
-      if (childSpace instanceof HTMLElement) {
-        childSpace.style.width = `${this.childWidth}px`;
+      if (Array.isArray(block)) {
+        block.forEach((childBlock) => {
+          childBlock.calcWidth();
+        });
       }
+    });
+
+    const childSpace = div?.querySelector(':scope > .block__child');
+    if (childSpace instanceof HTMLElement) {
+      childSpace.style.width = `${this.childWidth}px`;
     }
 
     return this.width;
   }
 
   calcHeight(): { childHeight: number; prefixSum?: number[] } {
-    if (this.getChildBlock().length > 0) {
+    if (this.getChildBlock().length <= 0) {
+      return { childHeight: this.defaultHeight };
+    } else {
       if (this.fold) {
         const div = document.querySelector(`#${this.data.id}`) as HTMLDivElement;
         const child = div.querySelector(':scope > .block__child') as HTMLSpanElement;
@@ -138,8 +139,6 @@ export class BlockCommon implements BlockObject {
           return { childHeight: height + 100 > 150 ? height + 100 : 150, prefixSum };
         }
       }
-    } else {
-      return { childHeight: this.defaultHeight };
     }
   }
 
@@ -165,5 +164,25 @@ export class BlockCommon implements BlockObject {
 
   get defaultSpaceMargin() {
     return BLOCK_SPACE_DEFAULT_MARGIN;
+
+  changeUniqueId() {
+    const newUniqueId = createUniqueId();
+    this.data.id = newUniqueId;
+
+    this.getInnerBlock().forEach((innerProp) => {
+      const block = this.data[innerProp];
+      if (block instanceof BlockCommon) {
+        block.changeUniqueId();
+      }
+    });
+
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
+      if (Array.isArray(block)) {
+        block.forEach((child) => {
+          child.changeUniqueId();
+        });
+      }
+    });
   }
 }
