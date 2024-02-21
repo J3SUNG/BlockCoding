@@ -89,6 +89,7 @@ const addWorkspaceMouseDragEvent = (
         initialY = e.clientY;
 
         target.style.zIndex = '1000';
+        target.style.opacity = '0.8';
         active = true;
       }
     }
@@ -105,8 +106,10 @@ const addWorkspaceMouseDragEvent = (
 
   section.addEventListener('mouseup', function (e: MouseEvent) {
     e.preventDefault();
+
+    const MOVE_LIMIT = 3;
     if (active && target) {
-      if (Math.abs(currentX) > 3 || Math.abs(currentY) > 3) {
+      if (Math.abs(currentX) > MOVE_LIMIT || Math.abs(currentY) > MOVE_LIMIT) {
         target.style.display = 'none';
         const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
         const anotherBlockClosestDiv = anotherBlock.closest('div');
@@ -150,6 +153,7 @@ const addWorkspaceMouseDragEvent = (
       }
 
       target.style.zIndex = '0';
+      target.style.opacity = '1';
       target.style.transform = 'translate(0px, 0px)';
     }
     target = null;
@@ -200,6 +204,7 @@ const addWorkspaceMouseDragEvent = (
     anotherBlock: HTMLElement,
   ) => {
     let changeCheck = true;
+
     if (!newChild) {
       removeTargetBlock(parentData);
       changeCheck = insertBlockAnotherBlock(
@@ -229,6 +234,7 @@ const addWorkspaceMouseDragEvent = (
     if (active) {
       e.preventDefault();
 
+      const MOVE_LIMIT = 3;
       currentX = e.clientX - initialX;
       currentY = e.clientY - initialY;
 
@@ -243,12 +249,15 @@ const addWorkspaceMouseDragEvent = (
 
         if (elementBelow) {
           if (elementBelow.classList.contains('block__space') || elementBelow.classList.contains('block__child')) {
-            elementBelow.classList.add('block--highlight-drop');
+            elementBelow.classList.add('is-highlight-drop');
             lastHighlighted = elementBelow;
           } else {
             const closestBlock = elementBelow.closest('div');
-            if (closestBlock?.classList.contains('block')) {
-              closestBlock.classList.add('block--highlight-drop');
+            if (closestBlock?.id === 'trash-bin') {
+              closestBlock.classList.add('is-highlight-drop');
+              lastHighlighted = closestBlock;
+            } else if (closestBlock?.classList.contains('block')) {
+              closestBlock.classList.add('is-highlight-drop');
               lastHighlighted = closestBlock;
             }
           }
@@ -320,12 +329,16 @@ const addWorkspaceReceiveDragEvent = (
 
       if (elementBelow) {
         if (elementBelow.classList.contains('block__space') || elementBelow.classList.contains('block__child')) {
-          elementBelow.classList.add('block--highlight-drop');
+          elementBelow.classList.add('is-highlight-drop');
           lastHighlighted = elementBelow;
         } else {
           const closestBlock = elementBelow.closest('div');
+          if (closestBlock?.id === 'trash-bin') {
+            closestBlock.classList.add('is-highlight-drop');
+            lastHighlighted = closestBlock;
+          }
           if (closestBlock?.classList.contains('block')) {
-            closestBlock.classList.add('block--highlight-drop');
+            closestBlock.classList.add('is-highlight-drop');
             lastHighlighted = closestBlock;
           }
         }
