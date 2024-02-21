@@ -9,6 +9,7 @@ import { restoreWorkspaceData } from '../utils/restoreWorkspaceData';
 import { BlockCommon } from '../classes/block/blockClassCommon';
 import { changeUniqueIdObj } from '../utils/changeUniqueIdObj';
 import { unzip } from '../utils/zipBlock';
+import { decompressString } from '../utils/compressionStream';
 
 export const blockCoding = () => {
   const [getConsoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
@@ -126,10 +127,12 @@ const urlParser = (updateWorkspaceData: UpdateWorkspaceData) => {
     const zipWorkspaceData = searchParams.get('workspaceData');
 
     if (zipWorkspaceData) {
-      const unZipWorkspaceData = unzip(JSON.parse(zipWorkspaceData));
-      const newWorkspaceData = restoreWorkspaceData(unZipWorkspaceData) as BlockCommon[];
-      changeUniqueIdObj(newWorkspaceData);
-      updateWorkspaceData(newWorkspaceData);
+      decompressString(zipWorkspaceData).then((decompress) => {
+        const unZipWorkspaceData = unzip(JSON.parse(decompress));
+        const newWorkspaceData = restoreWorkspaceData(unZipWorkspaceData) as BlockCommon[];
+        changeUniqueIdObj(newWorkspaceData);
+        updateWorkspaceData(newWorkspaceData);
+      });
     }
   } catch (e) {
     window.location.href = url.origin;
