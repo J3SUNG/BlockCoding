@@ -1,6 +1,6 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { InfinityLoop } from '../infinityLoop/infinityLoop';
+import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockRefVariable extends BlockCommon {
@@ -39,12 +39,12 @@ export class BlockRefVariable extends BlockCommon {
   async runLogic(
     variableMap: Map<string, string>,
     functionMap: Map<string, BlockCommon>,
-    prevLog: () => string[],
-    setChanageLog: (log: string[]) => void,
+    prevLog: () => { text: string; type: string }[],
+    setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
-    timeManager: InfinityLoop,
+    exceptionManager: Exception,
   ): Promise<string> {
-    if (getProgramState() === 'stop') {
+    if (getProgramState() === 'stop' || exceptionManager.isError) {
       return '';
     }
 
@@ -58,7 +58,7 @@ export class BlockRefVariable extends BlockCommon {
         prevLog,
         setChanageLog,
         getProgramState,
-        timeManager,
+        exceptionManager,
       );
       result = variableMap.get(operand) || '';
     }

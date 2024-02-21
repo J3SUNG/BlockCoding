@@ -1,6 +1,6 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { InfinityLoop } from '../infinityLoop/infinityLoop';
+import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockInput extends BlockCommon {
@@ -24,18 +24,18 @@ export class BlockInput extends BlockCommon {
   async runLogic(
     variableMap: Map<string, string>,
     functionMap: Map<string, BlockCommon>,
-    prevLog: () => string[],
-    setChanageLog: (log: string[]) => void,
+    prevLog: () => { text: string; type: string }[],
+    setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
-    timeManager: InfinityLoop,
+    exceptionManager: Exception,
   ): Promise<string> {
-    if (getProgramState() === 'stop') {
+    if (getProgramState() === 'stop' || exceptionManager.isError) {
       return '';
     }
 
-    setChanageLog([...prevLog(), '[입력 해주세요.]']);
+    setChanageLog([...prevLog(), { text: '[입력 해주세요.]', type: 'input' }]);
 
-    timeManager.stopTimer();
+    exceptionManager.stopTimer();
     const waitInput = () => {
       return new Promise<string>((resolve) => {
         const onKeyDown = (e: KeyboardEvent) => {
@@ -44,7 +44,7 @@ export class BlockInput extends BlockCommon {
             if (input.value !== '') {
               document.removeEventListener('keydown', onKeyDown);
               document.removeEventListener('ProgramStateChange', onProgramStateChange);
-              setChanageLog([...prevLog(), '[입력] ' + input.value]);
+              setChanageLog([...prevLog(), { text: '[입력] ' + input.value, type: 'input' }]);
               resolve(input.value);
             } else {
               input.focus();
@@ -72,7 +72,7 @@ export class BlockInput extends BlockCommon {
     };
 
     const result = await waitInput();
-    timeManager.startTimer();
+    exceptionManager.startTimer();
 
     return result;
   }

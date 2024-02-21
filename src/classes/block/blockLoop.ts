@@ -1,6 +1,6 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { InfinityLoop } from '../infinityLoop/infinityLoop';
+import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockLoop extends BlockCommon {
@@ -93,10 +93,10 @@ export class BlockLoop extends BlockCommon {
   async runLogic(
     variableMap: Map<string, string>,
     functionMap: Map<string, BlockCommon>,
-    prevLog: () => string[],
-    setChanageLog: (log: string[]) => void,
+    prevLog: () => { text: string; type: string }[],
+    setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
-    timeManager: InfinityLoop,
+    exceptionManager: Exception,
   ): Promise<string> {
     const condition = this.data.condition;
     const value = this.data.value;
@@ -104,16 +104,20 @@ export class BlockLoop extends BlockCommon {
 
     if (condition instanceof BlockCommon) {
       let operand =
-        (await condition.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
-        'true'
+        (await condition.runLogic(
+          variableMap,
+          functionMap,
+          prevLog,
+          setChanageLog,
+          getProgramState,
+          exceptionManager,
+        )) === 'true'
           ? true
           : false;
 
       while (operand) {
-        if (getProgramState() === 'stop') {
-          return '';
-        }
-        if (timeManager.isInfinityLoop()) {
+        exceptionManager.isInfinityLoop();
+        if (getProgramState() === 'stop' || exceptionManager.isError) {
           return '';
         }
         if (Array.isArray(value)) {
@@ -125,15 +129,21 @@ export class BlockLoop extends BlockCommon {
                 prevLog,
                 setChanageLog,
                 getProgramState,
-                timeManager,
+                exceptionManager,
               );
             }
           }
         }
 
         operand =
-          (await condition.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager)) ===
-          'true'
+          (await condition.runLogic(
+            variableMap,
+            functionMap,
+            prevLog,
+            setChanageLog,
+            getProgramState,
+            exceptionManager,
+          )) === 'true'
             ? true
             : false;
       }

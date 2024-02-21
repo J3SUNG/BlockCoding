@@ -1,7 +1,7 @@
 import { PARAM_MAX_SIZE, PARAM_MIN_SIZE } from '../../constants/blockDataMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { InfinityLoop } from '../infinityLoop/infinityLoop';
+import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockFunction extends BlockCommon {
@@ -170,17 +170,15 @@ export class BlockFunction extends BlockCommon {
   async runLogic(
     variableMap: Map<string, string>,
     functionMap: Map<string, BlockCommon>,
-    prevLog: () => string[],
-    setChanageLog: (log: string[]) => void,
+    prevLog: () => { text: string; type: string }[],
+    setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
-    timeManager: InfinityLoop,
+    exceptionManager: Exception,
   ): Promise<string> {
     let result: string = '';
 
-    if (timeManager.isInfinityLoop()) {
-      return '';
-    }
-    if (getProgramState() === 'stop') {
+    exceptionManager.isInfinityLoop();
+    if (getProgramState() === 'stop' || exceptionManager.isError) {
       return '';
     }
 
@@ -193,7 +191,7 @@ export class BlockFunction extends BlockCommon {
           prevLog,
           setChanageLog,
           getProgramState,
-          timeManager,
+          exceptionManager,
         );
         variableMap.set(`param${i + 1}`, paramResult);
       }
@@ -203,7 +201,14 @@ export class BlockFunction extends BlockCommon {
     if (Array.isArray(child)) {
       for (const childBlock of child) {
         if (childBlock instanceof BlockCommon) {
-          await childBlock.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager);
+          await childBlock.runLogic(
+            variableMap,
+            functionMap,
+            prevLog,
+            setChanageLog,
+            getProgramState,
+            exceptionManager,
+          );
         }
       }
     }
@@ -215,7 +220,7 @@ export class BlockFunction extends BlockCommon {
         prevLog,
         setChanageLog,
         getProgramState,
-        timeManager,
+        exceptionManager,
       );
       result = returnResult;
 

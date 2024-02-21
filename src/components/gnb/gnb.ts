@@ -11,7 +11,7 @@ import { BlockObject } from '../../types/blockObject';
 import { useState } from '../../core/core';
 import { BlockCommon } from '../../classes/block/blockClassCommon';
 import { createBlock } from '../../classes/blockFactory/createBlock';
-import { InfinityLoop } from '../../classes/infinityLoop/infinityLoop';
+import { Exception } from '../../classes/exception/exception';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
@@ -128,7 +128,10 @@ const runProgram = async (
     return block.name === 'start' && block.data;
   });
 
-  updateConsoleLog(['[프로그램을 실행합니다.]', 'ㅤ']);
+  updateConsoleLog([
+    { text: '[프로그램을 실행합니다.]', type: 'system' },
+    { text: 'ㅤ', type: 'system' },
+  ]);
 
   const functionMap = new Map<string, BlockCommon>();
   for (const block of workspaceData) {
@@ -136,14 +139,14 @@ const runProgram = async (
       const value = block.data.value;
       if (value && value instanceof BlockCommon) {
         const variableMap = new Map<string, string>();
-        const timeManager = new InfinityLoop();
+        const exceptionManager = new Exception();
         const functionName = await value.runLogic(
           variableMap,
           functionMap,
           getConsoleLog,
           updateConsoleLog,
           getProgramState,
-          timeManager,
+          exceptionManager,
         );
         functionMap.set(functionName, block);
       }
@@ -153,12 +156,28 @@ const runProgram = async (
   for (const block of startBlock) {
     const variableMap = new Map<string, string>();
 
+    const exceptionManager = new Exception();
     if (block instanceof BlockCommon) {
-      const timeManager = new InfinityLoop();
-      await block.runLogic(variableMap, functionMap, getConsoleLog, updateConsoleLog, getProgramState, timeManager);
+      await block.runLogic(
+        variableMap,
+        functionMap,
+        getConsoleLog,
+        updateConsoleLog,
+        getProgramState,
+        exceptionManager,
+      );
+    }
+    if (exceptionManager.isError) {
+      const errMessage = exceptionManager.errorMessage();
+      updateConsoleLog([...getConsoleLog(), { text: errMessage, type: 'error' }]);
     }
   }
-  updateConsoleLog([...getConsoleLog(), 'ㅤ', '[프로그램이 종료되었습니다.]']);
+
+  updateConsoleLog([
+    ...getConsoleLog(),
+    { text: 'ㅤ', type: 'system' },
+    { text: '[프로그램이 종료되었습니다.]', type: 'system' },
+  ]);
 
   updateProgramState('stop');
 };
