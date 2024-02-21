@@ -141,16 +141,18 @@ const addWorkspaceMouseDragEvent = (
         initialX = e.clientX;
         initialY = e.clientY;
 
-        target.style.zIndex = '1000';
+        target.style.zIndex = '999';
+        target.style.opacity = '0.8';
         active = true;
       }
     }
   });
 
   section.addEventListener('mouseup', function (e: MouseEvent) {
+    const MOVE_LIMIT = 3;
     e.preventDefault();
     if (active && target) {
-      if (Math.abs(currentX) > 3 || Math.abs(currentY) > 3) {
+      if (Math.abs(currentX) > MOVE_LIMIT || Math.abs(currentY) > MOVE_LIMIT) {
         target.style.display = 'none';
         const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
         const anotherBlockClosestDiv = anotherBlock.closest('div');
@@ -165,7 +167,7 @@ const addWorkspaceMouseDragEvent = (
           let newChild = null;
           if (e.metaKey || e.ctrlKey) {
             newChild = deepCopy(child);
-            changeUniqueIdObj(newChild);
+            newChild.changeUniqueId();
           }
 
           if (anotherBlock.id === 'workspace') {
@@ -208,21 +210,22 @@ const addWorkspaceMouseDragEvent = (
               );
             }
           }
-        }
 
-        initialX = currentX;
-        initialY = currentY;
+          initialX = currentX;
+          initialY = currentY;
 
-        if (changeCheck) {
-          updateWorkspaceDataAll(newWorkspaceData);
+          if (changeCheck) {
+            updateWorkspaceDataAll(newWorkspaceData);
+          }
+
+          target.style.zIndex = '0';
+          target.style.opacity = '1';
+          target.style.transform = 'translate(0px, 0px)';
         }
+        target = null;
+        active = false;
       }
-
-      target.style.zIndex = '0';
-      target.style.transform = 'translate(0px, 0px)';
     }
-    target = null;
-    active = false;
   });
 
   let lastHighlighted: Element | null = null;
@@ -239,17 +242,20 @@ const addWorkspaceMouseDragEvent = (
         target.style.visibility = 'visible';
 
         if (lastHighlighted && lastHighlighted !== elementBelow) {
-          lastHighlighted.classList.remove('block--highlight-drop');
+          lastHighlighted.classList.remove('is-highlight-drop');
         }
 
         if (elementBelow) {
           if (elementBelow.classList.contains('block__space') || elementBelow.classList.contains('block__child')) {
-            elementBelow.classList.add('block--highlight-drop');
+            elementBelow.classList.add('is-highlight-drop');
             lastHighlighted = elementBelow;
           } else {
             const closestBlock = elementBelow.closest('div');
-            if (closestBlock?.classList.contains('block')) {
-              closestBlock.classList.add('block--highlight-drop');
+            if (closestBlock?.id === 'trash-bin') {
+              closestBlock.classList.add('is-highlight-drop');
+              lastHighlighted = closestBlock;
+            } else if (closestBlock?.classList.contains('block')) {
+              closestBlock.classList.add('is-highlight-drop');
               lastHighlighted = closestBlock;
             }
           }
@@ -374,17 +380,21 @@ const addWorkspaceReceiveDragEvent = (
       const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
 
       if (lastHighlighted && lastHighlighted !== elementBelow) {
-        lastHighlighted.classList.remove('block--highlight-drop');
+        lastHighlighted.classList.remove('is-highlight-drop');
       }
 
       if (elementBelow) {
         if (elementBelow.classList.contains('block__space') || elementBelow.classList.contains('block__child')) {
-          elementBelow.classList.add('block--highlight-drop');
+          elementBelow.classList.add('is-highlight-drop');
           lastHighlighted = elementBelow;
         } else {
           const closestBlock = elementBelow.closest('div');
+          if (closestBlock?.id === 'trash-bin') {
+            closestBlock.classList.add('is-highlight-drop');
+            lastHighlighted = closestBlock;
+          }
           if (closestBlock?.classList.contains('block')) {
-            closestBlock.classList.add('block--highlight-drop');
+            closestBlock.classList.add('is-highlight-drop');
             lastHighlighted = closestBlock;
           }
         }
@@ -454,28 +464,4 @@ const insertBlockAnotherBlock = (
   }
 
   return false;
-};
-
-const changeUniqueIdObj = (obj: BlockObjectValue): void => {
-  if (!obj) {
-    return;
-  }
-
-  if (Array.isArray(obj)) {
-    for (const item of obj) {
-      changeUniqueIdObj(item);
-    }
-  } else if (typeof obj === 'object' && 'data' in obj) {
-    const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
-    const newUniqueId = createUniqueId();
-    obj.data.id = newUniqueId;
-
-    for (const item of blockProps) {
-      const blockObj = obj.data[item];
-
-      if (typeof blockObj === 'object') {
-        changeUniqueIdObj(blockObj);
-      }
-    }
-  }
 };

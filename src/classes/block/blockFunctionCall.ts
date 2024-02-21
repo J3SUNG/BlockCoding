@@ -1,4 +1,4 @@
-import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
+import { PARAM_MAX_SIZE, PARAM_MIN_SIZE } from '../../constants/blockDataMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
@@ -38,19 +38,19 @@ export class BlockFunctionCall extends BlockCommon {
 
     addButton.addEventListener('click', () => {
       if (onChange) {
-        this.paramSize = this.paramSize + 1 > 4 ? 4 : this.paramSize + 1;
+        this.paramSize = this.paramSize + 1 > PARAM_MAX_SIZE ? PARAM_MAX_SIZE : this.paramSize + 1;
         onChange(id, this.paramSize + '', 'param');
       }
     });
 
     removeButton.addEventListener('click', () => {
       if (onChange) {
-        this.paramSize = this.paramSize > 0 ? this.paramSize - 1 : 0;
+        this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
         onChange(id, this.paramSize + '', 'param');
       }
     });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     paramSpan.setAttribute('style', `justify-content: center;`);
     div.appendChild(p);
     div.appendChild(space1);
