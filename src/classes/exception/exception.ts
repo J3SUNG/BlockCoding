@@ -21,15 +21,15 @@ export class Exception {
   stopTimer() {
     if (this.#startTime !== null) {
       const endTime = Date.now();
-      this.#useTime += endTime - this.startTime;
+      this.#useTime += endTime - this.#startTime;
       this.#startTime = null;
     }
   }
 
   isInfinityLoop() {
-    const #endTime = Date.now();
+    const endTime = Date.now();
     if (this.#startTime) {
-      const curUseTime = this.#useTime + #endTime - this.#startTime;
+      const curUseTime = this.#useTime + endTime - this.#startTime;
 
       if (curUseTime > 10000) {
         this.#exception = 'infinityLoop';

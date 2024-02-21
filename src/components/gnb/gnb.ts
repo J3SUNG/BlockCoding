@@ -11,7 +11,7 @@ import { BlockObject } from '../../types/blockObject';
 import { useState } from '../../core/core';
 import { BlockCommon } from '../../classes/block/blockClassCommon';
 import { Exception } from '../../classes/exception/exception';
-import { Debug } from '../../classes/block/debug/debug';
+import { Debug } from '../../classes/debug/debug';
 import { restoreWorkspaceData } from '../../utils/restoreWorkspaceData';
 import { unzip, zip } from '../../utils/zipBlock';
 import { changeUniqueIdObj } from '../../utils/changeUniqueIdObj';
@@ -233,7 +233,7 @@ const loadData = (
   updateConsoleLog: UpdateConsoleLog,
 ): void => {
   const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
-  
+
   changeUniqueIdObj(newWorkspaceData);
   newWorkspaceData.forEach((block: BlockCommon) => {
     block.calcWidth();

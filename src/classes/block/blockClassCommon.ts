@@ -226,7 +226,7 @@ export class BlockCommon implements BlockObject {
       return false;
     }
 
-    await this.debugRun(debugManager.getTime, exceptionManager);
+    await this.debugRun(debugManager.time, exceptionManager);
 
     return true;
   }
