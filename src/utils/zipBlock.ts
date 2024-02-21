@@ -66,20 +66,21 @@ export const zip = (item: any): any => {
   if (Array.isArray(item)) {
     return item.map(zip);
   } else if (item !== null && typeof item === 'object') {
-    const result: any = {};
-    Object.entries(item).forEach(([key, value]) => {
+    const entries = Object.entries(item).map(([key, value]) => {
       const mappedKey = ZIP_KEY_MAP[key] || key;
+
       if (key === 'id') {
-        result[mappedKey] = '';
+        return [mappedKey, ''];
       } else if (key === 'name' && typeof value === 'string' && ZIP_NAME_MAP[value]) {
-        result[mappedKey] = ZIP_NAME_MAP[value];
+        return [mappedKey, ZIP_NAME_MAP[value]];
       } else if (key === 'type' && typeof value === 'string' && ZIP_NAME_MAP[value]) {
-        result[mappedKey] = ZIP_TYPE_MAP[value];
+        return [mappedKey, ZIP_TYPE_MAP[value]];
       } else {
-        result[mappedKey] = zip(value);
+        return [mappedKey, zip(value)];
       }
     });
-    return result;
+
+    return Object.fromEntries(entries);
   }
   return item;
 };
@@ -88,16 +89,20 @@ export const unzip = (item: any): any => {
   if (Array.isArray(item)) {
     return item.map(unzip);
   } else if (item !== null && typeof item === 'object') {
-    const result: any = {};
-    Object.entries(item).forEach(([key, value]) => {
+    const entries = Object.entries(item).map(([key, value]) => {
       const originalKey = UNZIP_KEY_MAP[key] || key;
+      let newValue;
+
       if (typeof value === 'string' && (originalKey === 'name' || originalKey === 'type')) {
-        result[originalKey] = UNZIP_NAME_MAP[value] || UNZIP_TYPE_MAP[value] || value;
+        newValue = UNZIP_NAME_MAP[value] || UNZIP_TYPE_MAP[value] || value;
       } else {
-        result[originalKey] = unzip(value);
+        newValue = unzip(value);
       }
+
+      return [originalKey, newValue];
     });
-    return result;
+
+    return Object.fromEntries(entries);
   }
   return item;
 };
