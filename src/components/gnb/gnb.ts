@@ -12,7 +12,7 @@ import { useState } from '../../core/core';
 import { BlockCommon } from '../../classes/block/blockClassCommon';
 import { createBlock } from '../../classes/blockFactory/createBlock';
 import { Exception } from '../../classes/exception/exception';
-import { Debug } from '../../classes/block/debug/debug';
+import { Debug } from '../../classes/debug/debug';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
@@ -77,9 +77,9 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
     fileInput.click();
   });
 
-  fileInput.addEventListener('change', function (e) {
+  fileInput.addEventListener('change', async (e) => {
     if (fileInput instanceof HTMLInputElement) {
-      const file: File | undefined = fileInput.files?.[0];
+      const file = fileInput.files?.[0];
 
       if (file) {
         const reader: FileReader = new FileReader();
@@ -181,19 +181,12 @@ const runProgram = async (
   updateProgramState('stop');
 };
 
-const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] | null => {
+const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] => {
   if (Array.isArray(block)) {
-    let array: BlockCommon[] = [];
-    block.forEach((item) => {
-      if (!Array.isArray(item)) {
-        const newBlock = restoreWorkspaceData(item);
-        if (newBlock && newBlock instanceof BlockCommon) {
-          array.push(newBlock);
-        }
-      }
+    return block.flatMap((item) => {
+      const newBlock = restoreWorkspaceData(item);
+      return newBlock instanceof BlockCommon ? [newBlock] : [];
     });
-
-    return array;
   } else {
     const newBlock = createBlock(block.name, block.data.id, block.data.x, block.data.y);
     Object.assign(newBlock, block);
@@ -220,18 +213,7 @@ const loadData = (
   updateProgramState: UpdateProgramState,
   updateConsoleLog: UpdateConsoleLog,
 ): void => {
-  const newWorkspaceData: BlockCommon[] = [];
-  loadWorkspaceData.forEach((block: BlockObject) => {
-    const resotreData = restoreWorkspaceData(block);
-
-    if (resotreData && !Array.isArray(resotreData)) {
-      newWorkspaceData.push(resotreData);
-    }
-  });
-
-  newWorkspaceData.forEach((block: BlockCommon) => {
-    block.calcWidth();
-  });
+  const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
 
   updateWorkspaceData(newWorkspaceData);
   updateProgramState('stop');
