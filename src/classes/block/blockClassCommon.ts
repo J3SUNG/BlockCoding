@@ -164,6 +164,7 @@ export class BlockCommon implements BlockObject {
 
   get defaultSpaceMargin() {
     return BLOCK_SPACE_DEFAULT_MARGIN;
+  }
 
   changeUniqueId() {
     const newUniqueId = createUniqueId();
