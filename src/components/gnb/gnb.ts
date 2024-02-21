@@ -37,7 +37,7 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
   const stopButton = createElementCommon('button', { type: 'button', className: 'bg-red', textContent: '⏹' });
   const urlCopyButton = createElementCommon('button', {
     type: 'button',
-    className: 'bg-green',
+    className: 'gnb-button__url-copy',
     textContent: 'URL Copy',
     style: 'width: 100px',
   });
@@ -93,11 +93,13 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
     if (zipWorkspaceData.length > URL_MAX_SIZE) {
       if (urlCopyButton instanceof HTMLButtonElement) {
         urlCopyButton.textContent = 'Fail Large!';
-        urlCopyButton.style.backgroundColor = 'rgb(255 69 58)';
+        urlCopyButton.classList.remove('gnb-button__url-copy');
+        urlCopyButton.classList.add('gnb-button__url-copy--fail');
         urlCopyButton.disabled = true;
         setTimeout(() => {
           urlCopyButton.textContent = 'URL Copy';
-          urlCopyButton.style.backgroundColor = 'rgb(34 197 94)';
+          urlCopyButton.classList.add('gnb-button__url-copy');
+          urlCopyButton.classList.remove('gnb-button__url-copy--fail');
           urlCopyButton.disabled = false;
         }, 2000);
       }
@@ -106,11 +108,13 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
 
       if (urlCopyButton instanceof HTMLButtonElement) {
         urlCopyButton.textContent = 'Copied!';
-        urlCopyButton.classList.add('gnb__button--active');
+        urlCopyButton.classList.remove('gnb-button__url-copy');
+        urlCopyButton.classList.add('gnb-button__url-copy--success');
         urlCopyButton.disabled = true;
         setTimeout(() => {
           urlCopyButton.textContent = 'URL Copy';
-          urlCopyButton.classList.remove('gnb__button--active');
+          urlCopyButton.classList.add('gnb-button__url-copy');
+          urlCopyButton.classList.remove('gnb-button__url-copy--success');
           urlCopyButton.disabled = false;
         }, 2000);
       }
