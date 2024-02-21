@@ -3,6 +3,7 @@ import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
+import { Debug } from '../debug/debug';
 
 export class BlockStart extends BlockCommon {
   name = 'start';
@@ -105,8 +106,9 @@ export class BlockStart extends BlockCommon {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
-    if (getProgramState() === 'stop' || exceptionManager.isError) {
+    if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
       return '';
     }
 
@@ -115,7 +117,15 @@ export class BlockStart extends BlockCommon {
     if (Array.isArray(value)) {
       for (const child of value) {
         if (child instanceof BlockCommon) {
-          await child.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, exceptionManager);
+          await child.runLogic(
+            variableMap,
+            functionMap,
+            prevLog,
+            setChanageLog,
+            getProgramState,
+            exceptionManager,
+            debugManager,
+          );
         }
       }
     }

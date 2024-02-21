@@ -5,8 +5,8 @@ import { Exception } from '../exception/exception';
 import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
 
-export class BlockTimer extends BlockCommon {
-  name = 'timer';
+export class BlockDeubg extends BlockCommon {
+  name = 'debug';
   type = 'general';
 
   constructor(id: string, x: number, y: number) {
@@ -15,7 +15,7 @@ export class BlockTimer extends BlockCommon {
 
   getElement(id: string, x: number, y: number) {
     const div = createElementCommon('div', { id, className: `block block--general` });
-    const p = createElementCommon('p', { className: 'block__text', textContent: '타이머' });
+    const p = createElementCommon('p', { className: 'block__text', textContent: '디버깅 시간' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
 
     div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
@@ -53,9 +53,8 @@ export class BlockTimer extends BlockCommon {
 
     const value = this.data.value;
 
-    exceptionManager.stopTimer();
     if (value instanceof BlockCommon) {
-      const time = await value.runLogic(
+      const result: string = await value.runLogic(
         variableMap,
         functionMap,
         prevLog,
@@ -65,16 +64,8 @@ export class BlockTimer extends BlockCommon {
         debugManager,
       );
 
-      if (debugManager.time > 0) {
-        const div = document.getElementById(this.data.id);
-        div?.classList.add('is-highlight-run');
-        await this.wait(Number(time), exceptionManager);
-        div?.classList.remove('is-highlight-run');
-      } else {
-        await this.wait(Number(time), exceptionManager);
-      }
+      debugManager.time = Number(result);
     }
-    exceptionManager.startTimer();
 
     return '';
   }

@@ -2,6 +2,7 @@ import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
+import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockLogical extends BlockCommon {
@@ -91,8 +92,9 @@ export class BlockLogical extends BlockCommon {
     setChanageLog: (log: { text: string; type: string }[]) => void,
     getProgramState: () => 'run' | 'stop' | 'pause',
     exceptionManager: Exception,
+    debugManager: Debug,
   ): Promise<string> {
-    if (getProgramState() === 'stop' || exceptionManager.isError) {
+    if (!(await this.preprocessingRun(getProgramState, exceptionManager, debugManager))) {
       return '';
     }
 
@@ -102,8 +104,15 @@ export class BlockLogical extends BlockCommon {
 
     if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
       const operand1 =
-        (await value.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, exceptionManager)) ===
-        'true'
+        (await value.runLogic(
+          variableMap,
+          functionMap,
+          prevLog,
+          setChanageLog,
+          getProgramState,
+          exceptionManager,
+          debugManager,
+        )) === 'true'
           ? true
           : false;
       const operand2 =
@@ -114,6 +123,7 @@ export class BlockLogical extends BlockCommon {
           setChanageLog,
           getProgramState,
           exceptionManager,
+          debugManager,
         )) === 'true'
           ? true
           : false;

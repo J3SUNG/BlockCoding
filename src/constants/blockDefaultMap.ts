@@ -17,6 +17,7 @@ export const BLOCK_DEFAULT_WIDTH: { [key: string]: number } = {
   timer: 120,
   value: 60,
   variable: 130,
+  debug: 130,
 };
 
 export const BLOCK_EXPRESSION_DEFAULT_HEIGHT = 40;
@@ -42,6 +43,7 @@ export const BLOCK_DEFAULT_HEIGHT: { [key: string]: number } = {
   timer: BLOCK_GENERAL_DEFAULT_HEIGHT,
   value: BLOCK_EXPRESSION_DEFAULT_HEIGHT,
   variable: BLOCK_GENERAL_DEFAULT_HEIGHT,
+  debug: BLOCK_GENERAL_DEFAULT_HEIGHT,
 };
 
 export const BLOCK_SPACE_DEFAULT_WIDTH = 50;
