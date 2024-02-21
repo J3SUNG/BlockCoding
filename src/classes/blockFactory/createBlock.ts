@@ -1,7 +1,10 @@
-import { BlockObject } from '../../types/blockObject';
 import { BlockArithmetic } from '../block/blockArithmetic';
+import { BlockCommon } from '../block/blockClassCommon';
 import { BlockComparison } from '../block/blockComparison';
 import { BlockCondition } from '../block/blockCondition';
+import { BlockFunction } from '../block/blockFunction';
+import { BlockFunctionCall } from '../block/blockFunctionCall';
+import { BlockFunctionReturn } from '../block/blockFunctionReturn';
 import { BlockInput } from '../block/blockInput';
 import { BlockLogical } from '../block/blockLogical';
 import { BlockLoop } from '../block/blockLoop';
@@ -16,11 +19,14 @@ import { BlockValue } from '../block/blockValue';
 import { BlockVariable } from '../block/blockVariable';
 
 interface BlockTypeMap {
-  [key: string]: new (id: string, x: number, y: number) => BlockObject;
+  [key: string]: new (id: string, x: number, y: number) => BlockCommon;
 }
 
 const blockTypes: BlockTypeMap = {
   start: BlockStart,
+  function: BlockFunction,
+  functionCall: BlockFunctionCall,
+  functionReturn: BlockFunctionReturn,
   variable: BlockVariable,
   output: BlockOutput,
   timer: BlockTimer,
@@ -37,7 +43,7 @@ const blockTypes: BlockTypeMap = {
   randomNumber: BlockRandomNumber,
 };
 
-export const createBlock = (name: string, id: string, x: number, y: number): BlockObject => {
+export const createBlock = (name: string, id: string, x: number, y: number): BlockCommon => {
   const BlockClass = blockTypes[name];
 
   if (!BlockClass) {

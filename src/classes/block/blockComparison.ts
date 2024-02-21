@@ -1,12 +1,11 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockComparison extends BlockCommon {
   name = 'comparison';
   type = 'expressionLogical';
-  defaultWidth = 100;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -19,7 +18,7 @@ export class BlockComparison extends BlockCommon {
     x: number,
     y: number,
     value: string,
-    onValueChange?: (id: string, value: string, insertLocation: string) => void,
+    onChange?: (id: string, value: string, insertLocation: string) => void,
   ) {
     const operator = ['=', '!=', '>', '<', '>=', '<='];
 
@@ -27,7 +26,6 @@ export class BlockComparison extends BlockCommon {
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const space2 = createElementCommon('span', { id: 'space2', className: 'block__space' });
     const operatorSelect = createElementCommon('select', { className: 'block__operator block__operator--logical' });
-    const childWidth = this.calcWidth();
     const startTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
     const endTriangle = createElementCommon('span', { className: 'block__triangle block--expression-logical' });
 
@@ -43,13 +41,11 @@ export class BlockComparison extends BlockCommon {
       const target = e.target as HTMLSelectElement;
       const selectedValue: string = target.value;
 
-      if (onValueChange) {
-        onValueChange(id, selectedValue, 'operator');
+      if (onChange) {
+        onChange(id, selectedValue, 'operator');
       }
     });
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
     startTriangle.setAttribute(
       'style',
       `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; left: -${this.defaultHeight}px; clip-path: polygon(40% 50%, 101% -5%, 101% 105%);`,
@@ -59,10 +55,7 @@ export class BlockComparison extends BlockCommon {
       `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
 
-    div.setAttribute(
-      'style',
-      `left: ${x + 10}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`,
-    );
+    div.setAttribute('style', `left: ${x + 10}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(space1);
@@ -90,23 +83,62 @@ export class BlockComparison extends BlockCommon {
     return false;
   }
 
-  runLogic(operand1: string, operand2: string): boolean {
-    switch (this.data.operator) {
-      case '=':
-        return operand1 === operand2;
-      case '!=':
-        return operand1 != operand2;
-      case '>':
-        return Number(operand1) > Number(operand2);
-      case '<':
-        return Number(operand1) < Number(operand2);
-      case '>=':
-        return Number(operand1) >= Number(operand2);
-      case '<=':
-        return Number(operand1) <= Number(operand2);
+  async runLogic(
+    variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: InfinityLoop,
+  ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
     }
 
-    throw new Error('blockComparison - runLogic - 예상치 못한 연산자');
+    const value = this.data.value;
+    const secondValue = this.data.secondValue;
+    let result: boolean = false;
+
+    if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
+      const operand1 = await value.runLogic(
+        variableMap,
+        functionMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
+      const operand2 = await secondValue?.runLogic(
+        variableMap,
+        functionMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
+
+      switch (this.data.operator) {
+        case '=':
+          result = operand1 === operand2;
+          break;
+        case '!=':
+          result = operand1 != operand2;
+          break;
+        case '>':
+          result = Number(operand1) > Number(operand2);
+          break;
+        case '<':
+          result = Number(operand1) < Number(operand2);
+          break;
+        case '>=':
+          result = Number(operand1) >= Number(operand2);
+          break;
+        case '<=':
+          result = Number(operand1) <= Number(operand2);
+          break;
+      }
+    }
+    return result + '';
   }
 
   getInnerBlock(): string[] {

@@ -1,12 +1,11 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockCondition extends BlockCommon {
   name = 'condition';
   type = 'control';
-  defaultWidth = 150;
-  defaultHeight = 150;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -19,19 +18,46 @@ export class BlockCondition extends BlockCommon {
     return { childX: 0, childY: prefixSum?.[index] ?? 0 };
   }
 
-  getElement(id: string, x: number, y: number) {
+  getElement(
+    id: string,
+    x: number,
+    y: number,
+    value?: string,
+    onChange?: (id: string, value: string, insertLocation?: string) => void,
+  ) {
     const div = createElementCommon('div', { id, className: `block block--control` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '조건문' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
-
-    const childWidth = this.calcWidth();
-    const childSpace = createElementCommon('span', { className: 'block__child' });
+    const childSpace = createElementCommon('span', { id: 'child', className: 'block__child' });
     const { childHeight } = this.calcHeight();
+    const toggle = createElementCommon('button', {
+      className: 'block__toggle',
+      textContent: `${this.fold ? '▶' : '▼'}`,
+    });
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px; margin-top: 5px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${childHeight}px;`);
+    toggle.addEventListener('click', () => {
+      if (!this.data.id) {
+        return;
+      }
+
+      this.fold = !this.fold;
+      if (onChange) {
+        if (this.fold) {
+          onChange(id, 'true', 'fold');
+        } else {
+          onChange(id, 'false', 'fold');
+        }
+      }
+
+      const { childHeight } = this.calcHeight();
+      div.style.height = childHeight + 'px';
+      childSpace.style.height = childHeight - 100 + 'px';
+    });
+
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${childHeight}px;`);
     p.setAttribute('style', `padding-top: 12px`);
-    childSpace.setAttribute('style', `width: ${childWidth - 50}px; height: ${childHeight - 100}px;`);
+    childSpace.setAttribute('style', `height: ${childHeight - 100}px; ${this.fold ? 'display: none' : ''}`);
+    div.appendChild(toggle);
     div.appendChild(p);
     div.appendChild(space1);
     div.appendChild(childSpace);
@@ -65,23 +91,41 @@ export class BlockCondition extends BlockCommon {
     return ['value'];
   }
 
-  calcHeight(): { childHeight: number; prefixSum?: number[] } {
-    let height = 0;
-    let prefixSum: number[] = [0];
-    this.getChildBlock().forEach((key) => {
-      const childList = this.data[key];
+  async runLogic(
+    variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: InfinityLoop,
+  ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
 
-      if (Array.isArray(childList)) {
-        childList.forEach((child) => {
-          if (child instanceof BlockCommon) {
-            const { childHeight } = child.calcHeight();
-            height += childHeight;
-            prefixSum.push(prefixSum[prefixSum.length - 1] + childHeight);
+    const condition = this.data.condition;
+    const value = this.data.value;
+
+    if (condition instanceof BlockCommon) {
+      const operand1 = await condition.runLogic(
+        variableMap,
+        functionMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
+      if (operand1 === 'true') {
+        if (Array.isArray(value)) {
+          for (const child of value) {
+            if (child instanceof BlockCommon) {
+              await child.runLogic(variableMap, functionMap, prevLog, setChanageLog, getProgramState, timeManager);
+            }
           }
-        });
+        }
       }
-    });
+    }
 
-    return { childHeight: height + 100 > 150 ? height + 100 : 150, prefixSum };
+    return '';
   }
 }

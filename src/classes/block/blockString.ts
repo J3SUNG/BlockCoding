@@ -1,12 +1,11 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockString extends BlockCommon {
   name = 'string';
   type = 'expressionValue';
-  defaultWidth = 110;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);
@@ -18,17 +17,14 @@ export class BlockString extends BlockCommon {
     x: number,
     y: number,
     value: string,
-    onValueChange?: (id: string, value: string, insertLocation: string) => void,
+    onChange?: (id: string, value: string, insertLocation: string) => void,
   ) {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '문자열' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
     const space2 = createElementCommon('span', { id: 'space2', className: 'block__space' });
-    const childWidth = this.calcWidth();
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    space2.setAttribute('style', `width: ${this.spaceWidth[1]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(space1);
     div.appendChild(space2);
@@ -54,8 +50,43 @@ export class BlockString extends BlockCommon {
     return false;
   }
 
-  runLogic(operand1: string, operand2: string): string {
-    return operand1 + ' ' + operand2;
+  async runLogic(
+    variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: InfinityLoop,
+  ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
+    const value = this.data.value;
+    const secondValue = this.data.secondValue;
+    let result: string = '';
+
+    if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
+      const operand1 = await value.runLogic(
+        variableMap,
+        functionMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
+      const operand2 = await secondValue.runLogic(
+        variableMap,
+        functionMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
+
+      result = operand1 + ' ' + operand2;
+    }
+    return result;
   }
 
   getInnerBlock(): string[] {

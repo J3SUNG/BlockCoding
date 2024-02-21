@@ -7,7 +7,8 @@ interface ConsoleSpaceProps {
 export const consoleSpace = ({ consoleLog }: ConsoleSpaceProps) => {
   const div = createElementCommon('div', { id: 'console' });
   const h1 = createElementCommon('h1', { textContent: 'Output' });
-  const outputDiv = createElementCommon('div', {});
+  const outputDiv = createElementCommon('div', { className: 'console__output' });
+
   consoleLog.forEach((item) => {
     const p = createElementCommon('p', { textContent: item });
     outputDiv.appendChild(p);
@@ -19,7 +20,6 @@ export const consoleSpace = ({ consoleLog }: ConsoleSpaceProps) => {
     name: 'input',
     placeholder: '입력해 주세요.',
   });
-  input.focus();
 
   div.appendChild(h1);
   div.appendChild(outputDiv);

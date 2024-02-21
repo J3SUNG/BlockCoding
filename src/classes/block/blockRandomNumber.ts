@@ -1,12 +1,11 @@
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
+import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockRandomNumber extends BlockCommon {
   name = 'randomNumber';
   type = 'expressionValue';
-  defaultWidth = 120;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
@@ -16,10 +15,8 @@ export class BlockRandomNumber extends BlockCommon {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '랜덤 범위' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
-    const childWidth = this.calcWidth();
 
-    space1.setAttribute('style', `width: ${this.spaceWidth[0]}px;`);
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; width: ${childWidth}px; height: ${this.defaultHeight}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(space1);
 
@@ -39,8 +36,33 @@ export class BlockRandomNumber extends BlockCommon {
     return false;
   }
 
-  runLogic(operand1: string): string {
-    const num = Math.floor(Math.random() * Number(operand1)) + 1;
-    return num.toString();
+  async runLogic(
+    variableMap: Map<string, string>,
+    functionMap: Map<string, BlockCommon>,
+    prevLog: () => string[],
+    setChanageLog: (log: string[]) => void,
+    getProgramState: () => 'run' | 'stop' | 'pause',
+    timeManager: InfinityLoop,
+  ): Promise<string> {
+    if (getProgramState() === 'stop') {
+      return '';
+    }
+
+    const value = this.data.value;
+    let result: number = 0;
+
+    if (value instanceof BlockCommon) {
+      const operand = await value.runLogic(
+        variableMap,
+        functionMap,
+        prevLog,
+        setChanageLog,
+        getProgramState,
+        timeManager,
+      );
+      result = Math.floor(Math.random() * Number(operand)) + 1;
+    }
+
+    return result.toString();
   }
 }

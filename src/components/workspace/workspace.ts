@@ -4,15 +4,22 @@ import { deepCopy } from '../../utils/deepCopy';
 import { createUniqueId } from '../../utils/createUniqueId';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock } from '../../utils/findTargetBlock';
-import { createBlock } from '../../classes/factory/createBlock';
+import { createBlock } from '../../classes/blockFactory/createBlock';
+import { BlockCommon } from '../../classes/block/blockClassCommon';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
   updateWorkspaceDataAll: UpdateWorkspaceDataAll;
   updateWorkspaceDataValue: UpdateWorkspaceDataValue;
+  changeBlockWidth: () => void;
 }
 
-export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspaceDataValue }: WorkspaceProps) => {
+export const workspace = ({
+  workspaceData,
+  updateWorkspaceDataAll,
+  updateWorkspaceDataValue,
+  changeBlockWidth,
+}: WorkspaceProps) => {
   const section = createElementCommon('div', { id: 'workspace' });
   const trashBin = createElementCommon('div', { id: 'trash-bin' });
   const trashIcon = createElementCommon('span', { className: 'material-symbols-outlined', textContent: 'delete' });
@@ -21,7 +28,13 @@ export const workspace = ({ workspaceData, updateWorkspaceDataAll, updateWorkspa
   addWorkspaceMouseDragEvent(section, workspaceData, updateWorkspaceDataAll);
 
   workspaceData.forEach((obj) => {
-    paintWorkspace(section, obj, { x: obj.data.x, y: obj.data.y, index: 0 }, updateWorkspaceDataValue);
+    paintWorkspace(
+      section,
+      obj,
+      { x: obj.data.x, y: obj.data.y, index: 0 },
+      updateWorkspaceDataValue,
+      changeBlockWidth,
+    );
   });
 
   section.appendChild(trashBin);
@@ -39,6 +52,7 @@ const paintWorkspace = (
     index?: number;
   },
   updateWorkspaceDataValue: UpdateWorkspaceDataValue,
+  changeBlockWidth: () => void,
   parentObj?: BlockObjectValue,
 ) => {
   if (!obj) {
@@ -47,19 +61,33 @@ const paintWorkspace = (
 
   if (Array.isArray(obj)) {
     obj.forEach((item, itemIndex) => {
-      paintWorkspace(parent, item, { x: data.x, y: data.y, index: itemIndex }, updateWorkspaceDataValue, parentObj);
+      paintWorkspace(
+        parent,
+        item,
+        { x: data.x, y: data.y, index: itemIndex },
+        updateWorkspaceDataValue,
+        changeBlockWidth,
+        parentObj,
+      );
     });
   } else {
     if (typeof obj !== 'string' && obj.data && (obj.data.value || obj.data.value == '')) {
       let newX = data.x;
       let newY = data.y;
       if (parentObj && typeof parentObj === 'object' && !Array.isArray(parentObj)) {
-        const { childX, childY } = parentObj.setChildPosition(data.index!);
+        const { childX, childY } = parentObj.setChildPosition(data.index);
         newX = childX;
         newY = childY;
       }
 
-      const { block, space } = obj.getElement(obj.data.id, newX, newY, obj.data.value, updateWorkspaceDataValue);
+      const { block, space } = obj.getElement(
+        obj.data.id,
+        newX,
+        newY,
+        obj.data.value,
+        updateWorkspaceDataValue,
+        changeBlockWidth,
+      );
       parent.appendChild(block);
 
       const blockProps = [...obj.getInnerBlock(), ...obj.getChildBlock()];
@@ -69,8 +97,9 @@ const paintWorkspace = (
           paintWorkspace(
             space[itemIndex],
             blockProps,
-            { x: newX, y: newY, index: itemIndex },
+            { x: newX, y: newY, index: 0 },
             updateWorkspaceDataValue,
+            changeBlockWidth,
             obj,
           );
         }
@@ -113,66 +142,94 @@ const addWorkspaceMouseDragEvent = (
         initialX = e.clientX;
         initialY = e.clientY;
 
+        target.style.zIndex = '999';
+        target.style.opacity = '0.8';
         active = true;
       }
     }
   });
 
   section.addEventListener('mouseup', function (e: MouseEvent) {
+    const MOVE_LIMIT = 3;
     e.preventDefault();
-    if (active && target && currentX && currentY) {
-      target.style.display = 'none';
-      const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
-      const anotherBlockClosestDiv = anotherBlock.closest('div');
-      target.style.display = 'flex';
+    if (active && target) {
+      if (Math.abs(currentX) > MOVE_LIMIT || Math.abs(currentY) > MOVE_LIMIT) {
+        target.style.display = 'none';
+        const anotherBlock = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+        const anotherBlockClosestDiv = anotherBlock.closest('div');
+        target.style.display = 'flex';
 
-      const newWorkspaceData = deepCopy(workspaceData);
-      const parentData = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
-      const child = findTargetBlock(target.id, newWorkspaceData);
-      let changeCheck = true;
+        const newWorkspaceData = deepCopy(workspaceData);
+        const parentData = findTargetParentBlock(target.id, newWorkspaceData, newWorkspaceData);
+        const child = findTargetBlock(target.id, newWorkspaceData);
+        let changeCheck = true;
 
-      if (anotherBlock && parent && child) {
-        if (anotherBlock.id === 'workspace') {
-          const rect = section.getBoundingClientRect();
-          const relativeX = e.clientX - rect.left - xOffset;
-          const relativeY = e.clientY - rect.top - yOffset;
-
-          if (child) {
-            child.data.x = relativeX;
-            child.data.y = relativeY;
-            child.data.id = target.id;
+        if (anotherBlock && parent && child) {
+          let newChild = null;
+          if (e.metaKey || e.ctrlKey) {
+            newChild = deepCopy(child);
+            newChild.changeUniqueId();
           }
 
-          removeTargetBlock(parentData);
-          newWorkspaceData.push(child);
-        } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
-          removeTargetBlock(parentData);
-        } else if (anotherBlockClosestDiv) {
-          removeTargetBlock(parentData);
-          changeCheck = insertBlockAnotherBlock(
-            anotherBlockClosestDiv.id as string,
-            child.name,
-            newWorkspaceData,
-            anotherBlock.id,
-            child,
-          );
+          if (anotherBlock.id === 'workspace') {
+            const rect = section.getBoundingClientRect();
+            const relativeX = e.clientX - rect.left - xOffset;
+            const relativeY = e.clientY - rect.top - yOffset;
+
+            if (child) {
+              if (!newChild) {
+                child.data.x = relativeX;
+                child.data.y = relativeY;
+                child.data.id = target.id;
+                removeTargetBlock(parentData);
+                newWorkspaceData.push(child);
+              } else {
+                newChild.data.x = relativeX;
+                newChild.data.y = relativeY;
+                newWorkspaceData.push(newChild);
+              }
+            }
+          } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
+            if (!newChild) removeTargetBlock(parentData);
+          } else if (anotherBlockClosestDiv) {
+            if (!newChild) {
+              removeTargetBlock(parentData);
+              changeCheck = insertBlockAnotherBlock(
+                anotherBlockClosestDiv.id as string,
+                child.name,
+                newWorkspaceData,
+                anotherBlock,
+                child,
+              );
+            } else {
+              changeCheck = insertBlockAnotherBlock(
+                anotherBlockClosestDiv.id as string,
+                newChild.name,
+                newWorkspaceData,
+                anotherBlock,
+                newChild,
+              );
+            }
+          }
+
+          initialX = currentX;
+          initialY = currentY;
+
+          if (changeCheck) {
+            updateWorkspaceDataAll(newWorkspaceData);
+          }
+
+          target.style.zIndex = '0';
+          target.style.opacity = '1';
+          target.style.transform = 'translate(0px, 0px)';
         }
-      }
-
-      initialX = currentX;
-      initialY = currentY;
-
-      if (changeCheck) {
-        updateWorkspaceDataAll(newWorkspaceData);
-      } else {
-        target.style.transform = 'translate(0px, 0px)';
+        target = null;
+        active = false;
       }
     }
-
-    target = null;
-    active = false;
   });
 
+  let lastHighlighted: Element | null = null;
   section.addEventListener('mousemove', function (e: MouseEvent) {
     if (active) {
       e.preventDefault();
@@ -181,8 +238,63 @@ const addWorkspaceMouseDragEvent = (
       currentY = e.clientY - initialY;
 
       if (target) {
-        target.style.transform = 'translate(' + currentX + 'px, ' + currentY + 'px)';
+        target.style.visibility = 'hidden';
+        const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+        target.style.visibility = 'visible';
+
+        if (lastHighlighted && lastHighlighted !== elementBelow) {
+          lastHighlighted.classList.remove('is-highlight-drop');
+        }
+
+        if (elementBelow) {
+          if (elementBelow.classList.contains('block__space') || elementBelow.classList.contains('block__child')) {
+            elementBelow.classList.add('is-highlight-drop');
+            lastHighlighted = elementBelow;
+          } else {
+            const closestBlock = elementBelow.closest('div');
+            if (closestBlock?.id === 'trash-bin') {
+              closestBlock.classList.add('is-highlight-drop');
+              lastHighlighted = closestBlock;
+            } else if (closestBlock?.classList.contains('block')) {
+              closestBlock.classList.add('is-highlight-drop');
+              lastHighlighted = closestBlock;
+            }
+          }
+        }
       }
+
+      if (target) {
+        if (Math.abs(currentX) > 3 || Math.abs(currentY) > 3) {
+          target.style.transform = 'translate(' + currentX + 'px, ' + currentY + 'px)';
+        } else {
+          target.style.transform = 'translate(0px, 0px)';
+        }
+      }
+    }
+  });
+
+  section.addEventListener('mouseover', function (e: Event) {
+    const target: HTMLElement = (e.target as HTMLElement).closest('div') as HTMLElement;
+
+    if (
+      (target && target.classList.contains('block')) ||
+      target.classList.contains('block__space') ||
+      target.classList.contains('block__child')
+    ) {
+      target.classList.add('block--highlight-select');
+    }
+  });
+
+  section.addEventListener('mouseout', function (e: Event) {
+    const target: HTMLElement = (e.target as HTMLElement).closest('div') as HTMLElement;
+
+    if (
+      (target && target.classList.contains('block')) ||
+      target.classList.contains('block__space') ||
+      target.classList.contains('block__child') ||
+      target.classList.contains('block__operator')
+    ) {
+      target.classList.remove('block--highlight-select');
     }
   });
 };
@@ -262,7 +374,33 @@ const addWorkspaceReceiveDragEvent = (
   const trashBin = document.getElementById('trash-bin') as HTMLElement;
   const trashIcon = document.querySelector('#trash-bin > span') as HTMLElement;
 
+  let lastHighlighted: Element | null = null;
   section.addEventListener('dragover', function (e: DragEvent) {
+    const target = e.target as HTMLElement;
+    if (target) {
+      const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+
+      if (lastHighlighted && lastHighlighted !== elementBelow) {
+        lastHighlighted.classList.remove('is-highlight-drop');
+      }
+
+      if (elementBelow) {
+        if (elementBelow.classList.contains('block__space') || elementBelow.classList.contains('block__child')) {
+          elementBelow.classList.add('is-highlight-drop');
+          lastHighlighted = elementBelow;
+        } else {
+          const closestBlock = elementBelow.closest('div');
+          if (closestBlock?.id === 'trash-bin') {
+            closestBlock.classList.add('is-highlight-drop');
+            lastHighlighted = closestBlock;
+          }
+          if (closestBlock?.classList.contains('block')) {
+            closestBlock.classList.add('is-highlight-drop');
+            lastHighlighted = closestBlock;
+          }
+        }
+      }
+    }
     e.preventDefault();
   });
 
@@ -275,12 +413,16 @@ const addWorkspaceReceiveDragEvent = (
       updateWorkspaceDataAll(newWorkspaceData);
     } else if (e.dataTransfer) {
       const newWorkspaceData = deepCopy(workspaceData);
-      const target = e.target as Element;
+      const target = e.target;
 
-      const uniqueId = target.closest('div')?.id ?? '';
-      const name = e.dataTransfer.getData('name');
-      if (insertBlockAnotherBlock(uniqueId, name, newWorkspaceData, target.id)) {
-        updateWorkspaceDataAll(newWorkspaceData);
+      if (target instanceof HTMLElement) {
+        const uniqueId = target.closest('div')?.id ?? '';
+        const name = e.dataTransfer.getData('name');
+        const insertSuccess = insertBlockAnotherBlock(uniqueId, name, newWorkspaceData, target);
+
+        if (insertSuccess) {
+          updateWorkspaceDataAll(newWorkspaceData);
+        }
       }
     }
   });
@@ -308,16 +450,15 @@ const insertBlockAnotherBlock = (
   targetUniqueId: string,
   name: string,
   newWorkspaceData: BlockObject[],
-  spaceId?: string,
+  anotherBlock: HTMLElement,
   insertBlock?: BlockObject,
 ): boolean => {
   const targetObj = findTargetBlock(targetUniqueId, newWorkspaceData);
 
   if (targetObj) {
     const newBlock = insertBlock ? insertBlock : createBlock(name, createUniqueId(), 0, 0);
-
-    if (spaceId === 'space1' || spaceId === 'space2') {
-      return targetObj.insert(newBlock, spaceId);
+    if (anotherBlock.classList.contains('block__space')) {
+      return targetObj.insert(newBlock, anotherBlock.id);
     } else {
       return targetObj.insert(newBlock);
     }

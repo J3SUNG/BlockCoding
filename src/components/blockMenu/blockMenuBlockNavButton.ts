@@ -1,4 +1,4 @@
-import { createBlock } from '../../classes/factory/createBlock';
+import { createBlock } from '../../classes/blockFactory/createBlock';
 
 interface BlockMenuBlockNavButtonProps {
   name: string;
