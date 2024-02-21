@@ -2,7 +2,7 @@ import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
-import { Debug } from './debug/debug';
+import { Debug } from '../debug/debug';
 
 export class BlockLoop extends BlockCommon {
   name = 'loop';
@@ -15,8 +15,7 @@ export class BlockLoop extends BlockCommon {
 
   setChildPosition(index: number) {
     const { prefixSum } = this.calcHeight();
-    if (prefixSum) return { childX: 0, childY: prefixSum[index] };
-    return { childX: 0, childY: 0 };
+    return { childX: 0, childY: prefixSum?.[index] ?? 0 };
   }
 
   getElement(id: string, x: number, y: number, onChange: () => void, value?: string) {
