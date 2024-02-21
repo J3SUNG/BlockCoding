@@ -121,9 +121,9 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
     }
   });
 
-  fileInput.addEventListener('change', function (e) {
+  fileInput.addEventListener('change', async (e) => {
     if (fileInput instanceof HTMLInputElement) {
-      const file: File | undefined = fileInput.files?.[0];
+      const file = fileInput.files?.[0];
 
       if (file) {
         const reader: FileReader = new FileReader();
@@ -232,15 +232,8 @@ const loadData = (
   updateProgramState: UpdateProgramState,
   updateConsoleLog: UpdateConsoleLog,
 ): void => {
-  const newWorkspaceData: BlockCommon[] = [];
-  loadWorkspaceData.forEach((block: BlockObject) => {
-    const resotreData = restoreWorkspaceData(unzip(block));
-
-    if (resotreData && !Array.isArray(resotreData)) {
-      newWorkspaceData.push(resotreData);
-    }
-  });
-
+  const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
+  
   changeUniqueIdObj(newWorkspaceData);
   newWorkspaceData.forEach((block: BlockCommon) => {
     block.calcWidth();
