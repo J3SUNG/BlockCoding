@@ -86,7 +86,7 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
   });
 
   urlCopyButton.addEventListener('click', () => {
-    const url = new URL(window.location.origin) + '?workspaceData=';
+    const url = window.location.origin + '/?workspaceData=';
     const zipWorkspaceData = JSON.stringify(zip(getWorkspaceData()));
     const URL_MAX_SIZE = 9600;
 
