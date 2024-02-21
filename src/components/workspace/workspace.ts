@@ -171,44 +171,18 @@ const addWorkspaceMouseDragEvent = (
           }
 
           if (anotherBlock.id === 'workspace') {
-            const rect = section.getBoundingClientRect();
-            const relativeX = e.clientX - rect.left - xOffset;
-            const relativeY = e.clientY - rect.top - yOffset;
-
-            if (child) {
-              if (!newChild) {
-                child.data.x = relativeX;
-                child.data.y = relativeY;
-                child.data.id = target.id;
-                removeTargetBlock(parentData);
-                newWorkspaceData.push(child);
-              } else {
-                newChild.data.x = relativeX;
-                newChild.data.y = relativeY;
-                newWorkspaceData.push(newChild);
-              }
-            }
+            workspaceDrop(e, child, newChild, target, parentData, newWorkspaceData);
           } else if (anotherBlockClosestDiv && anotherBlockClosestDiv.id === 'trash-bin') {
-            if (!newChild) removeTargetBlock(parentData);
+            trashBinDrop(newChild, parentData);
           } else if (anotherBlockClosestDiv) {
-            if (!newChild) {
-              removeTargetBlock(parentData);
-              changeCheck = insertBlockAnotherBlock(
-                anotherBlockClosestDiv.id as string,
-                child.name,
-                newWorkspaceData,
-                anotherBlock,
-                child,
-              );
-            } else {
-              changeCheck = insertBlockAnotherBlock(
-                anotherBlockClosestDiv.id as string,
-                newChild.name,
-                newWorkspaceData,
-                anotherBlock,
-                newChild,
-              );
-            }
+            changeCheck = anotherBlockDrop(
+              newChild,
+              parentData,
+              anotherBlockClosestDiv,
+              child,
+              newWorkspaceData,
+              anotherBlock,
+            );
           }
 
           initialX = currentX;
@@ -227,6 +201,71 @@ const addWorkspaceMouseDragEvent = (
       }
     }
   });
+
+  const workspaceDrop = (
+    e: MouseEvent,
+    child: BlockObject,
+    newChild: BlockObject | null,
+    target: HTMLElement,
+    parentData: { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null,
+    newWorkspaceData: WorkspaceData,
+  ) => {
+    const rect = section.getBoundingClientRect();
+    const relativeX = e.clientX - rect.left - xOffset;
+    const relativeY = e.clientY - rect.top - yOffset;
+
+    if (!newChild) {
+      child.data.x = relativeX;
+      child.data.y = relativeY;
+      child.data.id = target.id;
+      removeTargetBlock(parentData);
+      newWorkspaceData.push(child);
+    } else {
+      newChild.data.x = relativeX;
+      newChild.data.y = relativeY;
+      newWorkspaceData.push(newChild);
+    }
+  };
+
+  const trashBinDrop = (
+    newChild: BlockObject | null,
+    parentData: { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null,
+  ) => {
+    if (!newChild) {
+      removeTargetBlock(parentData);
+    }
+  };
+
+  const anotherBlockDrop = (
+    newChild: BlockObject | null,
+    parentData: { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null,
+    anotherBlockClosestDiv: HTMLElement,
+    child: BlockObject,
+    newWorkspaceData: WorkspaceData,
+    anotherBlock: HTMLElement,
+  ) => {
+    let changeCheck = true;
+    if (!newChild) {
+      removeTargetBlock(parentData);
+      changeCheck = insertBlockAnotherBlock(
+        anotherBlockClosestDiv.id as string,
+        child.name,
+        newWorkspaceData,
+        anotherBlock,
+        child,
+      );
+    } else {
+      changeCheck = insertBlockAnotherBlock(
+        anotherBlockClosestDiv.id as string,
+        newChild.name,
+        newWorkspaceData,
+        anotherBlock,
+        newChild,
+      );
+    }
+
+    return changeCheck;
+  };
 
   let lastHighlighted: Element | null = null;
   section.addEventListener('mousemove', function (e: MouseEvent) {
