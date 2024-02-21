@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockTimer extends BlockCommon {
   name = 'timer';
   type = 'general';
-  defaultWidth = 100;
-  defaultHeight = 50;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);

@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockNegation extends BlockCommon {
   name = 'negation';
   type = 'expressionLogical';
-  defaultWidth = 120;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);

@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockArithmetic extends BlockCommon {
   name = 'arithmetic';
   type = 'expressionValue';
-  defaultWidth = 100;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);

@@ -1,3 +1,9 @@
+import {
+  BLOCK_DEFAULT_HEIGHT,
+  BLOCK_DEFAULT_WIDTH,
+  BLOCK_SPACE_DEFAULT_MARGIN,
+  BLOCK_SPACE_DEFAULT_WIDTH,
+} from '../../constants/blockDefaultMap';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
@@ -6,16 +12,12 @@ import { createUniqueId } from '../../utils/createUniqueId';
 export class BlockCommon implements BlockObject {
   name = '';
   type = '';
-  defaultWidth = 100;
   width = 100;
-  defaultSpaceWidth = 50;
-  defaultSpaceMargin = 10;
-  defaultHeight = 50;
   spaceWidth = [50, 50];
   childWidth? = 100;
   fold = false;
-  data: BlockObject['data'];
   paramSize = 0;
+  data: BlockObject['data'];
 
   constructor(id: string, x: number, y: number, value: BlockObjectValue) {
     this.data = { id, x, y, value };
@@ -147,6 +149,21 @@ export class BlockCommon implements BlockObject {
   getChildBlock(): string[] {
     return [];
   }
+
+  get defaultWidth() {
+    return BLOCK_DEFAULT_WIDTH[this.name];
+  }
+
+  get defaultHeight() {
+    return BLOCK_DEFAULT_HEIGHT[this.name];
+  }
+
+  get defaultSpaceWidth() {
+    return BLOCK_SPACE_DEFAULT_WIDTH;
+  }
+
+  get defaultSpaceMargin() {
+    return BLOCK_SPACE_DEFAULT_MARGIN;
 
   changeUniqueId() {
     const newUniqueId = createUniqueId();

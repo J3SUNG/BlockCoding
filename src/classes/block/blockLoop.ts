@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockLoop extends BlockCommon {
   name = 'loop';
   type = 'control';
-  defaultWidth = 150;
-  defaultHeight = 150;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);

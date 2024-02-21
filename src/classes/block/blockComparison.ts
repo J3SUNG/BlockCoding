@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockComparison extends BlockCommon {
   name = 'comparison';
   type = 'expressionLogical';
-  defaultWidth = 100;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);

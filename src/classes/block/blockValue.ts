@@ -5,9 +5,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockValue extends BlockCommon {
   name = 'value';
   type = 'expressionValue';
-  defaultWidth = 60;
-  defaultHeight = 40;
-  defaultSpaceWidth = 50;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, '');
@@ -97,8 +94,8 @@ export class BlockValue extends BlockCommon {
       const width = parseInt(getComputedStyle(span).width, 10);
       span.style.display = 'none';
 
-      this.spaceWidth[0] = width + 20 > this.defaultSpaceWidth ? width + 20 : this.defaultSpaceWidth;
-      this.width = this.spaceWidth[0] + this.defaultWidth;
+      this.spaceWidth[0] = width + 36 > this.defaultSpaceWidth ? width + 36 : this.defaultSpaceWidth;
+      this.width = this.spaceWidth[0] + this.defaultHeight;
     }
   }
 

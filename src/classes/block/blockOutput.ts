@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockOutput extends BlockCommon {
   name = 'output';
   type = 'general';
-  defaultWidth = 90;
-  defaultHeight = 50;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);

@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { InfinityLoop } from '../infinityLoop/infinityLoop';
 import { BlockCommon } from './blockClassCommon';
@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockVariable extends BlockCommon {
   name = 'variable';
   type = 'general';
-  defaultWidth = 130;
-  defaultHeight = 50;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);

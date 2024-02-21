@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockString extends BlockCommon {
   name = 'string';
   type = 'expressionValue';
-  defaultWidth = 110;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, []);

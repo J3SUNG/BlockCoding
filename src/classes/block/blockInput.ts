@@ -6,8 +6,6 @@ import { BlockCommon } from './blockClassCommon';
 export class BlockInput extends BlockCommon {
   name = 'input';
   type = 'expressionValue';
-  defaultWidth = 60;
-  defaultHeight = 40;
 
   constructor(id: string, x: number, y: number) {
     super(id, x, y, {} as BlockObject);
