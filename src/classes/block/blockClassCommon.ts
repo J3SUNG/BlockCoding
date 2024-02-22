@@ -188,7 +188,9 @@ export class BlockCommon implements BlockObject {
   }
 
   async wait(time: number, exceptionManager: Exception) {
-    exceptionManager.stopTimer();
+    if (time > 0) {
+      exceptionManager.stopTimer();
+    }
 
     await new Promise((resolve) => {
       let timeoutId = setTimeout(resolve, time / MILLISECONDS);
@@ -214,7 +216,7 @@ export class BlockCommon implements BlockObject {
       document.addEventListener('ProgramStateChange', onProgramStateChange);
     });
 
-    exceptionManager.stopTimer();
+    exceptionManager.startTimer();
   }
 
   async preprocessingRun(

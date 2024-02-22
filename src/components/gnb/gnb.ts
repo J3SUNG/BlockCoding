@@ -15,6 +15,7 @@ import { Debug } from '../../classes/debug/debug';
 import { restoreWorkspaceData } from '../../utils/restoreWorkspaceData';
 import { unzip, zip } from '../../utils/zipBlock';
 import { changeUniqueIdObj } from '../../utils/changeUniqueIdObj';
+import { MILLISECONDS } from '../../constants/commonMap';
 
 interface GnbProps {
   getWorkspaceData: () => WorkspaceData;
@@ -89,35 +90,31 @@ export const gnb = ({ getWorkspaceData, updateWorkspaceData, getConsoleLog, upda
     const url = window.location.origin + '/?workspaceData=';
     const zipWorkspaceData = JSON.stringify(zip(getWorkspaceData()));
     const URL_MAX_SIZE = 9600;
+    const COPY_TEXT = 'URL Copy';
+    const COPIED_TEXT = 'Copied!';
+    const FAIL_TEXT = 'Fail Large!';
+    const BUTTON_ACTIVE_TIME = 1;
 
-    if (zipWorkspaceData.length > URL_MAX_SIZE) {
-      if (urlCopyButton instanceof HTMLButtonElement) {
-        urlCopyButton.textContent = 'Fail Large!';
+    if (urlCopyButton instanceof HTMLButtonElement) {
+      urlCopyButton.disabled = true;
+      if (zipWorkspaceData.length > URL_MAX_SIZE) {
+        urlCopyButton.textContent = FAIL_TEXT;
         urlCopyButton.classList.remove('gnb-button__url-copy');
         urlCopyButton.classList.add('gnb-button__url-copy--fail');
-        urlCopyButton.disabled = true;
-        setTimeout(() => {
-          urlCopyButton.textContent = 'URL Copy';
-          urlCopyButton.classList.add('gnb-button__url-copy');
-          urlCopyButton.classList.remove('gnb-button__url-copy--fail');
-          urlCopyButton.disabled = false;
-        }, 2000);
-      }
-    } else {
-      navigator.clipboard.writeText(url + zipWorkspaceData);
-
-      if (urlCopyButton instanceof HTMLButtonElement) {
-        urlCopyButton.textContent = 'Copied!';
+      } else {
+        navigator.clipboard.writeText(url + zipWorkspaceData);
+        urlCopyButton.textContent = COPIED_TEXT;
         urlCopyButton.classList.remove('gnb-button__url-copy');
         urlCopyButton.classList.add('gnb-button__url-copy--success');
-        urlCopyButton.disabled = true;
-        setTimeout(() => {
-          urlCopyButton.textContent = 'URL Copy';
-          urlCopyButton.classList.add('gnb-button__url-copy');
-          urlCopyButton.classList.remove('gnb-button__url-copy--success');
-          urlCopyButton.disabled = false;
-        }, 2000);
       }
+
+      setTimeout(() => {
+        urlCopyButton.textContent = COPY_TEXT;
+        urlCopyButton.classList.add('gnb-button__url-copy');
+        urlCopyButton.classList.remove('gnb-button__url-copy--fail');
+        urlCopyButton.classList.remove('gnb-button__url-copy--success');
+        urlCopyButton.disabled = false;
+      }, BUTTON_ACTIVE_TIME / MILLISECONDS);
     }
   });
 
