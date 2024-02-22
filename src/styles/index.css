@@ -54,6 +54,19 @@ select {
   margin: 2rem 0;
 }
 
+.gnb-button__url-copy {
+  background-color: rgb(100, 116, 139);
+  color: #fff;
+}
+.gnb-button__url-copy--success {
+  background-color: rgb(34 197 94);
+  color: #fff;
+}
+.gnb-button__url-copy--fail {
+  background-color: rgb(255, 69, 58);
+  color: #fff;
+}
+
 /* 콘텐츠 영역 */
 #main {
   flex: 1;

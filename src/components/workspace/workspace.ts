@@ -5,6 +5,7 @@ import { createUniqueId } from '../../utils/createUniqueId';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock } from '../../utils/findTargetBlock';
 import { createBlock } from '../../classes/blockFactory/createBlock';
+import { changeUniqueIdObj } from '../../utils/changeUniqueIdObj';
 import { BlockCommon } from '../../classes/block/blockClassCommon';
 
 interface WorkspaceProps {
