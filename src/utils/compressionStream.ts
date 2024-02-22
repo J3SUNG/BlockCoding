@@ -1,11 +1,11 @@
-export function addCompressedDataToURL(compressedData: string): string {
+export const addCompressedDataToURL = (compressedData: string): string => {
   const url = new URL(window.location.href);
   url.searchParams.set('workspaceData', compressedData);
 
   return url.toString();
-}
+};
 
-export async function compressString(inputString: string) {
+export const compressString = async (inputString: string) => {
   const encoder = new TextEncoder();
   const encodedData = encoder.encode(inputString);
   const inputStream = new ReadableStream({
@@ -29,9 +29,9 @@ export async function compressString(inputString: string) {
   const uint8Array = new Uint8Array(arrayBuffer);
 
   return btoa(String.fromCharCode(...uint8Array));
-}
+};
 
-export async function decompressString(compressedBase64String: string) {
+export const decompressString = async (compressedBase64String: string) => {
   const binaryString = atob(compressedBase64String);
   const uint8Array = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
@@ -55,9 +55,9 @@ export async function decompressString(compressedBase64String: string) {
 
   const decodedData = new TextDecoder().decode(concatenateUint8Arrays(chunks));
   return decodedData;
-}
+};
 
-function concatenateUint8Arrays(arrays: Uint8Array[]) {
+const concatenateUint8Arrays = (arrays: Uint8Array[]) => {
   let totalLength = 0;
   for (const arr of arrays) {
     totalLength += arr.length;
@@ -71,4 +71,4 @@ function concatenateUint8Arrays(arrays: Uint8Array[]) {
   }
 
   return result;
-}
+};
