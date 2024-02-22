@@ -241,4 +241,26 @@ export class BlockCommon implements BlockObject {
       div?.classList.remove('is-highlight-run');
     }
   }
+
+  getJsCode(defs: number): string {
+    return '';
+  }
+
+  addQuarters(text: string) {
+    return `'${text}'`;
+  }
+
+  removeQuarters(text: string) {
+    return text.replace(/'/g, '');
+  }
+
+  getJsTab(defs: number): string {
+    let tab = '';
+
+    for (let i = 0; i < defs; i++) {
+      tab += '\t';
+    }
+
+    return tab;
+  }
 }

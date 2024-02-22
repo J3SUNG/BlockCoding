@@ -68,4 +68,14 @@ export class BlockRandomNumber extends BlockCommon {
 
     return result.toString();
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+
+    if (this.data.value instanceof BlockCommon) {
+      jsCode = `(Math.floor(Math.random() * ${this.data.value.getJsCode(defs)}) + 1)`;
+    }
+
+    return jsCode;
+  }
 }

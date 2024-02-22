@@ -3,6 +3,7 @@ import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
+import { MILLISECONDS } from '../../constants/commonMap';
 
 export class BlockTimer extends BlockCommon {
   name = 'timer';
@@ -76,5 +77,15 @@ export class BlockTimer extends BlockCommon {
     exceptionManager.startTimer();
 
     return '';
+  }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+
+    if (this.data.value instanceof BlockCommon) {
+      jsCode = `${this.getJsTab(defs)}setTimeout(() => {}, ${Number(this.data.value.getJsCode(defs)) / MILLISECONDS});\n`;
+    }
+
+    return jsCode;
   }
 }

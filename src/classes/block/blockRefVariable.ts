@@ -68,4 +68,15 @@ export class BlockRefVariable extends BlockCommon {
 
     return result;
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+    const value = this.data.value;
+
+    if (value instanceof BlockCommon) {
+      jsCode = this.removeQuarters(value.getJsCode(defs));
+    }
+
+    return jsCode;
+  }
 }

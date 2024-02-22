@@ -128,4 +128,24 @@ export class BlockCondition extends BlockCommon {
 
     return '';
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+    const condition = this.data.condition;
+    const value = this.data.value;
+
+    if (condition instanceof BlockCommon) {
+      jsCode += `${this.getJsTab(defs)}if (${condition.getJsCode(defs)}) {\n`;
+      if (Array.isArray(value)) {
+        for (const child of value) {
+          if (child instanceof BlockCommon) {
+            jsCode += child.getJsCode(defs + 1);
+          }
+        }
+      }
+      jsCode += `${this.getJsTab(defs)}}\n`;
+    }
+
+    return jsCode;
+  }
 }

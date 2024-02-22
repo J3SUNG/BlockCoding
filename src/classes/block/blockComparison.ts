@@ -141,4 +141,28 @@ export class BlockComparison extends BlockCommon {
   getInnerBlock(): string[] {
     return ['value', 'secondValue'];
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+    const value = this.data.value;
+    const secondValue = this.data.secondValue;
+    const operatorMap: { [key: string]: string } = {
+      '>': '>',
+      '<': '<',
+      '>=': '>=',
+      '<=': '<=',
+      '=': '===',
+      '!=': '!==',
+    };
+
+    if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
+      const operator = this.data.operator;
+
+      if (operator) {
+        jsCode = `(${value.getJsCode(defs)} ${operatorMap[operator]} ${secondValue.getJsCode(defs)})`;
+      }
+    }
+
+    return jsCode;
+  }
 }

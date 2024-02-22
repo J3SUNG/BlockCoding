@@ -90,4 +90,17 @@ export class BlockString extends BlockCommon {
   getInnerBlock(): string[] {
     return ['value', 'secondValue'];
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+
+    if (this.data.value instanceof BlockCommon && this.data.secondValue instanceof BlockCommon) {
+      const value = this.data.value.getJsCode(defs);
+      const secondValue = this.data.secondValue.getJsCode(defs);
+
+      jsCode = value + ' + ' + secondValue;
+    }
+
+    return jsCode;
+  }
 }

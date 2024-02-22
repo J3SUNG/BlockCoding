@@ -113,4 +113,9 @@ export class BlockValue extends BlockCommon {
       return '';
     }
   }
+
+  getJsCode(defs: number): string {
+    const value = this.data.value + '';
+    return isNaN(Number(value)) ? `${this.addQuarters(value)}` : value;
+  }
 }

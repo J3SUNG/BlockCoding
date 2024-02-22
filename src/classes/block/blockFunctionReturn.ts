@@ -176,4 +176,27 @@ export class BlockFunctionReturn extends BlockCommon {
 
     return result;
   }
+
+  getJsCode(defs: number): string {
+    let jsCode = '';
+    const value = this.data.value;
+
+    if (value instanceof BlockCommon) {
+      jsCode = `${this.removeQuarters(value.getJsCode(defs))}(`;
+    }
+
+    for (let i = 0; i < this.paramSize; i++) {
+      const propName = `param${i + 1}`;
+      const paramBlock = this.data[propName];
+
+      if (paramBlock && paramBlock instanceof BlockCommon) {
+        jsCode += paramBlock.getJsCode(defs);
+      }
+
+      jsCode += i !== this.paramSize - 1 ? ', ' : '';
+    }
+    jsCode += ')';
+
+    return jsCode;
+  }
 }
