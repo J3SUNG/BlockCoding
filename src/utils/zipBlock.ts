@@ -71,10 +71,10 @@ export const zip = (item: any): any => {
 
       if (key === 'id') {
         return [mappedKey, ''];
-      } else if (key === 'name' && ZIP_NAME_MAP[value as string]) {
-        return [mappedKey, ZIP_NAME_MAP[value as string]];
-      } else if (key === 'type' && ZIP_TYPE_MAP[value as string]) {
-        return [mappedKey, ZIP_TYPE_MAP[value as string]];
+      } else if (key === 'name' && typeof value === 'string' && ZIP_NAME_MAP[value]) {
+        return [mappedKey, ZIP_NAME_MAP[value]];
+      } else if (key === 'type' && typeof value === 'string' && ZIP_NAME_MAP[value]) {
+        return [mappedKey, ZIP_TYPE_MAP[value]];
       } else {
         return [mappedKey, zip(value)];
       }
