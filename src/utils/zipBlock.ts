@@ -22,10 +22,6 @@ const ZIP_KEY_MAP: ZipType = {
   width: 'z$',
   childWidth: '1$',
   spaceWidth: '2$',
-  defaultWidth: '3$',
-  defaultHeight: '4$',
-  defaultSpaceWidth: '5$',
-  defaultSpaceMargin: '6$',
 };
 
 const ZIP_NAME_MAP: ZipType = {
@@ -73,7 +69,7 @@ export const zip = (item: any): any => {
         return [mappedKey, ''];
       } else if (key === 'name' && typeof value === 'string' && ZIP_NAME_MAP[value]) {
         return [mappedKey, ZIP_NAME_MAP[value]];
-      } else if (key === 'type' && typeof value === 'string' && ZIP_NAME_MAP[value]) {
+      } else if (key === 'type' && typeof value === 'string' && ZIP_TYPE_MAP[value]) {
         return [mappedKey, ZIP_TYPE_MAP[value]];
       } else {
         return [mappedKey, zip(value)];
