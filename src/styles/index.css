@@ -281,10 +281,14 @@ select {
 
 .block--highlight-select {
   box-shadow: 0px 0px 0px 4px #ffcd00;
+  z-index: 999;
 }
 
-.block.is-highlight-drop {
+.block.is-highlight-drop,
+.block__space.is-highlight-drop,
+.block__child.is-highlight-drop {
   box-shadow: 0px 0px 0px 4px #34c759;
+  z-index: 998;
 }
 
 .block--declare {

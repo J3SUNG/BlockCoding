@@ -244,7 +244,7 @@ const addWorkspaceMouseDragEvent = (
         target.style.visibility = 'visible';
 
         if (lastHighlighted && lastHighlighted !== elementBelow) {
-          lastHighlighted.classList.remove('block--highlight-drop');
+          lastHighlighted.classList.remove('is-highlight-drop');
         }
 
         if (elementBelow) {
@@ -324,7 +324,7 @@ const addWorkspaceReceiveDragEvent = (
       const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
 
       if (lastHighlighted && lastHighlighted !== elementBelow) {
-        lastHighlighted.classList.remove('block--highlight-drop');
+        lastHighlighted.classList.remove('is-highlight-drop');
       }
 
       if (elementBelow) {
@@ -364,6 +364,7 @@ const addWorkspaceReceiveDragEvent = (
 
         if (anotherBlockClosestDiv) {
           const insertSuccess = insertBlockAnotherBlock(e, anotherBlockClosestDiv, name, newWorkspaceData, target);
+          anotherBlockClosestDiv.classList.remove('is-highlight-drop');
 
           if (insertSuccess) {
             updateWorkspaceData(newWorkspaceData);
