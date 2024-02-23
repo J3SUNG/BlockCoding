@@ -1,9 +1,9 @@
-import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
-import { Debug } from './debug/debug';
+import { Debug } from '../debug/debug';
 import { BlockCommon } from './blockClassCommon';
+import { MILLISECONDS } from '../../constants/commonMap';
 
 export class BlockTimer extends BlockCommon {
   name = 'timer';
@@ -18,7 +18,7 @@ export class BlockTimer extends BlockCommon {
     const p = createElementCommon('p', { className: 'block__text', textContent: '타이머' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(space1);
 
@@ -65,7 +65,7 @@ export class BlockTimer extends BlockCommon {
         debugManager,
       );
 
-      if (debugManager.getTime > 0) {
+      if (debugManager.time > 0) {
         const div = document.getElementById(this.data.id);
         div?.classList.add('is-highlight-run');
         await this.wait(Number(time), exceptionManager);
@@ -80,11 +80,10 @@ export class BlockTimer extends BlockCommon {
   }
 
   getJsCode(defs: number): string {
-    const MILISECONDS = 0.001;
     let jsCode = '';
 
     if (this.data.value instanceof BlockCommon) {
-      jsCode = `${this.getJsTab(defs)}await new Promise(resolve => setTimeout(resolve, ${Number(this.data.value.getJsCode(defs)) / MILISECONDS}));\n`;
+      jsCode = `${this.getJsTab(defs)}await new Promise(resolve => setTimeout(resolve, ${Number(this.data.value.getJsCode(defs)) / MILLISECONDS}));\n`;
     }
 
     return jsCode;
