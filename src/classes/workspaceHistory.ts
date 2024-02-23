@@ -1,6 +1,6 @@
 import { WorkspaceData } from '../types/stateType';
 
-export class PrevStack {
+export class WorkspaceHistory {
   #stack: WorkspaceData[];
   #capacity: number;
 

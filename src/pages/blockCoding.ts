@@ -6,12 +6,12 @@ import { workspace } from '../components/workspace/workspace';
 import { consoleSpace } from '../components/consoleSpace/consoleSpace';
 import { createElementCommon } from '../utils/createElementCommon';
 import { UrlTool } from '../classes/urlTool';
-import { PrevStack } from '../classes/prevStack';
+import { WorkspaceHistory } from '../classes/WorkspaceHistory';
 
 export const blockCoding = () => {
   const [getConsoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
   const [getWorkspaceData, setWorkspaceData] = useState<WorkspaceData>('workspaceData', []);
-  const prevWorkspaceData = new PrevStack();
+  const prevWorkspaceData = new WorkspaceHistory();
   const BLOCK_MENU_INDEX = 0;
   const WORKSPACE_INDEX = 1;
   const CONSOLE_SPACE_INDEX = 2;
