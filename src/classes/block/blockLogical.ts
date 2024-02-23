@@ -1,8 +1,7 @@
-import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { Exception } from '../exception/exception';
-import { Debug } from './debug/debug';
+import { Exception } from '../exception';
+import { Debug } from '../debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockLogical extends BlockCommon {
@@ -47,14 +46,14 @@ export class BlockLogical extends BlockCommon {
 
     startTriangle.setAttribute(
       'style',
-      `width: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; position: absolute; left: -${BLOCK_DEFAULT_HEIGHT[this.name]}px; clip-path: polygon(40% 50%, 101% -5%, 101% 105%);`,
+      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; left: -${this.defaultHeight}px; clip-path: polygon(40% 50%, 101% -5%, 101% 105%);`,
     );
     endTriangle.setAttribute(
       'style',
-      `width: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; position: absolute; right: -${BLOCK_DEFAULT_HEIGHT[this.name]}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
+      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
 
-    div.setAttribute('style', `left: ${x + 10}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
+    div.setAttribute('style', `left: ${x + 10}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(startTriangle);
     div.appendChild(endTriangle);
     div.appendChild(space1);

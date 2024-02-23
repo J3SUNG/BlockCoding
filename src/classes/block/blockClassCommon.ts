@@ -4,10 +4,12 @@ import {
   BLOCK_SPACE_DEFAULT_MARGIN,
   BLOCK_SPACE_DEFAULT_WIDTH,
 } from '../../constants/blockDefaultMap';
+import { MILLISECONDS } from '../../constants/commonMap';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { Exception } from '../exception/exception';
-import { Debug } from './debug/debug';
+import { createUniqueId } from '../../utils/createUniqueId';
+import { Exception } from '../exception';
+import { Debug } from '../debug';
 
 export class BlockCommon implements BlockObject {
   name = '';
@@ -52,19 +54,19 @@ export class BlockCommon implements BlockObject {
 
   calcWidth() {
     let addWidth = 0;
-    this.width = BLOCK_DEFAULT_WIDTH[this.name];
+    this.width = this.defaultWidth;
     this.getInnerBlock().forEach((innerProp, index) => {
       const block = this.data[innerProp];
       if (typeof block === 'object' && Object.keys(block).length === 0) {
-        this.spaceWidth[index] = BLOCK_SPACE_DEFAULT_WIDTH;
-        addWidth += BLOCK_SPACE_DEFAULT_WIDTH + BLOCK_SPACE_DEFAULT_MARGIN;
+        this.spaceWidth[index] = this.defaultSpaceWidth;
+        addWidth += this.defaultSpaceWidth + this.defaultSpaceMargin;
       } else if (block instanceof BlockCommon) {
         this.spaceWidth[index] = block.calcWidth();
-        addWidth += this.spaceWidth[index] + BLOCK_SPACE_DEFAULT_MARGIN;
+        addWidth += this.spaceWidth[index] + this.defaultSpaceMargin;
       }
     });
 
-    this.width = BLOCK_DEFAULT_WIDTH[this.name] + addWidth;
+    this.width = this.defaultWidth + addWidth;
     this.childWidth = this.width - 48;
 
     const div = document.getElementById(this.data.id);
@@ -81,28 +83,28 @@ export class BlockCommon implements BlockObject {
       }
     }
 
-    if (this.getChildBlock().length > 0) {
-      this.getChildBlock().forEach((childProp) => {
-        const block = this.data[childProp];
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
 
-        if (Array.isArray(block)) {
-          block.forEach((childBlock) => {
-            childBlock.calcWidth();
-          });
-        }
-      });
-
-      const childSpace = div?.querySelector(':scope > .block__child');
-      if (childSpace instanceof HTMLElement) {
-        childSpace.style.width = `${this.childWidth}px`;
+      if (Array.isArray(block)) {
+        block.forEach((childBlock) => {
+          childBlock.calcWidth();
+        });
       }
+    });
+
+    const childSpace = div?.querySelector(':scope > .block__child');
+    if (childSpace instanceof HTMLElement) {
+      childSpace.style.width = `${this.childWidth}px`;
     }
 
     return this.width;
   }
 
   calcHeight(): { childHeight: number; prefixSum?: number[] } {
-    if (this.getChildBlock().length > 0) {
+    if (this.getChildBlock().length <= 0) {
+      return { childHeight: this.defaultHeight };
+    } else {
       if (this.fold) {
         const div = document.querySelector(`#${this.data.id}`) as HTMLDivElement;
         const child = div.querySelector(':scope > .block__child') as HTMLSpanElement;
@@ -137,8 +139,6 @@ export class BlockCommon implements BlockObject {
           return { childHeight: height + 100 > 150 ? height + 100 : 150, prefixSum };
         }
       }
-    } else {
-      return { childHeight: BLOCK_DEFAULT_HEIGHT[this.name] };
     }
   }
 
@@ -150,16 +150,52 @@ export class BlockCommon implements BlockObject {
     return [];
   }
 
+  get defaultWidth() {
+    return BLOCK_DEFAULT_WIDTH[this.name];
+  }
+
+  get defaultHeight() {
+    return BLOCK_DEFAULT_HEIGHT[this.name];
+  }
+
+  get defaultSpaceWidth() {
+    return BLOCK_SPACE_DEFAULT_WIDTH;
+  }
+
+  get defaultSpaceMargin() {
+    return BLOCK_SPACE_DEFAULT_MARGIN;
+  }
+
+  changeUniqueId() {
+    const newUniqueId = createUniqueId();
+    this.data.id = newUniqueId;
+
+    this.getInnerBlock().forEach((innerProp) => {
+      const block = this.data[innerProp];
+      if (block instanceof BlockCommon) {
+        block.changeUniqueId();
+      }
+    });
+
+    this.getChildBlock().forEach((childProp) => {
+      const block = this.data[childProp];
+      if (Array.isArray(block)) {
+        block.forEach((child) => {
+          child.changeUniqueId();
+        });
+      }
+    });
+  }
+
   async wait(time: number, exceptionManager: Exception) {
     if (time > 0) {
       exceptionManager.stopTimer();
     }
-    const SECOND = 1000;
 
     await new Promise((resolve) => {
-      let timeoutId = setTimeout(resolve, time * SECOND);
-      let startTime = new Date().getTime();
-      let remainingTime: number = time * SECOND;
+      let timeoutId = setTimeout(resolve, time / MILLISECONDS);
+      let startTime = Date.now();
+      let remainingTime: number = time / MILLISECONDS;
 
       const onProgramStateChange = (e: Event) => {
         const customEvent = e as CustomEvent;
@@ -168,11 +204,11 @@ export class BlockCommon implements BlockObject {
           document.removeEventListener('ProgramStateChange', onProgramStateChange);
           resolve('');
         } else if (customEvent.detail === 'pause') {
-          const endTime = new Date().getTime();
+          const endTime = Date.now();
           remainingTime = remainingTime - (endTime - startTime);
           clearTimeout(timeoutId);
         } else if (customEvent.detail === 'run') {
-          startTime = new Date().getTime();
+          startTime = Date.now();
           timeoutId = setTimeout(resolve, remainingTime);
         }
       };
@@ -192,7 +228,7 @@ export class BlockCommon implements BlockObject {
       return false;
     }
 
-    await this.debugRun(debugManager.getTime, exceptionManager);
+    await this.debugRun(debugManager.time, exceptionManager);
 
     return true;
   }

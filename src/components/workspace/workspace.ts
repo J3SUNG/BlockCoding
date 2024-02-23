@@ -4,8 +4,9 @@ import { deepCopy } from '../../utils/deepCopy';
 import { createUniqueId } from '../../utils/createUniqueId';
 import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock, findTargetParentBlock } from '../../utils/findBlock';
-import { createBlock } from '../../classes/blockFactory/createBlock';
+import { createBlock } from '../../utils/createBlock';
 import { workspaceSection } from './workspaceSection';
+import { BLOCK_GENERAL_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;

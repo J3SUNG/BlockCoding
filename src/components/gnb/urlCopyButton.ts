@@ -1,3 +1,4 @@
+import { MILLISECONDS } from '../../constants/commonMap';
 import { WorkspaceData } from '../../types/stateType';
 import { addCompressedDataToURL, compressString } from '../../utils/compressionStream';
 import { createElementCommon } from '../../utils/createElementCommon';
@@ -10,20 +11,17 @@ interface UrlCopyButtonProps {
 export const urlCopyButton = ({ getWorkspaceData }: UrlCopyButtonProps) => {
   const element = createElementCommon('button', {
     type: 'button',
-    className: 'bg-gray',
+    className: 'gnb-button__url-copy',
     textContent: 'URL Copy',
     style: 'width: 100px',
   });
 
   element.addEventListener('click', () => {
     const URL_MAX_SIZE = 4000;
-    const COLOR_RED = 'rgb(255 69 58)';
-    const COLOR_GREEN = 'rgb(34 197 94)';
-    const COLOR_GRAY = 'rgb(100 116 139)';
     const COPY_TEXT = 'URL Copy';
     const COPIED_TEXT = 'Copied!';
     const FAIL_TEXT = 'Fail Large!';
-    const BUTTON_ACTIVE_TIME = 1000;
+    const BUTTON_ACTIVE_TIME = 1;
 
     const zipWorkspaceData = JSON.stringify(zip(getWorkspaceData()));
 
@@ -34,18 +32,22 @@ export const urlCopyButton = ({ getWorkspaceData }: UrlCopyButtonProps) => {
         element.disabled = true;
         if (copyUrl.length > URL_MAX_SIZE) {
           element.textContent = FAIL_TEXT;
-          element.style.backgroundColor = COLOR_RED;
+          element.classList.remove('gnb-button__url-copy');
+          element.classList.add('gnb-button__url-copy--fail');
         } else {
-          navigator.clipboard.writeText(copyUrl);
+          navigator.clipboard.writeText(copyUrl + zipWorkspaceData);
           element.textContent = COPIED_TEXT;
-          element.style.backgroundColor = COLOR_GREEN;
+          element.classList.remove('gnb-button__url-copy');
+          element.classList.add('gnb-button__url-copy--success');
         }
 
         setTimeout(() => {
           element.textContent = COPY_TEXT;
-          element.style.backgroundColor = COLOR_GRAY;
+          element.classList.add('gnb-button__url-copy');
+          element.classList.remove('gnb-button__url-copy--fail');
+          element.classList.remove('gnb-button__url-copy--success');
           element.disabled = false;
-        }, BUTTON_ACTIVE_TIME);
+        }, BUTTON_ACTIVE_TIME / MILLISECONDS);
       }
     });
   });

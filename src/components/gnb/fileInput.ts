@@ -44,14 +44,7 @@ const loadData = (
   updateProgramState: UpdateProgramState,
   updateConsoleLog: UpdateConsoleLog,
 ): void => {
-  const newWorkspaceData: BlockCommon[] = [];
-  loadWorkspaceData.forEach((block: BlockObject) => {
-    const resotreData = restoreWorkspaceData(block);
-
-    if (resotreData && !Array.isArray(resotreData)) {
-      newWorkspaceData.push(resotreData);
-    }
-  });
+  const newWorkspaceData = loadWorkspaceData.map((block: BlockObject) => restoreWorkspaceData(block)) as BlockCommon[];
 
   changeUniqueIdObj(newWorkspaceData);
   newWorkspaceData.forEach((block: BlockCommon) => {

@@ -1,8 +1,7 @@
-import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { Exception } from '../exception/exception';
-import { Debug } from './debug/debug';
+import { Exception } from '../exception';
+import { Debug } from '../debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockRandomNumber extends BlockCommon {
@@ -18,7 +17,7 @@ export class BlockRandomNumber extends BlockCommon {
     const p = createElementCommon('p', { className: 'block__text', textContent: '랜덤 범위' });
     const space1 = createElementCommon('span', { id: 'space1', className: 'block__space' });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
     div.appendChild(space1);
 

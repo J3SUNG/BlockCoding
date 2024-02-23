@@ -1,8 +1,7 @@
-import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { Exception } from '../exception/exception';
-import { Debug } from './debug/debug';
+import { Exception } from '../exception';
+import { Debug } from '../debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockInput extends BlockCommon {
@@ -17,7 +16,7 @@ export class BlockInput extends BlockCommon {
     const div = createElementCommon('div', { id, className: `block block--expression-value` });
     const p = createElementCommon('p', { className: 'block__text', textContent: '입력 받기' });
 
-    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px;`);
+    div.setAttribute('style', `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px;`);
     div.appendChild(p);
 
     return { block: div, space: [] };
@@ -75,7 +74,7 @@ export class BlockInput extends BlockCommon {
     };
 
     let result = '';
-    if (debugManager.getTime > 0) {
+    if (debugManager.time > 0) {
       const div = document.getElementById(this.data.id);
       div?.classList.add('is-highlight-run');
       result = await waitInput();
