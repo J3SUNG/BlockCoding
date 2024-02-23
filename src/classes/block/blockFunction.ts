@@ -69,7 +69,7 @@ export class BlockFunction extends BlockCommon {
 
     removeButton.addEventListener('click', () => {
       this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
-      for (let i = 1; i <= 4; i++) {
+      for (let i = 1; i <= PARAM_MAX_SIZE; i++) {
         if (this.paramSize < i) {
           this.data[`param${i}`] = {} as BlockObject;
         }
