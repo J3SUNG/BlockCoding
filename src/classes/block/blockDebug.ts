@@ -1,8 +1,8 @@
 import { BLOCK_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { Exception } from '../exception/exception';
-import { Debug } from '../debug/debug';
+import { Exception } from '../exception';
+import { Debug } from '../debug';
 import { BlockCommon } from './blockClassCommon';
 
 export class BlockDeubg extends BlockCommon {

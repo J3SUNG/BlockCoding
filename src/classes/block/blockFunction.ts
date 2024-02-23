@@ -1,9 +1,9 @@
 import { PARAM_MAX_SIZE, PARAM_MIN_SIZE } from '../../constants/blockDataMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
-import { Exception } from '../exception/exception';
+import { Exception } from '../exception';
 import { BlockCommon } from './blockClassCommon';
-import { Debug } from '../debug/debug';
+import { Debug } from '../debug';
 
 export class BlockFunction extends BlockCommon {
   name = 'function';

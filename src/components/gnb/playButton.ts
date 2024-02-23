@@ -1,6 +1,6 @@
 import { BlockCommon } from '../../classes/block/blockClassCommon';
-import { Debug } from '../../classes/debug/debug';
-import { Exception } from '../../classes/exception/exception';
+import { Debug } from '../../classes/debug';
+import { Exception } from '../../classes/exception';
 import { ConsoleLog, ProgramState, UpdateConsoleLog, UpdateProgramState, WorkspaceData } from '../../types/stateType';
 import { createElementCommon } from '../../utils/createElementCommon';
 

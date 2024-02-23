@@ -1,5 +1,5 @@
 import { BlockCommon } from '../classes/block/blockClassCommon';
-import { createBlock } from '../classes/blockFactory/createBlock';
+import { createBlock } from './createBlock';
 import { BlockObject } from '../types/blockObject';
 
 export const restoreWorkspaceData = (block: BlockObject | BlockObject[]): BlockCommon | BlockCommon[] | null => {

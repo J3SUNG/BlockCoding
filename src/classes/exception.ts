@@ -1,4 +1,4 @@
-import { EXCEPTION } from '../../constants/exceptionMap';
+import { EXCEPTION } from '../constants/exceptionMap';
 
 type ExceptionType = '' | 'infinityLoop' | 'nan' | 'infinity' | 'nullPointer';
 
