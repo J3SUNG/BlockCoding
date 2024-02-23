@@ -31,6 +31,10 @@ export class BlockStart extends BlockCommon {
     });
 
     toggle.addEventListener('click', () => {
+      if (!this.data.id) {
+        return;
+      }
+
       this.fold = !this.fold;
 
       onChange();

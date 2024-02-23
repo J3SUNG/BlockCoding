@@ -67,7 +67,7 @@ export class BlockValue extends BlockCommon {
       const input = div.querySelector('.block__input');
 
       if (input && input instanceof HTMLInputElement && div instanceof HTMLDivElement) {
-        this.calcValueWidth(div, input);
+        this.calcValueWidth(input);
 
         input.style.width = this.spaceWidth[0].toString() + 'px';
         div.style.width = this.width.toString() + 'px';
@@ -79,7 +79,7 @@ export class BlockValue extends BlockCommon {
     return this.width;
   }
 
-  calcValueWidth(div: HTMLDivElement, input: HTMLInputElement) {
+  calcValueWidth(input: HTMLInputElement) {
     const span = document.querySelector('#measure');
 
     if (span instanceof HTMLSpanElement && input instanceof HTMLInputElement) {

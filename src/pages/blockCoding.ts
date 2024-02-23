@@ -6,12 +6,12 @@ import { workspace } from '../components/workspace/workspace';
 import { consoleSpace } from '../components/consoleSpace/consoleSpace';
 import { createElementCommon } from '../utils/createElementCommon';
 import { UrlTool } from '../classes/urlTool';
-import { WorkspaceHistory } from '../classes/WorkspaceHistory';
+import { WorkspaceHistory } from '../classes/workspaceHistory';
 
 export const blockCoding = () => {
   const [getConsoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
   const [getWorkspaceData, setWorkspaceData] = useState<WorkspaceData>('workspaceData', []);
-  const prevWorkspaceData = new WorkspaceHistory();
+  const workspaceHistory = new WorkspaceHistory();
   const BLOCK_MENU_INDEX = 0;
   const WORKSPACE_INDEX = 1;
   const CONSOLE_SPACE_INDEX = 2;
@@ -48,7 +48,7 @@ export const blockCoding = () => {
     );
 
     requestAnimationFrame(() => {
-      prevWorkspaceData.push(getWorkspaceData());
+      workspaceHistory.push(getWorkspaceData());
       changeBlockWidth();
     });
   };
@@ -105,11 +105,11 @@ export const blockCoding = () => {
 
   document.addEventListener('keydown', function (event) {
     if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
-      prevWorkspaceData.pop();
-      const prevData = prevWorkspaceData.peek();
+      workspaceHistory.pop();
+      const prevData = workspaceHistory.peek();
       if (prevData) {
         updateWorkspaceData(prevData);
-        prevWorkspaceData.pop();
+        workspaceHistory.pop();
       }
     }
   });

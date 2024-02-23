@@ -31,6 +31,10 @@ export class BlockArithmetic extends BlockCommon {
     });
 
     operatorSelect.addEventListener('change', (e: Event) => {
+      if (!this.data.id) {
+        return;
+      }
+
       const target = e.target as HTMLSelectElement;
       const selectedValue: string = target.value;
 
