@@ -1,4 +1,4 @@
-import { BlockObject, BlockObjectValue } from '../../types/blockObject';
+import { BlockObject } from '../../types/blockObject';
 import { UpdateWorkspaceData, WorkspaceData } from '../../types/stateType';
 import { changeUniqueIdObj } from '../../utils/changeUniqueIdObj';
 import { createElementCommon } from '../../utils/createElementCommon';
@@ -13,7 +13,8 @@ interface WorkspaceSectionProps {
   ) => void;
   inserBlockWorkspace: (section: HTMLElement, event: DragEvent, workspaceData: WorkspaceData) => WorkspaceData;
   insertBlockAnotherBlock: (
-    targetUniqueId: string,
+    event: MouseEvent,
+    anotherBlockClosestDiv: HTMLElement,
     name: string,
     newWorkspaceData: BlockObject[],
     anotherBlock: HTMLElement,
@@ -50,7 +51,8 @@ const addWorkspaceMouseDragEvent = (
     parentData: { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null,
   ) => void,
   insertBlockAnotherBlock: (
-    targetUniqueId: string,
+    event: MouseEvent,
+    anotherBlockClosestDiv: HTMLElement,
     name: string,
     newWorkspaceData: BlockObject[],
     anotherBlock: HTMLElement,
@@ -70,7 +72,7 @@ const addWorkspaceMouseDragEvent = (
     const trashBin = document.getElementById('trash-bin') as HTMLElement;
     const trashIcon = document.querySelector('#trash-bin > span') as HTMLElement;
 
-    if (e.target === section || e.target === trashBin || e.target === trashIcon) {
+    if (e.button !== 0 || e.target === section || e.target === trashBin || e.target === trashIcon) {
       return;
     }
 
@@ -91,6 +93,15 @@ const addWorkspaceMouseDragEvent = (
         active = true;
       }
     }
+  });
+
+  section.addEventListener('mouseleave', function (e: MouseEvent) {
+    if (active && target) {
+      target.style.zIndex = '0';
+      target.style.transform = 'translate(0px, 0px)';
+    }
+    target = null;
+    active = false;
   });
 
   section.addEventListener('mouseup', function (e: MouseEvent) {
@@ -122,6 +133,7 @@ const addWorkspaceMouseDragEvent = (
             trashBinDrop(newChild, parentData);
           } else if (anotherBlockClosestDiv) {
             changeCheck = anotherBlockDrop(
+              e,
               newChild,
               parentData,
               anotherBlockClosestDiv,
@@ -183,6 +195,7 @@ const addWorkspaceMouseDragEvent = (
   };
 
   const anotherBlockDrop = (
+    event: MouseEvent,
     newChild: BlockObject | null,
     parentData: { parent: BlockObject | BlockObject[]; prop?: string; index?: number } | null,
     anotherBlockClosestDiv: HTMLElement,
@@ -195,7 +208,8 @@ const addWorkspaceMouseDragEvent = (
     if (!newChild) {
       removeTargetBlock(parentData);
       changeCheck = insertBlockAnotherBlock(
-        anotherBlockClosestDiv.id as string,
+        event,
+        anotherBlockClosestDiv,
         child.name,
         newWorkspaceData,
         anotherBlock,
@@ -203,7 +217,8 @@ const addWorkspaceMouseDragEvent = (
       );
     } else {
       changeCheck = insertBlockAnotherBlock(
-        anotherBlockClosestDiv.id as string,
+        event,
+        anotherBlockClosestDiv,
         newChild.name,
         newWorkspaceData,
         anotherBlock,
@@ -291,7 +306,8 @@ const addWorkspaceReceiveDragEvent = (
   updateWorkspaceData: UpdateWorkspaceData,
   inserBlockWorkspace: (section: HTMLElement, event: DragEvent, workspaceData: WorkspaceData) => WorkspaceData,
   insertBlockAnotherBlock: (
-    targetUniqueId: string,
+    event: MouseEvent,
+    anotherBlockClosestDiv: HTMLElement,
     name: string,
     newWorkspaceData: BlockObject[],
     anotherBlock: HTMLElement,
@@ -343,12 +359,15 @@ const addWorkspaceReceiveDragEvent = (
       const target = e.target;
 
       if (target instanceof HTMLElement) {
-        const uniqueId = target.closest('div')?.id ?? '';
+        const anotherBlockClosestDiv = target.closest('div');
         const name = e.dataTransfer.getData('name');
-        const insertSuccess = insertBlockAnotherBlock(uniqueId, name, newWorkspaceData, target);
 
-        if (insertSuccess) {
-          updateWorkspaceData(newWorkspaceData);
+        if (anotherBlockClosestDiv) {
+          const insertSuccess = insertBlockAnotherBlock(e, anotherBlockClosestDiv, name, newWorkspaceData, target);
+
+          if (insertSuccess) {
+            updateWorkspaceData(newWorkspaceData);
+          }
         }
       }
     }
