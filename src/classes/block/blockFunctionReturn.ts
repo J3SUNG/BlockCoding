@@ -38,6 +38,11 @@ export class BlockFunctionReturn extends BlockCommon {
 
     removeButton.addEventListener('click', () => {
       this.paramSize = this.paramSize > PARAM_MIN_SIZE ? this.paramSize - 1 : PARAM_MIN_SIZE;
+      for (let i = 1; i <= 4; i++) {
+        if (this.paramSize < i) {
+          this.data[`param${i}`] = {} as BlockObject;
+        }
+      }
       onChange();
     });
 
@@ -117,7 +122,10 @@ export class BlockFunctionReturn extends BlockCommon {
       );
 
       const functionBlock = functionMap.get(functionName);
-      if (functionBlock) {
+      if (functionBlock === undefined) {
+        exceptionManager.isNullPointer();
+        return '';
+      } else {
         const paramSize = functionBlock.paramSize;
 
         if (typeof paramSize === 'number') {

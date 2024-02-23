@@ -1,6 +1,6 @@
 import { EXCEPTION } from '../../constants/exceptionMap';
 
-type ExceptionType = '' | 'infinityLoop' | 'nan' | 'infinity';
+type ExceptionType = '' | 'infinityLoop' | 'nan' | 'infinity' | 'nullPointer';
 
 export class Exception {
   #startTime: number | null = null;
@@ -47,6 +47,10 @@ export class Exception {
     if (value === Infinity || value === -Infinity) {
       this.#exception = 'infinity';
     }
+  }
+
+  isNullPointer() {
+    this.#exception = 'nullPointer';
   }
 
   get isError() {

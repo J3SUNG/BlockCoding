@@ -51,7 +51,7 @@ export class BlockRefVariable extends BlockCommon {
     }
 
     const value = this.data.value;
-    let result: string = '';
+    let result: string | undefined = '';
 
     if (value instanceof BlockCommon) {
       const operand = await value.runLogic(
@@ -63,7 +63,12 @@ export class BlockRefVariable extends BlockCommon {
         exceptionManager,
         debugManager,
       );
-      result = variableMap.get(operand) || '';
+      result = variableMap.get(operand);
+    }
+
+    if (result === undefined) {
+      exceptionManager.isNullPointer();
+      return '';
     }
 
     return result;
