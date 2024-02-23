@@ -1,9 +1,8 @@
-import { BLOCK_DEFAULT_HEIGHT, BLOCK_DEFAULT_WIDTH } from '../../constants/blockDefaultMap';
 import { BlockObject } from '../../types/blockObject';
 import { createElementCommon } from '../../utils/createElementCommon';
 import { Exception } from '../exception/exception';
 import { BlockCommon } from './blockClassCommon';
-import { Debug } from './debug/debug';
+import { Debug } from '../debug/debug';
 
 export class BlockStart extends BlockCommon {
   name = 'start';
@@ -43,13 +42,13 @@ export class BlockStart extends BlockCommon {
 
     triangle.setAttribute(
       'style',
-      `width: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; position: absolute; right: -${BLOCK_DEFAULT_HEIGHT[this.name]}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
+      `width: ${this.defaultHeight}px; height: ${this.defaultHeight}px; position: absolute; right: -${this.defaultHeight}px; clip-path: polygon(-1% -5%, -1% 105%, 60% 50%);`,
     );
     div.appendChild(toggle);
     div.appendChild(triangle);
     div.setAttribute(
       'style',
-      `left: ${x}px; top: ${y}px; height: ${BLOCK_DEFAULT_HEIGHT[this.name]}px; overflow: ${this.fold ? 'hidden' : ''};`,
+      `left: ${x}px; top: ${y}px; height: ${this.defaultHeight}px; overflow: ${this.fold ? 'hidden' : ''};`,
     );
     div.appendChild(p);
 
@@ -76,7 +75,7 @@ export class BlockStart extends BlockCommon {
 
   calcWidth(): number {
     const div = document.getElementById(this.data.id);
-    this.width = BLOCK_DEFAULT_WIDTH[this.name];
+    this.width = this.defaultWidth;
 
     if (div) {
       div.style.width = `${this.width}px`;
