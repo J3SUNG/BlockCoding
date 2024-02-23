@@ -89,6 +89,6 @@ export class BlockInput extends BlockCommon {
   }
 
   getJsCode(defs: number): string {
-    return 'input()';
+    return `prompt('입력해주세요.')`;
   }
 }

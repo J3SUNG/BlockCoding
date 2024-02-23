@@ -136,9 +136,20 @@ export class BlockArithmetic extends BlockCommon {
     let jsCode = '';
     const value = this.data.value;
     const secondValue = this.data.secondValue;
+    const operatorMap: { [key: string]: string } = {
+      '+': '+',
+      '-': '-',
+      x: '*',
+      '/': '/',
+      '%': '%',
+    };
 
     if (value instanceof BlockCommon && secondValue instanceof BlockCommon) {
-      jsCode = `(${value.getJsCode(defs)} ${this.data.operator} ${secondValue.getJsCode(defs)})`;
+      const operator = this.data.operator;
+
+      if (operator) {
+        jsCode = `(${value.getJsCode(defs)} ${operatorMap[operator]} ${secondValue.getJsCode(defs)})`;
+      }
     }
 
     return jsCode;
