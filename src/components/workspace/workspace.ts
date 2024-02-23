@@ -6,6 +6,7 @@ import { BlockObject, BlockObjectValue } from '../../types/blockObject';
 import { findTargetBlock, findTargetParentBlock } from '../../utils/findBlock';
 import { createBlock } from '../../classes/blockFactory/createBlock';
 import { workspaceSection } from './workspaceSection';
+import { BLOCK_GENERAL_DEFAULT_HEIGHT } from '../../constants/blockDefaultMap';
 
 interface WorkspaceProps {
   workspaceData: WorkspaceData;
@@ -169,10 +170,10 @@ const insertBlockAnotherBlock = (
         if (parentData && Array.isArray(parentData.parent) && typeof parentData.index === 'number') {
           const rect = anotherBlockClosestDiv.getBoundingClientRect();
           const y = event.pageY - rect.top + window.scrollY;
-          if (y < 25) {
+          if (y < BLOCK_GENERAL_DEFAULT_HEIGHT / 2) {
             parentData.parent.splice(parentData.index, 0, newBlock);
             return true;
-          } else if (y > rect.height - 25) {
+          } else if (y > rect.height - BLOCK_GENERAL_DEFAULT_HEIGHT / 2) {
             parentData.parent.splice(parentData.index + 1, 0, newBlock);
             return true;
           } else {
