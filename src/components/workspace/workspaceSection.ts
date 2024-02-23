@@ -89,7 +89,6 @@ const addWorkspaceMouseDragEvent = (
         initialY = e.clientY;
 
         target.style.zIndex = '1000';
-        target.style.opacity = '0.8';
         active = true;
       }
     }
@@ -153,7 +152,6 @@ const addWorkspaceMouseDragEvent = (
       }
 
       target.style.zIndex = '0';
-      target.style.opacity = '1';
       target.style.transform = 'translate(0px, 0px)';
     }
     target = null;
@@ -240,6 +238,7 @@ const addWorkspaceMouseDragEvent = (
 
       if (target) {
         target.style.visibility = 'hidden';
+        target.style.opacity = '0.8';
         const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
         target.style.visibility = 'visible';
 
@@ -265,7 +264,7 @@ const addWorkspaceMouseDragEvent = (
       }
 
       if (target) {
-        if (Math.abs(currentX) > 3 || Math.abs(currentY) > 3) {
+        if (Math.abs(currentX) > MOVE_LIMIT || Math.abs(currentY) > MOVE_LIMIT) {
           target.style.transform = 'translate(' + currentX + 'px, ' + currentY + 'px)';
         } else {
           target.style.transform = 'translate(0px, 0px)';
@@ -295,6 +294,7 @@ const addWorkspaceMouseDragEvent = (
       target.classList.contains('block__child') ||
       target.classList.contains('block__operator')
     ) {
+      target.style.opacity = '1';
       target.classList.remove('block--highlight-select');
     }
   });
