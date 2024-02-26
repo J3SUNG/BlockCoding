@@ -7,6 +7,7 @@ import { consoleSpace } from '../components/consoleSpace/consoleSpace';
 import { createElementCommon } from '../utils/createElementCommon';
 import { UrlTool } from '../classes/urlTool';
 import { WorkspaceHistory } from '../classes/workspaceHistory';
+import { deepCopy } from '../utils/deepCopy';
 
 export const blockCoding = () => {
   const [getConsoleLog, setConsoleLog] = useState<ConsoleLog>('consoleLog', []);
@@ -48,7 +49,7 @@ export const blockCoding = () => {
     );
 
     requestAnimationFrame(() => {
-      workspaceHistory.push(getWorkspaceData());
+      workspaceHistory.push(deepCopy(getWorkspaceData()));
       changeBlockWidth();
     });
   };
