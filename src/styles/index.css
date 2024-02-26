@@ -50,10 +50,6 @@ select {
   margin-left: auto;
 }
 
-#title {
-  margin: 2rem 0;
-}
-
 .gnb-button__url-copy {
   background-color: rgb(100, 116, 139);
   color: #fff;
@@ -328,7 +324,7 @@ select {
   font-weight: bold;
   background-color: #f0f0f0;
   color: black;
-  text-align: start;
+  text-align: center;
   border: none;
   border-radius: 20px;
   position: relative;
