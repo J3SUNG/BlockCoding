@@ -1,6 +1,6 @@
-import { BlockCommon } from '../classes/block/blockClassCommon';
-import { UpdateWorkspaceData } from '../types/stateType';
+import { UpdateWorkspaceData, WorkspaceData } from '../types/stateType';
 import { changeUniqueIdObj } from '../utils/changeUniqueIdObj';
+import { decompressString } from '../utils/compressionStream';
 import { restoreWorkspaceData } from '../utils/restoreWorkspaceData';
 import { unzip } from '../utils/zipBlock';
 
@@ -10,12 +10,12 @@ export class UrlTool {
     this.url = new URL(window.location.href);
   }
 
-  urlParser(updateWorkspaceData: UpdateWorkspaceData) {
+  async urlParser(updateWorkspaceData: UpdateWorkspaceData) {
     try {
       const data = this.getSearchParams('workspaceData');
 
       if (data) {
-        const newData = this.unZipData(data);
+        const newData = await this.unZipData(data);
 
         changeUniqueIdObj(newData);
         updateWorkspaceData(newData);
@@ -30,9 +30,10 @@ export class UrlTool {
   }
 
   unZipData(data: string) {
-    const unZipWorkspaceData = unzip(JSON.parse(data));
-
-    return restoreWorkspaceData(unZipWorkspaceData) as BlockCommon[];
+    return decompressString(data).then((compressedBase64String) => {
+      const newData = restoreWorkspaceData(unzip(JSON.parse(compressedBase64String)));
+      return newData as WorkspaceData;
+    });
   }
 
   moveOriginPage() {
