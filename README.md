@@ -3,8 +3,9 @@
 ## 블록 코딩 서비스
 
 - 프로젝트 정의서 : https://wiki.daumkakao.com/pages/viewpage.action?pageId=1303807502
-- 위키 정리 : https://wiki.daumkakao.com/display/feplatform/j etty.cola
-- ![Feb-19-2024 04-03-30](https://github.daumkakao.com/storage/user/12463/files/979bb9a6-b747-44f5-a136-cc57560402be)
+- 위키 정리 : https://wiki.daumkakao.com/display/feplatform/jetty.cola
+
+<img width="600" alt="image" src="https://github.daumkakao.com/storage/user/12463/files/f1a746a8-c757-4280-97c0-c7c1904ce204">
 
 ## 프로젝트구조
 
@@ -104,8 +105,6 @@
 
 <img width="800" alt="image" src="https://github.daumkakao.com/storage/user/12463/files/be4b9c38-ce8b-4952-a520-58431b2877a9">
 <img width="800" alt="image" src="https://github.daumkakao.com/storage/user/12463/files/365ab3f2-ce6b-4650-a0a2-436e9cb6f279">
-
-##
 
 ## 주차 과제
 
