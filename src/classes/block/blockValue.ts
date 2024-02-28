@@ -90,7 +90,7 @@ export class BlockValue extends BlockCommon {
       span.style.display = 'none';
 
       this.spaceWidth[0] = width + 36 > this.defaultSpaceWidth ? width + 36 : this.defaultSpaceWidth;
-      this.width = this.spaceWidth[0] + this.defaultHeight;
+      this.width = this.spaceWidth[0] + this.defaultWidth;
     }
   }
 

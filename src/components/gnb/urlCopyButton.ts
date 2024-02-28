@@ -35,7 +35,7 @@ export const urlCopyButton = ({ getWorkspaceData }: UrlCopyButtonProps) => {
           element.classList.remove('gnb-button__url-copy');
           element.classList.add('gnb-button__url-copy--fail');
         } else {
-          navigator.clipboard.writeText(copyUrl + zipWorkspaceData);
+          navigator.clipboard.writeText(copyUrl);
           element.textContent = COPIED_TEXT;
           element.classList.remove('gnb-button__url-copy');
           element.classList.add('gnb-button__url-copy--success');
